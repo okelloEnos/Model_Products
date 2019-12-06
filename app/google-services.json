@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "133551819336",
+    "firebase_url": "https://modelfarm-103bb.firebaseio.com",
+    "project_id": "modelfarm-103bb",
+    "storage_bucket": "modelfarm-103bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133551819336:android:f2de54ca8d4b05578e667d",
+        "android_client_info": {
+          "package_name": "com.okellosoftwarez.modelfarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133551819336-78hnut50ai866m1picnbn71lf0jkhb3d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.okellosoftwarez.modelfarm",
+            "certificate_hash": "f4a6e8838d2a2993adf2af436c755896e35c4c36"
+          }
+        },
+        {
+          "client_id": "133551819336-pb5gs6fff511uisrfrib767qsc6pivl6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuEqZnYzO9_28-PcGrP-XiosBUFSlvdeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133551819336-pb5gs6fff511uisrfrib767qsc6pivl6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
