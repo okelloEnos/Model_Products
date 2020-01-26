@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".welcome_screen">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="@dimen/zero_dp"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:textSize="@dimen/thirty_sp"
+        android:layout_marginTop="@dimen/two_hundred_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        android:textColor="@color/black"
+        android:layout_marginRight="@dimen/eight_dp"
+        android:layout_marginBottom="@dimen/eight_dp"
+        android:text="@string/tvWelcome"
+        app:layout_constraintBottom_toTopOf="@+id/continueBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/continueBtn"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eighty_dp"
+        android:layout_marginLeft="@dimen/eighty_dp"
+        android:layout_marginTop="@dimen/forty_dp"
+        android:background="@drawable/mybutton"
+        android:layout_marginEnd="@dimen/eighty_dp"
+        android:paddingBottom="@dimen/eight_dp"
+        android:paddingTop="@dimen/eight_dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:layout_marginRight="@dimen/eighty_dp"
+        android:textSize="@dimen/twenty_four_sp"
+        android:text="@string/continueBtn"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+         />
+
+    <TextView
+        android:id="@+id/tvTerms"
+        android:textColor="@color/black"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:textSize="@dimen/eighteen_sp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        android:layout_marginRight="@dimen/eight_dp"
+        android:layout_marginBottom="@dimen/ten_dp"
+        android:text="@string/tvTerms"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

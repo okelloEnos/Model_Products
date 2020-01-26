@@ -47,7 +47,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
         Log.d(TAG, "onBindViewHolder: allign to recycler...");
         final Products currentProducts = productsList.get(position);
         holder.recName.setText(currentProducts.getName());
-        holder.recPhone.setText(currentProducts.getPhone());
+        holder.recLocation.setText(currentProducts.getLocation());
+        holder.recPrice.setText(currentProducts.getPrice());
         Picasso.with(mcontext)
                 .load(currentProducts.getImage())
                 .placeholder(R.mipmap.ic_launcher)
@@ -56,18 +57,24 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                 .into(holder.recImage);
 
 
-        holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent passIntent = new Intent(mcontext, Product_Details.class);
-                passIntent.putExtra("name", currentProducts.getName());
-                passIntent.putExtra("email", currentProducts.getLocation());
-                passIntent.putExtra("phone", currentProducts.getPhone());
-                passIntent.putExtra("image", currentProducts.getImage());
-                mcontext.startActivity(passIntent);
-                Log.d(TAG, "onClick: detail view...");
-            }
-        });
+        if (Products_view.buttonString.equals("buyer")) {
+
+            holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent passIntent = new Intent(mcontext, Product_Details.class);
+                    passIntent.putExtra("name", currentProducts.getName());
+                    passIntent.putExtra("location", currentProducts.getLocation());
+                    passIntent.putExtra("price", currentProducts.getPrice());
+                    passIntent.putExtra("capacity", currentProducts.getCapacity());
+                    passIntent.putExtra("email", currentProducts.getEmail());
+                    passIntent.putExtra("phone", currentProducts.getPhone());
+                    passIntent.putExtra("image", currentProducts.getImage());
+                    mcontext.startActivity(passIntent);
+                    Log.d(TAG, "onClick: detail view...");
+                }
+            });
+        }
         Log.d(TAG, "onBindViewHolder: done binding....");
     }
 
@@ -85,7 +92,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
     public class productViewHolder extends RecyclerView.ViewHolder {
 
         ImageView recImage;
-        TextView recName, recPhone;
+        TextView recName, recLocation, recPrice;
         LinearLayout clickedLayout;
 
         public productViewHolder(@NonNull View itemView) {
@@ -93,7 +100,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
             Log.d(TAG, "productViewHolder: Initializing recycler items...");
             recImage = itemView.findViewById(R.id.recycleImage);
             recName = itemView.findViewById(R.id.recycleName);
-            recPhone = itemView.findViewById(R.id.recyclePhone);
+            recLocation = itemView.findViewById(R.id.recycleLocation);
+            recPrice = itemView.findViewById(R.id.recyclePrice);
             clickedLayout = itemView.findViewById(R.id.rec);
         }
     }

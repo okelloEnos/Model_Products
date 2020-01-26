@@ -38,13 +38,28 @@
                     android:id="@+id/recycleName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:layout_marginBottom="@dimen/eight_dp"
+                    android:text="TextView"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/recyclePhone"
+                    android:id="@+id/recycleLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:layout_marginBottom="@dimen/eight_dp"
+                    android:text="TextView"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/recyclePrice"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textStyle="bold"
+                    android:textColor="#F10B0B" />
             </LinearLayout>
         </LinearLayout>
 

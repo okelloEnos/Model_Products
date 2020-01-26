@@ -10,8 +10,8 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        android.defaultConfig.vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -33,4 +33,5 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.androidstudy:daraja:1.0.2'
 }

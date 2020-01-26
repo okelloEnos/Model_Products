@@ -1,7 +1,5 @@
 package com.okellosoftwarez.modelfarm;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 
@@ -10,8 +8,10 @@ public class Products implements Serializable {
     private String name;
     private String phone;
     private String location;
-    private Uri imageUrl;
     private String image;
+    private String price;
+    private String capacity;
+    private String email;
 
     public String getImage() {
         return image;
@@ -36,15 +36,50 @@ public class Products implements Serializable {
         return ID;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
-    }
-
-    public Products(String name, String phone, Uri imageUrl, String location) {
+    public Products(String name, String phone, String location, String image, String price, String capacity, String email) {
         this.name = name;
         this.phone = phone;
-        this.imageUrl = imageUrl;
         this.location = location;
+        this.image = image;
+        this.price = price;
+        this.capacity = capacity;
+        this.email = email;
+    }
+
+    public Products(String name, String location, String image, String price, String capacity) {
+        this.name = name;
+        this.location = location;
+        this.image = image;
+        this.price = price;
+        this.capacity = capacity;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getName() {
@@ -61,14 +96,6 @@ public class Products implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Uri getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(Uri imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getLocation() {

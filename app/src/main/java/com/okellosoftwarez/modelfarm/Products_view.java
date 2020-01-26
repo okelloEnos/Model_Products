@@ -3,30 +3,42 @@ package com.okellosoftwarez.modelfarm;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Products_view extends AppCompatActivity {
+public class Products_view extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "Products_view";
+
+    public static String buttonString;
     DatabaseReference mDatabase;
     RecyclerView recyclerView;
     productAdapter adapter;
     LinearLayoutManager layoutManager;
     List<Products> productsList;
     ProgressBar circleP_bar;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +87,26 @@ public class Products_view extends AppCompatActivity {
         });
 
 //        Floating Btn to add new Product
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addProducts();
             }
         });
+
+        //        Setting up the navigation Drawer and view
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        //        Listen to the selected item
+        navigationView.setNavigationItemSelectedListener(this);
+
+        receiveButtonIntents();
     }
 
 //    Opening Main Activity
@@ -91,4 +116,96 @@ public class Products_view extends AppCompatActivity {
         startActivity(addIntent);
 
     }
+    private void receiveButtonIntents() {
+        if (getIntent().hasExtra("button")){
+            buttonString = getIntent().getStringExtra("button");
+//            sendIntents_details(buttonString);
+            Toast.makeText(this, "Which Button : " + buttonString, Toast.LENGTH_LONG).show();
+
+        }
+        checkUser(buttonString);
+    }
+    private void checkUser(String userType) {
+        if (userType.equals("buyer")) {
+            fab.setEnabled(false);
+
+//            Removing some features in the navigation view if user is a buyer
+            Menu menu = navigationView.getMenu();
+            menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.products_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        //        Handle several selection of products and calculating total
+        if (id == R.id.action_add_cart) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_profile) {
+            // Handle the Profile  action of the user details
+            profileView();
+        } else if (id == R.id.nav_newProduct) {
+            //            Handle how to add a new product to the products view
+            addProducts();
+        } else if (id == R.id.nav_urProduct) {
+            //              Handle how you can display posts belonging to the user
+        } else if (id == R.id.nav_help) {
+            //              Handle what to be displayed in the help like the frequently asked questions
+            Toast.makeText(this, "A Guide Document on What to do ...", Toast.LENGTH_SHORT).show();
+            //        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logOut) {
+            //              Handle user logout procedure
+            logOut();
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void profileView() {
+        Intent profileIntent = new Intent(this, Profile.class);
+        startActivity(profileIntent);
+    }
+
+    private void logOut() {
+        Intent exitIntent = new Intent(this, registration_screen.class);
+        startActivity(exitIntent);
+    }
+
+
 }

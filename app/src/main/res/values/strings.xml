@@ -1,4 +1,36 @@
 <resources>
-    <string name="app_name">ModelFarm</string>
+    <string name="app_name">ModelFarmer</string>
+    <string name="tvWelcome">Welcome to Agriculture Marketing Platform</string>
     <string name="title_activity_products_view">Products_view</string>
+    <string name="action_settings">Settings</string>
+    <string name="preview_description">Your Image Would appear here ...</string>
+    <string name="take_photo">Take Picture</string>
+    <string name="tvAccess">How do you want to Access Our Services ? As a ...</string>
+    <string name="tvBuyer">Buyer </string>
+    <string name="tvSeller">Seller </string>
+    <string name="continueBtn">CONTINUE</string>
+    <string name="tvTerms">By Tapping on the CONTINUE Button above, I agree to Terms of Services and Privacy Policy.</string>
+    <string name="signInBtn">Sign In</string>
+    <string name="signUpBtn">Sign Up</string>
+    <string name="tvUserName">User Name :</string>
+    <string name="enos">Enos Okello</string>
+    <string name="tvPassword">Password :</string>
+    <string name="nextBtn">NEXT</string>
+    <string name="phone">Phone No:</string>
+    <string name="email">Email:</string>
+    <string name="textview">TextView</string>
+    <string name="image_text">Product Image</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_addProduct">New Product</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_logOut">Log Out</string>
+    <string name="menu_yourProducts">Your Products</string>
+    <string name="action_cart">Add Cart</string>
+    <string name="No_internet">You Are Connected To a Network but Unfortunately There is No Internet Connectivity ...</string>
+    <string name="No_network">Ooops Check on Your Connection ...</string>
 </resources>

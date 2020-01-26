@@ -3,11 +3,17 @@ package com.okellosoftwarez.modelfarm;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -15,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,15 +34,17 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int IMAGE_REQUEST = 1;
-    EditText etName, etPhone, etMail;
+    public static final int IMAGE_REQUEST = 1, CAMERA_REQUEST = 2;
+    private static final int PERMISSION_CODE = 1000 ;
+
+    EditText etName, etLocation, etPrice, etCapacity, etPhone, etMail;
     Button chooseBtn, takeBtn, uploadBtn;
     ImageView addImage;
     Uri image_uri;
     Products product;
-    String sname, sphone, semail;
+    String sName, sPhone, sEmail, sLocation, sPrice, sCapacity;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private ProgressBar mProgress;
@@ -52,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
         product = new Products();
         etName = findViewById(R.id.et_addName);
-        etMail = findViewById(R.id.et_addEmail);
+        etLocation = findViewById(R.id.et_addLocation);
+        etPrice = findViewById(R.id.et_addPrice);
+        etCapacity = findViewById(R.id.et_addCapacity);
         etPhone = findViewById(R.id.et_addPhone);
+        etMail = findViewById(R.id.et_addEmail);
+
 
         chooseBtn = findViewById(R.id.choosePhoto);
         takeBtn = findViewById(R.id.takePhoto);
@@ -62,12 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
         mProgress = findViewById(R.id.progressBar);
 
-        chooseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePhoto();
-            }
-        });
+        chooseBtn.setOnClickListener(this);
+        takeBtn.setOnClickListener(this);
 
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,37 +88,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void backToMain() {
         Intent backIntent = new Intent(this, Products_view.class);
-////        backIntent.putExtra("name", product.getName());
-////        backIntent.putExtra("phone", product.getPhone());
-////        backIntent.putExtra("image", product.getImageUrl().toString());
-////        backIntent.putExtra("email", product.getLocation());
-//        backIntent.putExtra("Product", product);
         startActivity(backIntent);
         Toast.makeText(this, "Inserted Values are :" +
                 "\nName : " + product.getName() +
+                "\nLocation : " + product.getLocation() +
+                "\nPrice : " + product.getPrice() +
+                "\nCapacity : " + product.getCapacity() +
                 "\nPhone : " + product.getPhone() +
                 "\n Email : " + product.getLocation() +
-                "\n Image Name : " + product.getImageUrl() +
+//                "\n Image Name : " + product.getImageUrl() +
                 "\nProduct ID : " + product.getID() +
                 "\nImage String : " + product.getImage(), Toast.LENGTH_LONG).show();
     }
 
     private void receiveEntries() {
-        sname = etName.getText().toString().trim();
-        sphone = etPhone.getText().toString().trim();
-        semail = etMail.getText().toString().trim();
+        sName = etName.getText().toString().trim();
+        sLocation = etLocation.getText().toString().trim();
+        sPrice = etPrice.getText().toString().trim();
+        sCapacity = etCapacity.getText().toString().trim();
+        sPhone = etPhone.getText().toString().trim();
+        sEmail = etMail.getText().toString().trim();
         checkFields();
 
     }
 
     private void checkFields() {
-        if (sname.isEmpty() || sphone.isEmpty() || semail.isEmpty() || image_uri == null) {
+        if (sName.isEmpty() || sLocation.isEmpty() || sPrice.isEmpty() || sCapacity.isEmpty() || sPhone.isEmpty() || sEmail.isEmpty() || image_uri == null) {
             Toast.makeText(this, "Missing Fields...", Toast.LENGTH_SHORT).show();
         } else {
 
             Toast.makeText(this, "Check Field else part.......", Toast.LENGTH_SHORT).show();
             uploadDetails();
-//            backToMain();
         }
     }
 
@@ -164,8 +173,9 @@ public class MainActivity extends AppCompatActivity {
                                         mProgress.setProgress(0);
                                     }
                                 }, 500);
-                                Toast.makeText(MainActivity.this, "Upload Successful...", Toast.LENGTH_SHORT).show();
-                                product = new Products(sname, sphone, semail, sImage);
+                                Toast.makeText(MainActivity.this, "Upload Successful..." + sImage, Toast.LENGTH_SHORT).show();
+//                                product = new Products(sName, sPhone, sEmail, sImage);
+                                product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
                                 String key = databaseReference.push().getKey();
                                 databaseReference.child(key).setValue(product);
                                 Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
@@ -185,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                 mProgress.setProgress((int) progress);
             }
         });
@@ -199,20 +209,97 @@ public class MainActivity extends AppCompatActivity {
         return extension;
     }
 
-    private void choosePhoto() {
-        Intent chooseIntent = new Intent();
-        chooseIntent.setType("image/*");
-        chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(chooseIntent, IMAGE_REQUEST);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.takePhoto:
+//              Take a photo using the camera
+
+                takePhoto();
+
+                break;
+
+            case R.id.choosePhoto:
+//                Choose a photo from gallery
+
+                Intent chooseIntent = new Intent();
+                chooseIntent.setType("image/*");
+                chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(chooseIntent, IMAGE_REQUEST);
+                break;
+        }
+    }
+
+    private void takePhoto() {
+
+//        if system OS is greater than Marshmallow require Permissions at run time
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+//                Permissions not enabled so request for them
+                String [] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+                requestPermissions(permissions, PERMISSION_CODE);
+            }
+            else {
+//                Permission already granted
+                openCamera();
+            }
+        }
+        else {
+//            For OS lesser than Marshmallow
+            openCamera();
+        }
+    }
+
+    private void openCamera() {
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "NEW PICTURE");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From The Camera");
+        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+//        Camera Intent
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        This Method is called when user selects either allow or deny in the pop up notification
+        switch (requestCode){
+            case PERMISSION_CODE : {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                    Permission from pop up was granted
+                    openCamera();
+                }
+                else {
+//                    Permission from pop up was denied
+                    Toast.makeText(this, "Permission Denied ...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            image_uri = data.getData();
-            Picasso.with(this).load(image_uri).into(addImage);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAMERA_REQUEST) {
+
+                addImage.setImageURI(image_uri);
+                Toast.makeText(this, "Photo loaded...", Toast.LENGTH_SHORT).show();
+
+            } else if (requestCode == IMAGE_REQUEST) {
+
+                image_uri = data.getData();
+                Picasso.with(this).load(image_uri).into(addImage);
+
+            }
         }
     }
-
 }

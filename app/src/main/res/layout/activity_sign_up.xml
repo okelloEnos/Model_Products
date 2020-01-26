@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/eighty_dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvUsername_signIn"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginLeft="@dimen/eight_dp"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:text="@string/tvUserName"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etUserName"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:layout_marginRight="@dimen/eight_dp"
+                android:layout_weight="2"
+                android:ems="10"
+                android:hint="@string/enos"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvPassword_signIn"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginLeft="@dimen/eight_dp"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:text="@string/tvPassword"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etPassword_signIn"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:layout_marginRight="@dimen/eight_dp"
+                android:layout_weight="2"
+                android:ems="10"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginLeft="@dimen/eight_dp"
+                android:layout_weight="1"
+                android:text="@string/phone"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:layout_marginRight="@dimen/eight_dp"
+                android:layout_weight="2"
+                android:ems="10"
+                android:inputType="phone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginLeft="@dimen/eight_dp"
+                android:layout_weight="1"
+                android:text="@string/email"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/etMail"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:layout_marginRight="@dimen/eight_dp"
+                android:layout_weight="2"
+                android:ems="10"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/nextBtn_signUp"
+        android:layout_width="@dimen/zero_dp"
+        android:background="@drawable/normal_button"
+        android:layout_margin="@dimen/eight_dp"
+        android:layout_height="wrap_content"
+        android:text="@string/nextBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user">
+
+    <TextView
+        android:id="@+id/tvAccess"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginTop="@dimen/two_hundred_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        android:layout_marginRight="@dimen/eight_dp"
+        android:layout_marginBottom="@dimen/eight_dp"
+        android:gravity="center_horizontal"
+        android:text="@string/tvAccess"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_four_sp"
+        app:layout_constraintBottom_toTopOf="@+id/buyerBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buyerBtn"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eighty_dp"
+        android:layout_marginLeft="@dimen/eighty_dp"
+        android:layout_marginTop="@dimen/forty_dp"
+        android:layout_marginEnd="@dimen/eighty_dp"
+        android:layout_marginRight="@dimen/eighty_dp"
+        android:background="@drawable/mybutton"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/eight_dp"
+        android:paddingBottom="@dimen/eight_dp"
+        android:text="@string/tvBuyer"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_four_sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAccess" />
+
+    <Button
+        android:id="@+id/sellerBtn"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eighty_dp"
+        android:layout_marginLeft="@dimen/eighty_dp"
+        android:layout_marginTop="@dimen/forty_dp"
+        android:layout_marginEnd="@dimen/eighty_dp"
+        android:layout_marginRight="@dimen/eighty_dp"
+        android:background="@drawable/mybutton"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/eight_dp"
+        android:paddingBottom="@dimen/eight_dp"
+        android:text="@string/tvSeller"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_four_sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buyerBtn" />
+</androidx.constraintlayout.widget.ConstraintLayout>
