@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ModelFarmer</string>
     <string name="tvWelcome">Welcome to Agriculture Marketing Platform</string>
-    <string name="title_activity_products_view">Products_view</string>
+    <string name="title_activity_products_view">Products View</string>
     <string name="action_settings">Settings</string>
     <string name="preview_description">Your Image Would appear here ...</string>
     <string name="take_photo">Take Picture</string>

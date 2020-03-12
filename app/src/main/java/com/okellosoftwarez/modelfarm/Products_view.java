@@ -163,10 +163,16 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         //noinspection SimplifiableIfStatement
         //        Handle several selection of products and calculating total
         if (id == R.id.action_add_cart) {
+            cartOrderedList();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void cartOrderedList() {
+        Intent cartIntent = new Intent(this, Order.class);
+        startActivity(cartIntent);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -185,7 +191,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             //              Handle how you can display posts belonging to the user
         } else if (id == R.id.nav_help) {
             //              Handle what to be displayed in the help like the frequently asked questions
-            Toast.makeText(this, "A Guide Document on What to do ...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "A Guide Document on What to do ... Coming Soon ", Toast.LENGTH_SHORT).show();
             //        } else if (id == R.id.nav_share) {
         } else if (id == R.id.nav_logOut) {
             //              Handle user logout procedure

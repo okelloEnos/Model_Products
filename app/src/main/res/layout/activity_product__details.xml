@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,38 +39,113 @@
             android:textColor="@color/black"
             android:textSize="@dimen/eighteen_sp" />
 
-        <TextView
-            android:id="@+id/tv_detailName"
-            android:layout_marginTop="@dimen/eight_dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black" />
+            android:id="@+id/productNameLayout"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_prdName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="Product Name : "
+                android:layout_weight="40"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_detailName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="TextView"
+                android:layout_weight="60"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/productLocationLayout"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_productLocation"
+                android:layout_width="0dp"
+                android:layout_weight="40"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="Product Location : "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_detailLocation"
+                android:layout_width="0dp"
+                android:layout_weight="60"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="TextView"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/productPriceLayout"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_productPrice"
+                android:layout_width="0dp"
+                android:layout_weight="40"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="Price Per KG : KES "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_detailPrice"
+                android:layout_width="0dp"
+                android:layout_weight="60"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:text="TextView"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/productCapacityLayout"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
         <TextView
-            android:id="@+id/tv_detailLocation"
+            android:id="@+id/tv_productCapacity"
+            android:layout_width="0dp"
+            android:layout_weight="45"
             android:layout_marginTop="@dimen/eight_dp"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/tv_detailPrice"
-            android:layout_marginTop="@dimen/eight_dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="Capacity Available in KG : "
             android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/tv_detailCapacity"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="55"
             android:layout_marginTop="@dimen/eight_dp"
             android:layout_height="wrap_content"
             android:text="TextView"
             android:textColor="@color/black" />
-
+    </LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -83,6 +161,7 @@
         app:layout_constraintTop_toBottomOf="@id/detailLayout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contactLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/eight_dp"
@@ -91,15 +170,34 @@
         app:layout_constraintTop_toBottomOf="@id/tv_detailContact">
 
         <TextView
+            android:id="@+id/tv_staticPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eight_dp"
+            android:text="Phone No : "
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_detailPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/eight_dp"
             android:text="TextView"
             android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_staticPhone"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_staticMail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eight_dp"
+            android:text="Email : "
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_staticPhone" />
         <TextView
             android:id="@+id/tv_detailEmail"
             android:layout_width="wrap_content"
@@ -107,24 +205,26 @@
             android:layout_margin="@dimen/eight_dp"
             android:text="TextView"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/tv_staticMail"
+            app:layout_constraintTop_toBottomOf="@id/tv_detailPhone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/purchase_button"
+        android:id="@+id/order_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/eight_dp"
         android:layout_marginEnd="@dimen/eight_dp"
         android:layout_marginBottom="@dimen/eight_dp"
+        android:layout_marginTop="25dp"
         android:background="@color/colorAccent"
-        android:text="Make Purchase"
+        android:text="Place Order"
         android:textColor="@color/black"
         android:textSize="@dimen/eighteen_sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contactLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
