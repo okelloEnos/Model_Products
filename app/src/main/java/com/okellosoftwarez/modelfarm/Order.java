@@ -1,5 +1,6 @@
 package com.okellosoftwarez.modelfarm;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,7 +8,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +29,11 @@ public class Order extends AppCompatActivity {
     cartAdapter cartAdapter ;
     List<orderModel> ordersList;
     Button payBtn;
+    DatabaseReference orderDatabase;
+    ProgressBar loadingOrders;
+
+//    private StorageReference orderStorageReference;
+//    private DatabaseReference orderDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +42,17 @@ public class Order extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Toast.makeText(this, "On create", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "On create", Toast.LENGTH_LONG).show();
+
+//        orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
+//        obtaining the order database Reference from the order
+        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
+        ordersList = new ArrayList<>();
 
         payBtn = findViewById(R.id.paymentBtn);
-        ordersList = new ArrayList<>();
-        receiveSelectedOrder(ordersList);
+        loadingOrders = findViewById(R.id.loadingOrders);
+
+//        receiveSelectedOrder(ordersList);
         ordersRecyclerView = findViewById(R.id.cartList);
         ordersRecyclerView.setHasFixedSize(true);
 
@@ -40,6 +61,28 @@ public class Order extends AppCompatActivity {
 
         cartAdapter = new cartAdapter(this, ordersList);
         ordersRecyclerView.setAdapter(cartAdapter);
+
+        orderDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ordersList.clear();
+
+                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()){
+                    orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
+                    ordersList.add(orderedProduct);
+                }
+                cartAdapter.notifyDataSetChanged();
+                loadingOrders.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(Order.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                loadingOrders.setVisibility(View.INVISIBLE);
+
+            }
+        });
 
         payBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,14 +104,5 @@ public class Order extends AppCompatActivity {
             ordersList.add(orderedPrd);
             Toast.makeText(this, "Received :" + prdName +"\n"+prdCapacity+"\n"+prdPrice, Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        Toast.makeText(this, "on Start", Toast.LENGTH_LONG).show();
-        super.onStart();
-        Toast.makeText(this, "After On Start", Toast.LENGTH_LONG).show();
-//        receiveSelectedOrder();
-        cartAdapter.notifyDataSetChanged();
     }
 }

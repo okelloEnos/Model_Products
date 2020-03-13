@@ -1,29 +1,57 @@
 package com.okellosoftwarez.modelfarm;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Product_Details extends AppCompatActivity {
 
-    private String d_price, d_name, d_capacity;
+    private String d_price, d_name, d_capacity, d_image;
     ImageView detail_image;
     TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email;
+
+    private StorageReference orderStorageReference;
+    private DatabaseReference orderDatabaseReference;
+    private orderModel orders, fullOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product__details);
+
+        orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
+        orderDatabaseReference = FirebaseDatabase.getInstance().getReference("Orders");
+        orders = new orderModel();
+        fullOrder = new orderModel();
 
         detail_image = findViewById(R.id.detailImage);
         tv_name = findViewById(R.id.tv_detailName);
@@ -81,6 +109,8 @@ public class Product_Details extends AppCompatActivity {
 
 //                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
 
+                uploadingData(totalPrice, value);
+//                uploadOrders(totalPrice);
                 Intent cartIntent = new Intent(Product_Details.this, Order.class);
                 cartIntent.putExtra("prdName", d_name );
                 cartIntent.putExtra("prdCapacity", value);
@@ -99,12 +129,23 @@ public class Product_Details extends AppCompatActivity {
         alert.show();
     }
 
+    private void uploadingData(int totalPrice, String value) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Orders");
+        String orderKey = ref.push().getKey();
+        orders = new orderModel(d_name, d_capacity, Integer.toString(totalPrice));
+        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
+        ref.child(orderKey).setValue(fullOrder);
+
+        Toast.makeText(this, "Success Upload of Data...", Toast.LENGTH_SHORT).show();
+    }
+
     private void receiveDetailIntents() {
         if (getIntent().hasExtra("name") && getIntent().hasExtra("phone")
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
                 && getIntent().hasExtra("capacity")){
-            String d_location, d_phone, d_image, d_email;
+            String d_location, d_phone, d_email;
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
             d_price = getIntent().getStringExtra("price");
@@ -116,9 +157,24 @@ public class Product_Details extends AppCompatActivity {
             Toast.makeText(this, "The Email : " + d_email, Toast.LENGTH_LONG).show();
 
             assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity);
+
+//            uploadOrders();
         }
     }
 
+    private void ordersList(int price) {
+        Intent ordersIntent = new Intent(this, Order.class);
+        startActivity(ordersIntent);
+
+        Toast.makeText(this, "ORDERS OKELLO : " + d_name + price, Toast.LENGTH_SHORT).show();
+    }
+
+    private String getOrdersFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String extension = mime.getExtensionFromMimeType(contentResolver.getType(uri));
+        return extension;
+    }
     private void assignDetails(String d_name, String d_phone, String d_image, String d_email, String d_location, String d_price, String d_capacity) {
         tv_name.setText(d_name);
         tv_phone.setText(d_phone);

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterViewHolder> {
@@ -38,6 +40,12 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
         holder.orderName.setText(currentOrder.getPrdOrderedName());
         holder.orderCapacity.setText(currentOrder.getPrdOrderedCapacity() + " KG");
         holder.orderedPrice.setText(currentOrder.getPrdOrderedTotal());
+        Picasso.with(ordersContext)
+                .load(currentOrder.getPrdOrderImage())
+                .placeholder(R.drawable.common_google_signin_btn_icon_dark)
+                .fit()
+                .centerCrop()
+                .into(holder.orderImage);
 
     }
 
@@ -50,12 +58,13 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
     }
 
     public class cartAdapterViewHolder extends RecyclerView.ViewHolder{
-//        ImageView orderImage;
+        ImageView orderImage;
         TextView orderName, orderCapacity, orderedPrice;
 //        LinearLayout clickedLayout;
 
         public cartAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
+            orderImage = itemView.findViewById(R.id.cartImage);
             orderName = itemView.findViewById(R.id.selectedPrdName);
             orderCapacity = itemView.findViewById(R.id.selectedCapacity);
             orderedPrice = itemView.findViewById(R.id.totalSelected);
