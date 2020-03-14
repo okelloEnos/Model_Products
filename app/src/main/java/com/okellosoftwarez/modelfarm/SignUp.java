@@ -41,9 +41,18 @@ public class SignUp extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etConfirmPassword = findViewById(R.id.etConfirmPassword_signUp);
 
-        Button next = findViewById(R.id.nextBtn_signUp);
+        Button registerBtn = findViewById(R.id.registerBtn_signUp);
 
-        next.setOnClickListener(new View.OnClickListener() {
+        Button logBtn = findViewById(R.id.logInBtn_signUp);
+        logBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent logIntent = new Intent( SignUp.this, SignIn.class);
+                startActivity(logIntent);
+            }
+        });
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -53,18 +62,30 @@ public class SignUp extends AppCompatActivity {
                 String userName = etUserName.getText().toString().trim();
                 String phone = etPhone.getText().toString().trim();
 
-                if (email.isEmpty()) {
-                    etMail.setError("Missing Mail");
-                } else if (userName.isEmpty()) {
+                if (userName.isEmpty()) {
                     etUserName.setError("Missing User Name");
+
                 } else if (password.isEmpty()) {
                     etPassword.setError("Missing PassWord");
+
                 } else if (confirmPassword.isEmpty()) {
                     etConfirmPassword.setError("Missing Confirm Password");
+
                 } else if (phone.isEmpty()) {
                     etPhone.setError("Missing Phone Number");
-                } else {
 
+                } else if (email.isEmpty()) {
+                    etMail.setError("Missing Mail");
+
+                }else if (password.length() < 6) {
+                    etPassword.setError("PassWord Too Short");
+
+                } else if (!password.equals(confirmPassword)){
+                 etConfirmPassword.setError("Confirm PassWord Do not Match ");
+                } else if (phone.length() < 10){
+                    etPhone.setError("Phone Number Too Short");
+                }
+                else {
 
                    SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
                     SharedPreferences.Editor editor = pref.edit();
@@ -98,6 +119,7 @@ public class SignUp extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(SignUp.this, "Successfull Registration...", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null){
@@ -107,9 +129,16 @@ public class SignUp extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUp.this, "Authentication failed. Check Your Details : " + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(SignUp.this, "Authentication failed. Check Your Details : " + task.getException().getMessage(),
+//                                    Toast.LENGTH_SHORT).show();
 //                            updateUI(null);
+                            if (task.getException().getMessage().equals("The email address is already in use by another account.")){
+                                Toast.makeText(SignUp.this, "Your E mail is already registered Try Log In...", Toast.LENGTH_LONG).show();
+                            }
+
+                            if (task.getException().getMessage().equals("The email address is badly formatted.")){
+                                Toast.makeText(SignUp.this, "Bad Format E mail...", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         // ...
@@ -126,7 +155,9 @@ public class SignUp extends AppCompatActivity {
             updateUI(currentUser);
         }
     }
-    public static void signOut() {
-        mAuth.signOut();
-    }
+//    public void signOut() {
+//        mAuth.signOut();
+//        Intent outIntent = new Intent(getApplicationContext(), SignUp.class);
+//        startActivity(outIntent);
+//    }
 }

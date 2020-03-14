@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +44,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private FloatingActionButton fab;
     TextView navMail, navPhone;
 
+    FirebaseAuth signOutmAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
 
         circleP_bar = findViewById(R.id.progressBarCircle);
+
+        // Initialize Firebase Auth
+        signOutmAuth = FirebaseAuth.getInstance();
 //        navMail = findViewById(R.id.navMail);
 //        navPhone = findViewById(R.id.navPhone);
 
@@ -259,7 +265,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_logOut) {
             //              Handle user logout procedure
 //            logOut();
-            SignUp.signOut();
+            signOut();
+
         } else if (id == R.id.nav_switchUser){
             switchUser();
         } else if (id == R.id.nav_prdRequest) {
@@ -274,7 +281,11 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    private void signOut() {
+        signOutmAuth.signOut();
+        Intent outIntent = new Intent(this, SignUp.class);
+        startActivity(outIntent);
+    }
     private void switchUser() {
 //        logOut();
         if (buttonString.equals("buyer")){
