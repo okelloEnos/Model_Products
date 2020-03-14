@@ -31,9 +31,7 @@ public class Order extends AppCompatActivity {
     Button payBtn;
     DatabaseReference orderDatabase;
     ProgressBar loadingOrders;
-
-//    private StorageReference orderStorageReference;
-//    private DatabaseReference orderDatabaseReference;
+    private int priceSum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +40,6 @@ public class Order extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        Toast.makeText(this, "On create", Toast.LENGTH_LONG).show();
-
-//        orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
 //        obtaining the order database Reference from the order
         orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         ordersList = new ArrayList<>();
@@ -52,7 +47,6 @@ public class Order extends AppCompatActivity {
         payBtn = findViewById(R.id.paymentBtn);
         loadingOrders = findViewById(R.id.loadingOrders);
 
-//        receiveSelectedOrder(ordersList);
         ordersRecyclerView = findViewById(R.id.cartList);
         ordersRecyclerView.setHasFixedSize(true);
 
@@ -67,9 +61,11 @@ public class Order extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ordersList.clear();
 
+                priceSum = 0;
                 for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()){
                     orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
                     ordersList.add(orderedProduct);
+                    priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
                 }
                 cartAdapter.notifyDataSetChanged();
                 loadingOrders.setVisibility(View.INVISIBLE);
@@ -87,22 +83,8 @@ public class Order extends AppCompatActivity {
         payBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Order.this, "Feature Coming Soon...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this, "Feature Coming Soon... : " + priceSum, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void receiveSelectedOrder(List<orderModel> ordersList) {
-        if (getIntent().hasExtra("prdName") && getIntent().hasExtra("prdCapacity") && getIntent().hasExtra("prdPrice")){
-            String prdName, prdCapacity, prdPrice;
-            prdName = getIntent().getStringExtra("prdName");
-            prdCapacity  = getIntent().getStringExtra("prdCapacity");
-            prdPrice  = getIntent().getStringExtra("prdPrice");
-
-            orderModel orderedPrd = new orderModel(prdName, prdCapacity, prdPrice);
-//            ordersList = new ArrayList<>();
-            ordersList.add(orderedPrd);
-            Toast.makeText(this, "Received :" + prdName +"\n"+prdCapacity+"\n"+prdPrice, Toast.LENGTH_LONG).show();
-        }
     }
 }

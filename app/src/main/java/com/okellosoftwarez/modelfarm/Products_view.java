@@ -1,6 +1,7 @@
 package com.okellosoftwarez.modelfarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private FloatingActionButton fab;
+    TextView navMail, navPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,19 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
 
         circleP_bar = findViewById(R.id.progressBarCircle);
+//        navMail = findViewById(R.id.navMail);
+//        navPhone = findViewById(R.id.navPhone);
+
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+//
+//        if (pref.getString("eMail", null) != null){
+//            navMail.setText(pref.getString("eMail", null));
+//        }
+//        if (pref.getString("phone", null) != null){
+//            navPhone.setText(pref.getString("phone", null));
+//        }
+
+
 
 //        Obtaining reference to the firebase database
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
@@ -106,6 +122,19 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         //        Listen to the selected item
         navigationView.setNavigationItemSelectedListener(this);
 
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        navMail = headerView.findViewById(R.id.navMail);
+        navPhone = headerView.findViewById(R.id.navPhone);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+
+        if (pref.getString("eMail", null) != null){
+            navMail.setText(pref.getString("eMail", null));
+        }
+        if (pref.getString("phone", null) != null){
+            navPhone.setText(pref.getString("phone", null));
+        }
         receiveButtonIntents();
     }
 
@@ -213,5 +242,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         startActivity(exitIntent);
     }
 
-
+    @Override
+    protected void onStop() {
+//        mDatabase.removeEventListener();
+        super.onStop();
+    }
 }

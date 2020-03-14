@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -60,7 +59,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
     public class cartAdapterViewHolder extends RecyclerView.ViewHolder{
         ImageView orderImage;
         TextView orderName, orderCapacity, orderedPrice;
-//        LinearLayout clickedLayout;
 
         public cartAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

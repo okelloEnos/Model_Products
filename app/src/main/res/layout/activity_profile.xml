@@ -10,65 +10,127 @@
         android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:srcCompat="@mipmap/ic_launcher_round"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/eight_dp"
         android:foregroundGravity="center_horizontal"
-        android:layout_margin="@dimen/eight_dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_round" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/profileImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="@dimen/eight_dp"
         android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="@dimen/eight_dp"
         android:layout_marginRight="@dimen/eight_dp"
-        android:orientation="vertical">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImage">
 
-        <TextView
-            android:id="@+id/profileName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/userNameLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/eight_dp"
-            android:text="User Name "
-            android:textColor="@color/black"
-            android:textSize="@dimen/eighteen_sp"/>
+            android:orientation="horizontal"
+            android:weightSum="100">
 
-        <TextView
-            android:id="@+id/profileMail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="E - Mail "
-            android:layout_margin="@dimen/eight_dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/eighteen_sp"/>
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="40"
+                android:text="User Name : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
 
-        <TextView
-            android:id="@+id/profilePhone"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/dynamicProfileName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="60"
+                android:text="User Name "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emailProfileLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Phone No "
             android:layout_margin="@dimen/eight_dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/eighteen_sp"/>
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/profileMail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="40"
+                android:text="E - Mail : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+            <TextView
+                android:id="@+id/dynamicProfileMail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="60"
+                android:text="E - Mail "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phoneProfileLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eight_dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/profilePhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="40"
+                android:text="Phone No : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+            <TextView
+                android:id="@+id/dynamicProfilePhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="60"
+                android:text="Phone No "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/profileEditBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/eight_dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:background="@color/colorAccent"
         android:text="Edit Profile"
         android:textColor="@color/black"
-        android:background="@color/colorAccent"
-        android:textSize="@dimen/eighteen_sp"/>
+        android:textSize="@dimen/eighteen_sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

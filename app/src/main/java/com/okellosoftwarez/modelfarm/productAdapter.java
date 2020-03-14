@@ -47,8 +47,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
         Log.d(TAG, "onBindViewHolder: allign to recycler...");
         final Products currentProducts = productsList.get(position);
         holder.recName.setText(currentProducts.getName());
-        holder.recLocation.setText(currentProducts.getLocation());
-        holder.recPrice.setText(currentProducts.getPrice());
+        holder.recLocation.setText("Location : " + currentProducts.getLocation());
+        holder.recPrice.setText("Price Per KG : " + currentProducts.getPrice());
         Picasso.with(mcontext)
                 .load(currentProducts.getImage())
                 .placeholder(R.mipmap.ic_launcher)

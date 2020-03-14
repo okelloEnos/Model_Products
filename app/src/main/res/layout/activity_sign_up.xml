@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvUsername_signIn"
+                android:id="@+id/tvUsername_signUp"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/eight_dp"
@@ -72,6 +72,36 @@
                 android:ems="10"
                 android:inputType="textPassword" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:weightSum="100"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvConfirmPassword_signUp"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginLeft="@dimen/eight_dp"
+                android:layout_weight="45"
+                android:text="@string/tvConfirmPassword"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etConfirmPassword_signUp"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/eight_dp"
+                android:layout_marginRight="@dimen/eight_dp"
+                android:layout_weight="55"
+                android:ems="10"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -15,18 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Order"
+        <activity
+            android:name=".Order"
             android:label="Your Orders"></activity>
         <activity android:name=".Retry" />
         <activity android:name=".user">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                        <intent-filter>-->
+<!--                            <action android:name="android.intent.action.MAIN" />-->
+<!---->
+<!--                            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                        </intent-filter>-->
         </activity>
-        <activity android:name=".Product_Details"
-            android:label="Product Details"/>
+        <activity
+            android:name=".Product_Details"
+            android:label="Product Details" />
         <activity
             android:name=".Products_view"
             android:label="@string/title_activity_products_view"
@@ -35,7 +37,13 @@
         <activity
             android:name=".SignUp"
             android:label="Registration"
-            android:parentActivityName=".registration_screen" />
+            android:parentActivityName=".registration_screen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SignIn"
             android:label="Validation"
@@ -63,6 +71,9 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+        <activity
+            android:name=".Profile"
+            android:label=" Profile "></activity>
     </application>
 
 </manifest>

@@ -41,7 +41,7 @@ public class Product_Details extends AppCompatActivity {
 
     private StorageReference orderStorageReference;
     private DatabaseReference orderDatabaseReference;
-    private orderModel orders, fullOrder;
+    private orderModel fullOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class Product_Details extends AppCompatActivity {
 
         orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
         orderDatabaseReference = FirebaseDatabase.getInstance().getReference("Orders");
-        orders = new orderModel();
+
         fullOrder = new orderModel();
 
         detail_image = findViewById(R.id.detailImage);
@@ -79,15 +79,9 @@ public class Product_Details extends AppCompatActivity {
 //                }
                 priceConfirmationDialog();
 
-//                Intent backIntent = new Intent(Product_Details.this, Products_view.class);
-//                startActivity(backIntent);
             }
         });
         receiveDetailIntents();
-
-//        if (Products_view.buttonString.equals("seller")){
-//            orderBtn.setVisibility(View.INVISIBLE);
-//        }
     }
 
     private void priceConfirmationDialog() {
@@ -110,11 +104,10 @@ public class Product_Details extends AppCompatActivity {
 //                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
 
                 uploadingData(totalPrice, value);
-//                uploadOrders(totalPrice);
+
                 Intent cartIntent = new Intent(Product_Details.this, Order.class);
                 cartIntent.putExtra("prdName", d_name );
                 cartIntent.putExtra("prdCapacity", value);
-//                cartIntent.putExtra("prdPrice", totalPrice);
                 cartIntent.putExtra("prdPrice", price);
                 startActivity(cartIntent);
             }
@@ -133,7 +126,7 @@ public class Product_Details extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Orders");
         String orderKey = ref.push().getKey();
-        orders = new orderModel(d_name, d_capacity, Integer.toString(totalPrice));
+
         fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
         ref.child(orderKey).setValue(fullOrder);
 
@@ -162,19 +155,6 @@ public class Product_Details extends AppCompatActivity {
         }
     }
 
-    private void ordersList(int price) {
-        Intent ordersIntent = new Intent(this, Order.class);
-        startActivity(ordersIntent);
-
-        Toast.makeText(this, "ORDERS OKELLO : " + d_name + price, Toast.LENGTH_SHORT).show();
-    }
-
-    private String getOrdersFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String extension = mime.getExtensionFromMimeType(contentResolver.getType(uri));
-        return extension;
-    }
     private void assignDetails(String d_name, String d_phone, String d_image, String d_email, String d_location, String d_price, String d_capacity) {
         tv_name.setText(d_name);
         tv_phone.setText(d_phone);
