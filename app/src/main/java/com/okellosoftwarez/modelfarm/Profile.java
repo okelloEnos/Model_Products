@@ -42,7 +42,7 @@ public class Profile extends AppCompatActivity {
         editProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(Profile.this, "Your Password : " + pref.getString("passWord", null), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Profile.this, "Feature Coming Soon...", Toast.LENGTH_SHORT).show();
             }
         });
 

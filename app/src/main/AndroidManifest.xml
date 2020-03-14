@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Order"
-            android:label="Your Orders"></activity>
+            android:label="Cart List"></activity>
         <activity android:name=".Retry" />
         <activity android:name=".user">
 <!--                        <intent-filter>-->

@@ -13,9 +13,22 @@
             android:icon="@drawable/ic_profile"
             android:title="@string/menu_profile" />
         <item
+            android:id="@+id/nav_switchUser"
+            android:title="Switch User"
+            android:icon="@drawable/ic_people_black_24dp" />
+
+        <item
             android:id="@+id/nav_newProduct"
             android:icon="@drawable/ic_add_new_product"
             android:title="@string/menu_addProduct" />
+        <item
+            android:id="@+id/nav_prdRequest"
+            android:icon="@drawable/ic_vertical_align_bottom_black_24dp"
+            android:title="Product Requests"/>
+        <item
+            android:id="@+id/nav_prdOrders"
+            android:icon="@drawable/ic_vertical_align_top_black_24dp"
+            android:title="Placed Orders"/>
         <item
             android:id="@+id/nav_urProduct"
             android:icon="@drawable/ic_view_your_products"

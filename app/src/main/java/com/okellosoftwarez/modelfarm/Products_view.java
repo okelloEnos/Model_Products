@@ -119,6 +119,25 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        invalidateOptionsMenu();
+
+        receiveButtonIntents();
+
+//        invalidateOptionsMenu();
+//        get navigation Menu
+        Menu menu = navigationView.getMenu();
+
+//        Changing Switch User Appropriately
+//        find the Item
+        MenuItem switchUserItem = menu.findItem(R.id.nav_switchUser);
+        String user;
+        if (buttonString.equals("buyer")){
+            user = "Seller";
+        }
+        else { user = "Buyer" ;}
+        switchUserItem.setTitle("Switch to " + user);
+
         //        Listen to the selected item
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -135,7 +154,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         if (pref.getString("phone", null) != null){
             navPhone.setText(pref.getString("phone", null));
         }
-        receiveButtonIntents();
+//        receiveButtonIntents();
     }
 
 //    Opening Main Activity
@@ -155,13 +174,23 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         checkUser(buttonString);
     }
     private void checkUser(String userType) {
+
+        Menu menu = navigationView.getMenu();
+
         if (userType.equals("buyer")) {
             fab.setEnabled(false);
 
 //            Removing some features in the navigation view if user is a buyer
-            Menu menu = navigationView.getMenu();
-            menu.getItem(1).setVisible(false);
             menu.getItem(2).setVisible(false);
+            menu.getItem(3).setVisible(false);
+            menu.getItem(5).setVisible(false);
+
+        }
+        else {
+//            MenuItem cartItem ;
+//            int sellerCart = cartItem.getItemId();
+//            int sCart = MenuItem.
+            menu.getItem(4).setVisible(false);
         }
     }
 
@@ -179,6 +208,10 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.products_view, menu);
+        if (buttonString.equals("seller")){
+            MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
+            cartSellerItem.setVisible(false);
+        }
         return true;
     }
 
@@ -218,18 +251,39 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             addProducts();
         } else if (id == R.id.nav_urProduct) {
             //              Handle how you can display posts belonging to the user
+            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_help) {
             //              Handle what to be displayed in the help like the frequently asked questions
             Toast.makeText(this, "A Guide Document on What to do ... Coming Soon ", Toast.LENGTH_SHORT).show();
             //        } else if (id == R.id.nav_share) {
         } else if (id == R.id.nav_logOut) {
             //              Handle user logout procedure
-            logOut();
+//            logOut();
+            SignUp.signOut();
+        } else if (id == R.id.nav_switchUser){
+            switchUser();
+        } else if (id == R.id.nav_prdRequest) {
+            //              Handle how you can display posts belonging to the user
+            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_prdOrders) {
+            //              Handle how you can display posts belonging to the user
+            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void switchUser() {
+//        logOut();
+        if (buttonString.equals("buyer")){
+            buttonString = "seller" ;
+        } else {
+            buttonString = "buyer";
+        }
+        Intent switchIntent = new Intent(this, Products_view.class);
+        startActivity(switchIntent);
     }
 
     private void profileView() {
@@ -238,13 +292,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     }
 
     private void logOut() {
-        Intent exitIntent = new Intent(this, registration_screen.class);
+        Intent exitIntent = new Intent(this, user.class);
         startActivity(exitIntent);
-    }
-
-    @Override
-    protected void onStop() {
-//        mDatabase.removeEventListener();
-        super.onStop();
     }
 }
