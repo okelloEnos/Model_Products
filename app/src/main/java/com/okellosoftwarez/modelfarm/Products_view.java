@@ -43,8 +43,10 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private DrawerLayout drawerLayout;
     private FloatingActionButton fab;
     TextView navMail, navPhone;
+    String phoneNo;
 
     FirebaseAuth signOutmAuth;
+    Products personalProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,15 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 //            navPhone.setText(pref.getString("phone", null));
 //        }
 
+//        String phone = "NoPath";
+//        if (getIntent().hasExtra("phone")){
+//            phone = getIntent().getStringExtra("phone");
+//            sendIntents_details(buttonString);
+//            Toast.makeText(this, "Phone No : " + phone, Toast.LENGTH_LONG).show();
 
+//        }
+
+        personalProduct = new Products();
 
 //        Obtaining reference to the firebase database
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
@@ -161,9 +171,35 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             navPhone.setText(pref.getString("phone", null));
         }
 //        receiveButtonIntents();
+        personalProductsIntents();
     }
 
-//    Opening Main Activity
+    private void personalProductsIntents() {
+        if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
+                getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
+                getIntent().hasExtra("image")){
+            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage ;
+            pPhone = getIntent().getStringExtra("phone");
+            pName = getIntent().getStringExtra("name");
+            pLocation = getIntent().getStringExtra("location");
+            pPrice = getIntent().getStringExtra("price");
+            pCapacity = getIntent().getStringExtra("capacity");
+            pMail = getIntent().getStringExtra("mail");
+            pImage = getIntent().getStringExtra("image");
+
+            FirebaseDatabase personalDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference personalDatabaseReference = personalDatabase.getReference("personalProducts");
+            String personalKey = personalDatabaseReference.push().getKey();
+
+            personalProduct = new Products(pName, pPhone, pLocation, pImage, pPrice, pCapacity, pMail);
+            personalDatabaseReference.child(pPhone).child(personalKey).setValue(personalProduct);
+
+            Toast.makeText(this, "Personal Orders are SuccessFUll...", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    //    Opening Main Activity
     private void addProducts() {
         Intent addIntent = new Intent(this, MainActivity.class);
 
@@ -257,7 +293,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             addProducts();
         } else if (id == R.id.nav_urProduct) {
             //              Handle how you can display posts belonging to the user
-            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
+            loadPersonalProducts();
         } else if (id == R.id.nav_help) {
             //              Handle what to be displayed in the help like the frequently asked questions
             Toast.makeText(this, "A Guide Document on What to do ... Coming Soon ", Toast.LENGTH_SHORT).show();
@@ -281,6 +318,20 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void loadPersonalProducts() {
+//        phoneNo = personalProduct.getPhone();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        phoneNo = pref.getString("phone", null);
+        if (phoneNo.equals(null)) {
+            Toast.makeText(this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent loadIntent = new Intent(this, personalProducts.class);
+            loadIntent.putExtra("pPhone", phoneNo);
+            startActivity(loadIntent);
+        }
+    }
+
     private void signOut() {
         signOutmAuth.signOut();
         Intent outIntent = new Intent(this, SignUp.class);

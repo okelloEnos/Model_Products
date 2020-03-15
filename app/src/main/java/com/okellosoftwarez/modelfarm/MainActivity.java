@@ -88,7 +88,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void backToMain() {
         Intent backIntent = new Intent(this, Products_view.class);
-        startActivity(backIntent);
+        backIntent.putExtra("phone", product.getPhone());
+        backIntent.putExtra("name", product.getName());
+        backIntent.putExtra("location", product.getLocation());
+        backIntent.putExtra("price", product.getPrice());
+        backIntent.putExtra("capacity", product.getCapacity());
+        backIntent.putExtra("mail", product.getEmail());
+        backIntent.putExtra("image", product.getImage());
+//        backIntent.putExtra("Id", product.getID());
         Toast.makeText(this, "Inserted Values are :" +
                 "\nName : " + product.getName() +
                 "\nLocation : " + product.getLocation() +
@@ -99,6 +106,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                "\n Image Name : " + product.getImageUrl() +
                 "\nProduct ID : " + product.getID() +
                 "\nImage String : " + product.getImage(), Toast.LENGTH_LONG).show();
+        startActivity(backIntent);
+//        Toast.makeText(this, "Inserted Values are :" +
+//                "\nName : " + product.getName() +
+//                "\nLocation : " + product.getLocation() +
+//                "\nPrice : " + product.getPrice() +
+//                "\nCapacity : " + product.getCapacity() +
+//                "\nPhone : " + product.getPhone() +
+//                "\n Email : " + product.getLocation() +
+////                "\n Image Name : " + product.getImageUrl() +
+//                "\nProduct ID : " + product.getID() +
+//                "\nImage String : " + product.getImage(), Toast.LENGTH_LONG).show();
     }
 
     private void receiveEntries() {
@@ -178,7 +196,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
                                 String key = databaseReference.push().getKey();
                                 databaseReference.child(key).setValue(product);
+//                                databaseReference.child(sPhone).child(key).setValue(product);
+//                                databaseReference.child(sPhone).setValue(product);
                                 Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
+//                                backToMain(sPhone);
                                 backToMain();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
