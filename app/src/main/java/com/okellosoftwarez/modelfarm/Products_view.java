@@ -313,11 +313,17 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_prdOrders) {
             //              Handle how you can display posts belonging to the user
             Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
+            moveToPlacedOrders();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void moveToPlacedOrders() {
+        Intent placedIntent = new Intent(this, placedOrders.class);
+        startActivity(placedIntent);
     }
 
     private void loadPersonalProducts() {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class Order extends AppCompatActivity {
     ProgressBar loadingOrders;
     TextView defaultOrderView;
     private int priceSum;
+    private orderModel orderedProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +68,10 @@ public class Order extends AppCompatActivity {
 
                 priceSum = 0;
                 for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()){
-                    orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
+                    orderedProduct = orderSnapshot.getValue(orderModel.class);
                     ordersList.add(orderedProduct);
                     priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
+//                    writePlacedOrders(orderedProduct);
                 }
                 if (ordersList.isEmpty()){
                     defaultOrderView.setVisibility(View.VISIBLE);
@@ -92,10 +95,31 @@ public class Order extends AppCompatActivity {
                 Toast.makeText(Order.this, "Feature Coming Soon... : Clear " + priceSum, Toast.LENGTH_SHORT).show();
                 paymentMethod(priceSum);
 //                ordersList.clear();
+                passingPlacedOrders();
                 orderDatabase.removeValue();
+
                 defaultOrderView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void writePlacedOrders(orderModel orderedProduct) {
+        DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
+        String placedKey = placedRef.push().getKey();
+        placedRef.child(placedKey).setValue(orderedProduct);
+    }
+
+    private void passingPlacedOrders() {
+//        Intent placedIntent = new Intent(this, placedOrders.class);
+//        placedIntent.putExtra("orders", );
+        DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
+        String placedKey = placedRef.push().getKey();
+        placedRef.child(placedKey).setValue(orderedProduct);
+//        placedRef.setValue(ordersList);
+
+//        Intent placedIntent = new Intent(this, placedOrders.class);
+//        startActivity(placedIntent);
+
     }
 
     private void paymentMethod(int priceSum) {
