@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +28,7 @@ public class personalProducts extends AppCompatActivity {
     personalAdapter personalAdapter;
     List<Products> personal_productsList;
     ProgressBar personal_progressBar;
+    TextView defaultView;
 
     DatabaseReference personalReference;
 
@@ -37,11 +39,15 @@ public class personalProducts extends AppCompatActivity {
         setContentView(R.layout.activity_personal_prducts);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-        String recPersonalPhone = "No";
+//        String recPersonalPhone = "No";
 
-        if (getIntent().hasExtra("pPhone")) {
-            recPersonalPhone = getIntent().getStringExtra("pPhone");
-            personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(recPersonalPhone);
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
+//        Toast.makeText(this, "Phone :" + phoneNo, Toast.LENGTH_SHORT).show();
+        if (!phoneNo.equals(null)){
+//        if (getIntent().hasExtra("pPhone")) {
+//            recPersonalPhone = getIntent().getStringExtra("pPhone");
+            personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
 
 
 //        if (recPersonalPhone.equals(null)){
@@ -53,6 +59,8 @@ public class personalProducts extends AppCompatActivity {
             personal_productsList = new ArrayList<>();
 
             personal_progressBar = findViewById(R.id.loadingPersonalProducts);
+            defaultView = findViewById(R.id.defaultPersonalView);
+
 
             personalRecyclerView = findViewById(R.id.personalList);
             personalRecyclerView.setHasFixedSize(true);
@@ -72,8 +80,13 @@ public class personalProducts extends AppCompatActivity {
                         Products personalProduct = personalSnapShot.getValue(Products.class);
                         personal_productsList.add(personalProduct);
                     }
+                    if (personal_productsList.isEmpty()){
+                        defaultView.setVisibility(View.VISIBLE);
+//                        Toast.makeText(personalProducts.this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
+                    }
                     personalAdapter.notifyDataSetChanged();
                     personal_progressBar.setVisibility(View.INVISIBLE);
+
                 }
 
                 @Override

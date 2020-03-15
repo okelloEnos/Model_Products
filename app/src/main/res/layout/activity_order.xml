@@ -31,6 +31,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/defaultOrderView"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="@dimen/forty_dp"
+            android:layout_marginTop="@dimen/forty_dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:layout_marginRight="@dimen/eight_dp"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:layout_marginStart="@dimen/eight_dp"
+            app:layout_constraintBottom_toTopOf="@id/paymentBtn"
+            android:text="You have Not Yet Ordered Any Products!!!" />
         <Button
             android:id="@+id/paymentBtn"
             android:layout_width="match_parent"

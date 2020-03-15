@@ -42,8 +42,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private FloatingActionButton fab;
-    TextView navMail, navPhone;
-    String phoneNo;
+    TextView navMail, navPhone, defaultProductView;
 
     FirebaseAuth signOutmAuth;
     Products personalProduct;
@@ -57,6 +56,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         setSupportActionBar(toolbar);
 
         circleP_bar = findViewById(R.id.progressBarCircle);
+        defaultProductView = findViewById(R.id.defaultProductView);
 
         // Initialize Firebase Auth
         signOutmAuth = FirebaseAuth.getInstance();
@@ -104,6 +104,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Products receivedProduct = postSnapshot.getValue(Products.class);
                     productsList.add(receivedProduct);
+                }
+                if (productsList.isEmpty()){
+                    defaultProductView.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
                 circleP_bar.setVisibility(View.INVISIBLE);
@@ -293,7 +296,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             addProducts();
         } else if (id == R.id.nav_urProduct) {
             //              Handle how you can display posts belonging to the user
-//            Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
             loadPersonalProducts();
         } else if (id == R.id.nav_help) {
             //              Handle what to be displayed in the help like the frequently asked questions
@@ -301,7 +303,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             //        } else if (id == R.id.nav_share) {
         } else if (id == R.id.nav_logOut) {
             //              Handle user logout procedure
-//            logOut();
             signOut();
 
         } else if (id == R.id.nav_switchUser){
@@ -320,16 +321,15 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     }
 
     private void loadPersonalProducts() {
-//        phoneNo = personalProduct.getPhone();
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-        phoneNo = pref.getString("phone", null);
-        if (phoneNo.equals(null)) {
-            Toast.makeText(this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
-        } else {
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+//        phoneNo = pref.getString("phone", null);
+//        if (phoneNo.equals(null)) {
+//            Toast.makeText(this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
+//        } else {
             Intent loadIntent = new Intent(this, personalProducts.class);
-            loadIntent.putExtra("pPhone", phoneNo);
+//            loadIntent.putExtra("pPhone", phoneNo);
             startActivity(loadIntent);
-        }
+//        }
     }
 
     private void signOut() {
@@ -338,7 +338,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         startActivity(outIntent);
     }
     private void switchUser() {
-//        logOut();
         if (buttonString.equals("buyer")){
             buttonString = "seller" ;
         } else {
@@ -353,8 +352,4 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         startActivity(profileIntent);
     }
 
-    private void logOut() {
-        Intent exitIntent = new Intent(this, user.class);
-        startActivity(exitIntent);
-    }
 }

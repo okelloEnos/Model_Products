@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +32,7 @@ public class Order extends AppCompatActivity {
     Button payBtn;
     DatabaseReference orderDatabase;
     ProgressBar loadingOrders;
+    TextView defaultOrderView;
     private int priceSum;
 
     @Override
@@ -46,6 +48,7 @@ public class Order extends AppCompatActivity {
 
         payBtn = findViewById(R.id.paymentBtn);
         loadingOrders = findViewById(R.id.loadingOrders);
+        defaultOrderView = findViewById(R.id.defaultOrderView);
 
         ordersRecyclerView = findViewById(R.id.cartList);
         ordersRecyclerView.setHasFixedSize(true);
@@ -67,6 +70,9 @@ public class Order extends AppCompatActivity {
                     ordersList.add(orderedProduct);
                     priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
                 }
+                if (ordersList.isEmpty()){
+                    defaultOrderView.setVisibility(View.VISIBLE);
+                }
                 cartAdapter.notifyDataSetChanged();
                 loadingOrders.setVisibility(View.INVISIBLE);
             }
@@ -83,8 +89,16 @@ public class Order extends AppCompatActivity {
         payBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Order.this, "Feature Coming Soon... : " + priceSum, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this, "Feature Coming Soon... : Clear " + priceSum, Toast.LENGTH_SHORT).show();
+                paymentMethod(priceSum);
+//                ordersList.clear();
+                orderDatabase.removeValue();
+                defaultOrderView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void paymentMethod(int priceSum) {
+
     }
 }
