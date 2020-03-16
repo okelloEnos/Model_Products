@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 receivedImage = getIntent().getStringExtra("editImage");
                 Picasso.with(this).load(receivedImage).placeholder(R.mipmap.ic_launcher)
                                     .fit().centerCrop().into(addImage);
+                image_uri = Uri.parse(receivedImage);
+
                 if (getIntent().hasExtra("editName")){
                     sName = getIntent().getStringExtra("editName");
                     etName.setText(sName);
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updatingDetails() {
-        Toast.makeText(this, "Changes" + editKey, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Changes" + editKey, Toast.LENGTH_LONG).show();
         newName = etName.getText().toString().trim();
         newLocation = etLocation.getText().toString().trim();
         newPrice = etPrice.getText().toString().trim();
@@ -209,14 +211,101 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newEmail = etMail.getText().toString().trim();
         newPhone = etPhone.getText().toString().trim();
 
-//        FirebaseStorage updateImageStorage = FirebaseStorage.getInstance();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);
-        DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
-//        Products updatedProduct = new Products();
-        Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+        final DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
+//        final Products updatedProduct = new Products();
+//        Toast.makeText(this, "rec:"+ receivedImage + "\nuri:" +image_uri, Toast.LENGTH_SHORT).show();
+        String image = image_uri.toString();
+        if (image.startsWith("https")) {
+            Toast.makeText(this, ".............................................................", Toast.LENGTH_SHORT).show();
+            Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+            updateRef.child(editKey).setValue(updatedProduct);
+            databaseReference.child(editKey).setValue(updatedProduct);
+        }
+        else {
 
-        Toast.makeText(this, "Updating :"+ "\n"+ newName+"\n"+newPrice+"\n"+ newCapacity+"\n"+newEmail, Toast.LENGTH_LONG).show();
+            if (image_uri != null) {
+
+                StorageReference updatePhotoReference = storageReference.child(System.currentTimeMillis() + "."
+                        + getFileExtension(image_uri));
+                UploadTask uploadUpdateTask = updatePhotoReference.putFile(image_uri);
+
+                Toast.makeText(this, "UP " + uploadUpdateTask, Toast.LENGTH_SHORT).show();
+
+                // Register observers to listen for when the download is done or if it fails
+                uploadUpdateTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                        // Handle unsuccessful uploads
+                        Toast.makeText(MainActivity.this, "Fail Changing Photo..."+ exception.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+
+                        Toast.makeText(MainActivity.this, "Success Changing Photo...", Toast.LENGTH_LONG).show();
+
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> resultUpdate = taskSnapshot.getStorage().getDownloadUrl();
+                                resultUpdate.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Toast.makeText(MainActivity.this, "Complete...", Toast.LENGTH_LONG).show();
+                                        String newImage = uri.toString();
+
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mProgress.setProgress(0);
+                                            }
+                                        }, 500);
+                                        Toast.makeText(MainActivity.this, "Upload Successful..." + newImage, Toast.LENGTH_SHORT).show();
+//                                product = new Products(sName, sPhone, sEmail, sImage);
+                                        Products updatedProduct = new Products(newName, newPhone, newLocation, newImage, newPrice, newCapacity, newEmail);
+//                                    product = new Products(sName, sPhone, sLocation, newImage, sPrice, sCapacity, sEmail);
+//                                    String key = databaseReference.push().getKey();
+//                                    databaseReference.child(key).setValue(product);
+//                                databaseReference.child(sPhone).child(key).setValue(product);
+//                                databaseReference.child(sPhone).setValue(product);
+//                                    Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
+//                                backToMain(sPhone);
+//                                    backToMain(key);
+                                        updateRef.child(editKey).setValue(updatedProduct);
+                                        databaseReference.child(editKey).setValue(updatedProduct);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                        Toast.makeText(MainActivity.this, "Database Fail...", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        mProgress.setProgress((int) progress);
+                    }
+                });
+            }
+        }
+//        FirebaseStorage updateImageStorage = FirebaseStorage.getInstance();
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+//        String phoneNo = pref.getString("phone", null);
+//        DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
+//        Products updatedProduct = new Products();
+//        Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+
+        Toast.makeText(this, "Updating :"+image+"\n"+ "\n"+ newName+"\n"+newPrice+"\n"+ newCapacity+"\n"+newEmail+"\n"+image_uri , Toast.LENGTH_LONG).show();
 
 //        StorageReference updateImageRef = updateImageStorage.getReferenceFromUrl(receivedImage);
 //        updateImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -232,8 +321,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Toast.makeText(MainActivity.this, "Update Failed..." + e.getMessage(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
-        updateRef.child(editKey).setValue(updatedProduct);
-        databaseReference.child(editKey).setValue(updatedProduct);
+//        updateRef.child(editKey).setValue(updatedProduct);
+//        databaseReference.child(editKey).setValue(updatedProduct);
     }
 
 
@@ -401,7 +490,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.updatePhoto:
-                    Toast.makeText(this, "Changing Photo Feature...", Toast.LENGTH_SHORT).show();
+                chooserPhoto();
+//                    Toast.makeText(this, "Changing Photo Feature...", Toast.LENGTH_SHORT).show();
                     break;
 
             case R.id.uploadChanges :
@@ -409,6 +499,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updatingDetails();
                 break;
         }
+    }
+
+    private void chooserPhoto() {
+        Intent chooseIntent = new Intent();
+        chooseIntent.setType("image/*");
+        chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(chooseIntent, IMAGE_REQUEST);
     }
 
     private void choosingPhoto() {
