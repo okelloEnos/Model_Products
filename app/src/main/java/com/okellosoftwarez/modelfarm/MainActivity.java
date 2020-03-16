@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void backToMain() {
+    private void backToMain(String key) {
         Intent backIntent = new Intent(this, Products_view.class);
         backIntent.putExtra("phone", product.getPhone());
         backIntent.putExtra("name", product.getName());
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         backIntent.putExtra("capacity", product.getCapacity());
         backIntent.putExtra("mail", product.getEmail());
         backIntent.putExtra("image", product.getImage());
-//        backIntent.putExtra("Id", product.getID());
+        backIntent.putExtra("key", key);
         Toast.makeText(this, "Inserted Values are :" +
                 "\nName : " + product.getName() +
                 "\nLocation : " + product.getLocation() +
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                                databaseReference.child(sPhone).setValue(product);
                                 Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
 //                                backToMain(sPhone);
-                                backToMain();
+                                backToMain(key);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override

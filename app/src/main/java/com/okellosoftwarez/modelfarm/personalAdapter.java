@@ -3,7 +3,10 @@ package com.okellosoftwarez.modelfarm;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +25,7 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
     private static final String TAG = "personalAdapter";
     List<Products> personalProductsList;
     private Context personalContext;
+    private onItemClickListener clickListener;
 
     public personalAdapter(Context context, List<Products> list) {
 
@@ -55,12 +59,12 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
                 .into(holder.recImage);
 
 
-        holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(personalContext, "Editing Coming Soon...", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(personalContext, "Editing Coming Soon...", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 //            if (Products_view.buttonString.equals("buyer")) {
 //
 //                holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
@@ -93,13 +97,14 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         return 0;
     }
 
-    public class personalViewHolder extends RecyclerView.ViewHolder {
+    public class personalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
 
         ImageView recImage;
         TextView recName, recLocation, recPrice;
         LinearLayout clickedLayout;
 
-        public personalViewHolder(@NonNull View itemView) {
+        public personalViewHolder(@NonNull View itemView)  {
             super(itemView);
             Log.d(TAG, "productViewHolder: Initializing recycler items...");
             recImage = itemView.findViewById(R.id.recycleImage);
@@ -107,6 +112,68 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
             recLocation = itemView.findViewById(R.id.recycleLocation);
             recPrice = itemView.findViewById(R.id.recyclePrice);
             clickedLayout = itemView.findViewById(R.id.rec);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+
+            if (clickListener != null){
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION){
+                    clickListener.onItemClick(position);
+                }
+            }
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+            menu.setHeaderTitle("Select Action");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do Whatever");
+            MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
+
+            doWhatever.setOnMenuItemClickListener(this);
+            delete.setOnMenuItemClickListener(this);
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+
+            if (clickListener != null){
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION){
+
+                    switch (item.getItemId()){
+                        case 1 :
+                            clickListener.onWhateverClick(position);
+                            return true;
+
+                        case 2 :
+                            clickListener.onDeleteItem(position);
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public interface onItemClickListener{
+
+        void onItemClick(int position);
+
+        void  onDeleteItem(int position);
+
+        void onWhateverClick(int position);
+
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener){
+        clickListener = listener;
     }
 }

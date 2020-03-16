@@ -103,6 +103,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 productsList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Products receivedProduct = postSnapshot.getValue(Products.class);
+//                    receivedProduct.setID(postSnapshot.getKey());
                     productsList.add(receivedProduct);
                 }
                 if (productsList.isEmpty()){
@@ -180,8 +181,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private void personalProductsIntents() {
         if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
                 getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
-                getIntent().hasExtra("image")){
-            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage ;
+                getIntent().hasExtra("image") && getIntent().hasExtra("key")){
+            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
             pPhone = getIntent().getStringExtra("phone");
             pName = getIntent().getStringExtra("name");
             pLocation = getIntent().getStringExtra("location");
@@ -189,13 +190,15 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             pCapacity = getIntent().getStringExtra("capacity");
             pMail = getIntent().getStringExtra("mail");
             pImage = getIntent().getStringExtra("image");
+            dKey = getIntent().getStringExtra("key");
 
             FirebaseDatabase personalDatabase = FirebaseDatabase.getInstance();
             DatabaseReference personalDatabaseReference = personalDatabase.getReference("personalProducts");
-            String personalKey = personalDatabaseReference.push().getKey();
+//            String personalKey = personalDatabaseReference.push().getKey();
 
+//            String personalKey = productsList
             personalProduct = new Products(pName, pPhone, pLocation, pImage, pPrice, pCapacity, pMail);
-            personalDatabaseReference.child(pPhone).child(personalKey).setValue(personalProduct);
+            personalDatabaseReference.child(pPhone).child(dKey).setValue(personalProduct);
 
             Toast.makeText(this, "Personal Orders are SuccessFUll...", Toast.LENGTH_SHORT).show();
 

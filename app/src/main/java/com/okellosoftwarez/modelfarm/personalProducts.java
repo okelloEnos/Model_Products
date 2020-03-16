@@ -12,16 +12,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class personalProducts extends AppCompatActivity {
+public class personalProducts extends AppCompatActivity implements personalAdapter.onItemClickListener{
 
     RecyclerView personalRecyclerView;
     LinearLayoutManager personalLayoutManager;
@@ -30,8 +34,10 @@ public class personalProducts extends AppCompatActivity {
     ProgressBar personal_progressBar;
     TextView defaultView;
 
-    DatabaseReference personalReference;
+    DatabaseReference personalReference, delProductRef;
+    FirebaseStorage personalStorage;
 
+    private ValueEventListener personalValueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,9 @@ public class personalProducts extends AppCompatActivity {
 //            recPersonalPhone = getIntent().getStringExtra("pPhone");
             personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
 
+            personalStorage = FirebaseStorage.getInstance();
+
+            delProductRef = FirebaseDatabase.getInstance().getReference("Products");
 
 //        if (recPersonalPhone.equals(null)){
 
@@ -70,14 +79,16 @@ public class personalProducts extends AppCompatActivity {
 
             personalAdapter = new personalAdapter(this, personal_productsList);
             personalRecyclerView.setAdapter(personalAdapter);
+            personalAdapter.setOnItemClickListener(this);
 
-            personalReference.addValueEventListener(new ValueEventListener() {
+            personalValueEventListener = personalReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     personal_productsList.clear();
 
                     for (DataSnapshot personalSnapShot : dataSnapshot.getChildren()) {
                         Products personalProduct = personalSnapShot.getValue(Products.class);
+                        personalProduct.setID(personalSnapShot.getKey());
                         personal_productsList.add(personalProduct);
                     }
                     if (personal_productsList.isEmpty()){
@@ -99,5 +110,44 @@ public class personalProducts extends AppCompatActivity {
 
             Toast.makeText(this, "Nothing to Show", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+        Toast.makeText(this, "Normal Click... " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeleteItem(int position) {
+//        Toast.makeText(this, "Delete Click... " + position, Toast.LENGTH_SHORT).show();
+    Products selectedProduct = personal_productsList.get(position);
+    final String selectedKey = selectedProduct.getID();
+
+        StorageReference selectedRef = personalStorage.getReferenceFromUrl(selectedProduct.getImage());
+        selectedRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                personalReference.child(selectedKey).removeValue();
+                delProductRef.child(selectedKey).removeValue();
+                Toast.makeText(personalProducts.this, "Product Deleted...", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(personalProducts.this, "Error :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onWhateverClick(int position) {
+        Toast.makeText(this, "Whatever Click... " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        personalReference.removeEventListener(personalValueEventListener);
     }
 }

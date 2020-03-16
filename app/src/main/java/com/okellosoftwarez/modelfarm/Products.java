@@ -1,5 +1,7 @@
 package com.okellosoftwarez.modelfarm;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 
@@ -32,6 +34,7 @@ public class Products implements Serializable {
     public Products() {
     }
 
+    @Exclude
     public String getID() {
         return ID;
     }
@@ -78,6 +81,7 @@ public class Products implements Serializable {
         this.email = email;
     }
 
+    @Exclude
     public void setID(String ID) {
         this.ID = ID;
     }

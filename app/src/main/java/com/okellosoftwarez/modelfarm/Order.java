@@ -35,7 +35,7 @@ public class Order extends AppCompatActivity {
     ProgressBar loadingOrders;
     TextView defaultOrderView;
     private int priceSum;
-    private orderModel orderedProduct;
+//    private orderModel orderedProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class Order extends AppCompatActivity {
 
                 priceSum = 0;
                 for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()){
-                    orderedProduct = orderSnapshot.getValue(orderModel.class);
+                    orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
                     ordersList.add(orderedProduct);
                     priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
 //                    writePlacedOrders(orderedProduct);
@@ -107,6 +107,8 @@ public class Order extends AppCompatActivity {
         DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
         String placedKey = placedRef.push().getKey();
         placedRef.child(placedKey).setValue(orderedProduct);
+//        List<orderModel> list = new ArrayList<>();
+//        list.add(orderedProduct);
     }
 
     private void passingPlacedOrders() {
@@ -114,7 +116,9 @@ public class Order extends AppCompatActivity {
 //        placedIntent.putExtra("orders", );
         DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
         String placedKey = placedRef.push().getKey();
-        placedRef.child(placedKey).setValue(orderedProduct);
+        for (orderModel placedOrder : ordersList) {
+            placedRef.child(placedKey).setValue(placedOrder);
+        }
 //        placedRef.setValue(ordersList);
 
 //        Intent placedIntent = new Intent(this, placedOrders.class);
