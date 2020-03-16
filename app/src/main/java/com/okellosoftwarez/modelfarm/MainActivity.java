@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Uri image_uri;
     Products product;
     String sName, sPhone, sEmail, sLocation, sPrice, sCapacity, editKey, receivedImage;
+    String newName, newPhone, newEmail, newLocation, newPrice, newCapacity;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private ProgressBar mProgress;
@@ -107,22 +109,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (getIntent().hasExtra("editName")){
                     sName = getIntent().getStringExtra("editName");
                     etName.setText(sName);
+//                    newName = etName.getText().toString().trim();
+
                     if (getIntent().hasExtra("editLocation")){
                         sLocation = getIntent().getStringExtra("editLocation");
                         etLocation.setText(sLocation);
+//                        newLocation = etLocation.getText().toString().trim();
+
                         if (getIntent().hasExtra("editPrice")){
                             sPrice = getIntent().getStringExtra("editPrice");
                             etPrice.setText(sPrice);
+//                            newPrice = etPrice.getText().toString().trim();
+
                             if (getIntent().hasExtra("editCapacity")){
                                 sCapacity = getIntent().getStringExtra("editCapacity");
                                 etCapacity.setText(sCapacity);
+//                                newCapacity = etCapacity.getText().toString().trim();
+
                                 if (getIntent().hasExtra("editMail")){
                                     sEmail = getIntent().getStringExtra("editMail");
                                     etMail.setText(sEmail);
+//                                    newEmail = etMail.getText().toString().trim();
+
                                     if (getIntent().hasExtra("editPhone")){
                                         sPhone = getIntent().getStringExtra("editPhone");
                                         etPhone.setText(sPhone);
+//                                        newPhone = etPhone.getText().toString().trim();
 
+
+//                                        updatingDetails();
                                         changePhoto.setOnClickListener(this);
                                         changeBtn.setOnClickListener(this);
 //                                        changeBtn.setOnClickListener(new View.OnClickListener() {
@@ -184,6 +199,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            dKey = getIntent().getStringExtra("key");
 //        }
     }
+
+    private void updatingDetails() {
+        Toast.makeText(this, "Changes" + editKey, Toast.LENGTH_LONG).show();
+        newName = etName.getText().toString().trim();
+        newLocation = etLocation.getText().toString().trim();
+        newPrice = etPrice.getText().toString().trim();
+        newCapacity = etCapacity.getText().toString().trim();
+        newEmail = etMail.getText().toString().trim();
+        newPhone = etPhone.getText().toString().trim();
+
+//        FirebaseStorage updateImageStorage = FirebaseStorage.getInstance();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
+        DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
+//        Products updatedProduct = new Products();
+        Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+
+        Toast.makeText(this, "Updating :"+ "\n"+ newName+"\n"+newPrice+"\n"+ newCapacity+"\n"+newEmail, Toast.LENGTH_LONG).show();
+
+//        StorageReference updateImageRef = updateImageStorage.getReferenceFromUrl(receivedImage);
+//        updateImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                updateRef.child(editKey).setValue(updatedProduct);
+//                databaseReference.child(editKey).setValue(updatedProduct);
+//                Toast.makeText(MainActivity.this, "Update Success...", Toast.LENGTH_SHORT).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(MainActivity.this, "Update Failed..." + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        updateRef.child(editKey).setValue(updatedProduct);
+        databaseReference.child(editKey).setValue(updatedProduct);
+    }
+
 
     private void backToMain(String key) {
         Intent backIntent = new Intent(this, Products_view.class);
@@ -341,11 +393,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.choosePhoto:
 //                Choose a photo from gallery
-
-                Intent chooseIntent = new Intent();
-                chooseIntent.setType("image/*");
-                chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(chooseIntent, IMAGE_REQUEST);
+                        choosingPhoto();
+//                Intent chooseIntent = new Intent();
+//                chooseIntent.setType("image/*");
+//                chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(chooseIntent, IMAGE_REQUEST);
                 break;
 
             case R.id.updatePhoto:
@@ -354,8 +406,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.uploadChanges :
                 Toast.makeText(MainActivity.this, "Updating Feature Coming Soon...", Toast.LENGTH_SHORT).show();
+                updatingDetails();
                 break;
         }
+    }
+
+    private void choosingPhoto() {
+        Intent chooseIntent = new Intent();
+        chooseIntent.setType("image/*");
+        chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(chooseIntent, IMAGE_REQUEST);
     }
 
     private void takePhoto() {
