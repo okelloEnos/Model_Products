@@ -1,7 +1,6 @@
 package com.okellosoftwarez.modelfarm;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -132,7 +130,7 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
             menu.setHeaderTitle("Select Action");
-            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do Whatever");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Edit Product");
             MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
 
             doWhatever.setOnMenuItemClickListener(this);
@@ -149,7 +147,7 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
 
                     switch (item.getItemId()){
                         case 1 :
-                            clickListener.onWhateverClick(position);
+                            clickListener.editProductDetails(position);
                             return true;
 
                         case 2 :
@@ -169,7 +167,7 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
 
         void  onDeleteItem(int position);
 
-        void onWhateverClick(int position);
+        void editProductDetails(int position);
 
     }
 

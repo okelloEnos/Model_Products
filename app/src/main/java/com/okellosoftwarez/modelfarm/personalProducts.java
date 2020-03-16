@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -141,8 +142,21 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
     }
 
     @Override
-    public void onWhateverClick(int position) {
-        Toast.makeText(this, "Whatever Click... " + position, Toast.LENGTH_SHORT).show();
+    public void editProductDetails(int position) {
+        Products selectedProduct = personal_productsList.get(position);
+        String selectedKey = selectedProduct.getID();
+
+        Intent updateIntent = new Intent(this, MainActivity.class);
+        updateIntent.putExtra("editKey", selectedKey);
+        updateIntent.putExtra("editImage", selectedProduct.getImage());
+        updateIntent.putExtra("editName", selectedProduct.getName());
+        updateIntent.putExtra("editLocation", selectedProduct.getLocation());
+        updateIntent.putExtra("editPrice", selectedProduct.getPrice());
+        updateIntent.putExtra("editCapacity", selectedProduct.getCapacity());
+        updateIntent.putExtra("editMail", selectedProduct.getEmail());
+        updateIntent.putExtra("editPhone", selectedProduct.getPhone());
+        startActivity(updateIntent);
+//        Toast.makeText(this, "Whatever Click... " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override

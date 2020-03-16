@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int PERMISSION_CODE = 1000 ;
 
     EditText etName, etLocation, etPrice, etCapacity, etPhone, etMail;
-    Button chooseBtn, takeBtn, uploadBtn;
+    Button chooseBtn, takeBtn, uploadBtn, changeBtn, changePhoto;
     ImageView addImage;
     Uri image_uri;
     Products product;
-    String sName, sPhone, sEmail, sLocation, sPrice, sCapacity;
+    String sName, sPhone, sEmail, sLocation, sPrice, sCapacity, editKey, receivedImage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private ProgressBar mProgress;
@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chooseBtn = findViewById(R.id.choosePhoto);
         takeBtn = findViewById(R.id.takePhoto);
         uploadBtn = findViewById(R.id.upload);
+        changePhoto = findViewById(R.id.updatePhoto);
+        changeBtn = findViewById(R.id.uploadChanges);
         addImage = findViewById(R.id.addImage);
 
         mProgress = findViewById(R.id.progressBar);
@@ -78,12 +80,109 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chooseBtn.setOnClickListener(this);
         takeBtn.setOnClickListener(this);
 
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                receiveEntries();
+
+        editProductDetails();
+//        uploadBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                editProductDetails();
+//                receiveEntries();
+//            }
+//        });
+    }
+
+    private void editProductDetails() {
+        if (getIntent().hasExtra("editKey")){
+            editKey = getIntent().getStringExtra("editKey");
+            setTitle("Edit Product");
+            changePhoto.setVisibility(View.VISIBLE);
+            chooseBtn.setVisibility(View.INVISIBLE);
+            takeBtn.setVisibility(View.INVISIBLE);
+            changeBtn.setVisibility(View.VISIBLE);
+            uploadBtn.setVisibility(View.INVISIBLE);
+            if (getIntent().hasExtra("editImage")){
+                receivedImage = getIntent().getStringExtra("editImage");
+                Picasso.with(this).load(receivedImage).placeholder(R.mipmap.ic_launcher)
+                                    .fit().centerCrop().into(addImage);
+                if (getIntent().hasExtra("editName")){
+                    sName = getIntent().getStringExtra("editName");
+                    etName.setText(sName);
+                    if (getIntent().hasExtra("editLocation")){
+                        sLocation = getIntent().getStringExtra("editLocation");
+                        etLocation.setText(sLocation);
+                        if (getIntent().hasExtra("editPrice")){
+                            sPrice = getIntent().getStringExtra("editPrice");
+                            etPrice.setText(sPrice);
+                            if (getIntent().hasExtra("editCapacity")){
+                                sCapacity = getIntent().getStringExtra("editCapacity");
+                                etCapacity.setText(sCapacity);
+                                if (getIntent().hasExtra("editMail")){
+                                    sEmail = getIntent().getStringExtra("editMail");
+                                    etMail.setText(sEmail);
+                                    if (getIntent().hasExtra("editPhone")){
+                                        sPhone = getIntent().getStringExtra("editPhone");
+                                        etPhone.setText(sPhone);
+
+                                        changePhoto.setOnClickListener(this);
+                                        changeBtn.setOnClickListener(this);
+//                                        changeBtn.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                Toast.makeText(MainActivity.this, "Updating Feature Coming Soon...", Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        });
+                                    }
+                                    else {
+//                                        no phone
+                                    }
+                                }
+                                else {
+//                                    no email
+                                }
+                            }
+                            else {
+//                                no capacity
+                            }
+                        }
+                        else {
+//                            no price
+                        }
+                    }
+                    else {
+//                        no location set
+                    }
+                }
+                else {
+//                    No name set
+                }
             }
-        });
+            else {
+//                What to do if there is no image
+            }
+        }
+        else {
+//            receiveEntries();
+            uploadBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                editProductDetails();
+                    receiveEntries();
+                }
+            });
+        }
+//        if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
+//                getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
+//                getIntent().hasExtra("image") && getIntent().hasExtra("key")){
+//            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
+//            pPhone = getIntent().getStringExtra("phone");
+//            pName = getIntent().getStringExtra("name");
+//            pLocation = getIntent().getStringExtra("location");
+//            pPrice = getIntent().getStringExtra("price");
+//            pCapacity = getIntent().getStringExtra("capacity");
+//            pMail = getIntent().getStringExtra("mail");
+//            pImage = getIntent().getStringExtra("image");
+//            dKey = getIntent().getStringExtra("key");
+//        }
     }
 
     private void backToMain(String key) {
@@ -247,6 +346,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 chooseIntent.setType("image/*");
                 chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(chooseIntent, IMAGE_REQUEST);
+                break;
+
+            case R.id.updatePhoto:
+                    Toast.makeText(this, "Changing Photo Feature...", Toast.LENGTH_SHORT).show();
+                    break;
+
+            case R.id.uploadChanges :
+                Toast.makeText(MainActivity.this, "Updating Feature Coming Soon...", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
