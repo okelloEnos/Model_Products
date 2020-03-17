@@ -3,7 +3,7 @@ package com.okellosoftwarez.modelfarm;
 import com.google.firebase.database.Exclude;
 
 public class orderModel {
-    String prdOrderedName, prdOrderedCapacity, prdOrderedTotal, prdOrderImage, prdOrderKey;
+    String prdOrderedName, prdOrderedCapacity, prdOrderedTotal, prdOrderImage, prdOrderKey, prdOrderPhone;
 
     public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal) {
         this.prdOrderedName = prdOrderedName;
@@ -19,6 +19,23 @@ public class orderModel {
         this.prdOrderedCapacity = prdOrderedCapacity;
         this.prdOrderedTotal = prdOrderedTotal;
         this.prdOrderImage = prdOrderImage;
+    }
+
+    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal, String prdOrderImage, String prdOrderPhone) {
+        this.prdOrderedName = prdOrderedName;
+        this.prdOrderedCapacity = prdOrderedCapacity;
+        this.prdOrderedTotal = prdOrderedTotal;
+        this.prdOrderImage = prdOrderImage;
+        this.prdOrderPhone = prdOrderPhone;
+    }
+
+
+    public String getPrdOrderPhone() {
+        return prdOrderPhone;
+    }
+
+    public void setPrdOrderPhone(String prdOrderPhone) {
+        this.prdOrderPhone = prdOrderPhone;
     }
 
     public String getPrdOrderImage() {

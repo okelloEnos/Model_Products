@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Product_Details extends AppCompatActivity {
 
-    private String d_price, d_name, d_capacity, d_image;
+    private String d_price, d_name, d_capacity, d_image, d_phone;
     ImageView detail_image;
     TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email;
 
@@ -107,6 +107,7 @@ public class Product_Details extends AppCompatActivity {
 
                 Intent cartIntent = new Intent(Product_Details.this, Order.class);
                 cartIntent.putExtra("prdName", d_name );
+                cartIntent.putExtra("prdPhone", d_phone);
                 cartIntent.putExtra("prdCapacity", value);
                 cartIntent.putExtra("prdPrice", price);
                 startActivity(cartIntent);
@@ -127,7 +128,8 @@ public class Product_Details extends AppCompatActivity {
         DatabaseReference ref = database.getReference("Orders");
         String orderKey = ref.push().getKey();
 
-        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
+//        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
+        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone);
         ref.child(orderKey).setValue(fullOrder);
 
         Toast.makeText(this, "Success Upload of Data...", Toast.LENGTH_SHORT).show();
@@ -138,7 +140,7 @@ public class Product_Details extends AppCompatActivity {
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
                 && getIntent().hasExtra("capacity")){
-            String d_location, d_phone, d_email;
+            String d_location, d_email;
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
             d_price = getIntent().getStringExtra("price");

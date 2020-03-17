@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -121,12 +122,19 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
     private void passingPlacedOrders() {
 //        Intent placedIntent = new Intent(this, placedOrders.class);
 //        placedIntent.putExtra("orders", );
-        DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
-//        DatabaseReference receivedRef = FirebaseDatabase.getInstance().getReference("receivedOrders");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
+        DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
+        DatabaseReference receivedRef = FirebaseDatabase.getInstance().getReference("receivedOrders");
 
         for (orderModel placedOrder : ordersList) {
+            String phone = placedOrder.getPrdOrderPhone();
             String placedKey = placedRef.push().getKey();
+
             placedRef.child(placedKey).setValue(placedOrder);
+
+
+            receivedRef.child(phone).child(placedKey).setValue(placedOrder);
         }
 //        placedRef.setValue(ordersList);
 

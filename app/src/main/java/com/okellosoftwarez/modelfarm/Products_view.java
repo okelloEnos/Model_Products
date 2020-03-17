@@ -44,6 +44,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private FloatingActionButton fab;
     TextView navMail, navPhone, defaultProductView;
 
+    String pPhone;
+
     FirebaseAuth signOutmAuth;
     Products personalProduct;
 
@@ -182,7 +184,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
                 getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
                 getIntent().hasExtra("image") && getIntent().hasExtra("key")){
-            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
+            String pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
             pPhone = getIntent().getStringExtra("phone");
             pName = getIntent().getStringExtra("name");
             pLocation = getIntent().getStringExtra("location");
@@ -200,7 +202,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             personalProduct = new Products(pName, pPhone, pLocation, pImage, pPrice, pCapacity, pMail);
             personalDatabaseReference.child(pPhone).child(dKey).setValue(personalProduct);
 
-            Toast.makeText(this, "Personal Orders are SuccessFUll...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Personal Orders are SuccessFull...", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -282,6 +284,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     private void cartOrderedList() {
         Intent cartIntent = new Intent(this, Order.class);
+//        cartIntent.putExtra("Iphone", pPhone);
         startActivity(cartIntent);
     }
 
@@ -313,6 +316,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_prdRequest) {
             //              Handle how you can display posts belonging to the user
             Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
+            moveToRequestedOrders();
         } else if (id == R.id.nav_prdOrders) {
             //              Handle how you can display posts belonging to the user
             Toast.makeText(this, " Feature Coming Soon ...", Toast.LENGTH_SHORT).show();
@@ -322,6 +326,11 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void moveToRequestedOrders() {
+        Intent reqIntent = new Intent(this, productRequests.class);
+        startActivity(reqIntent);
     }
 
     private void moveToPlacedOrders() {

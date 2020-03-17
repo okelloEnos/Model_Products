@@ -109,7 +109,7 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
             });
         } else {
 
-            Toast.makeText(this, "Nothing to Show", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_LONG).show();
         }
     }
 
