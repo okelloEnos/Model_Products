@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class placedOrders extends AppCompatActivity {
     ProgressBar placed_progressBar;
     TextView defaultPlacedView;
     DatabaseReference placedReference;
+    Button clearBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,5 +78,12 @@ public class placedOrders extends AppCompatActivity {
         });
 
 
+        clearBtn = findViewById(R.id.clearOrderBtn);
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                placedReference.removeValue();
+            }
+        });
     }
 }

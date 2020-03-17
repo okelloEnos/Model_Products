@@ -116,7 +116,7 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
     @Override
     public void onItemClick(int position) {
 
-        Toast.makeText(this, "Normal Click... " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Long Press On An Item To Open A Menu... ", Toast.LENGTH_LONG).show();
     }
 
     @Override

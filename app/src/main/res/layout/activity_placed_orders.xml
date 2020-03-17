@@ -39,8 +39,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/eight_dp"
+            app:layout_constraintBottom_toTopOf="@id/clearOrderBtn"
             android:text="No Placed Orders" />
+
+        <Button
+            android:id="@+id/clearOrderBtn"
+            android:layout_width="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/forty_dp"
+            android:padding="@dimen/eight_dp"
+            android:textStyle="bold"
+            android:background="@color/colorAccent"
+            app:layout_constraintTop_toBottomOf="@id/placedOrderList"
+            android:layout_height="wrap_content"
+            android:text="Clear Order History" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

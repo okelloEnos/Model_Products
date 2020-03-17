@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             chooseBtn.setVisibility(View.INVISIBLE);
             takeBtn.setVisibility(View.INVISIBLE);
             changeBtn.setVisibility(View.VISIBLE);
+
             uploadBtn.setVisibility(View.INVISIBLE);
             if (getIntent().hasExtra("editImage")){
                 receivedImage = getIntent().getStringExtra("editImage");
@@ -111,99 +112,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (getIntent().hasExtra("editName")){
                     sName = getIntent().getStringExtra("editName");
                     etName.setText(sName);
-//                    newName = etName.getText().toString().trim();
 
                     if (getIntent().hasExtra("editLocation")){
                         sLocation = getIntent().getStringExtra("editLocation");
                         etLocation.setText(sLocation);
-//                        newLocation = etLocation.getText().toString().trim();
 
                         if (getIntent().hasExtra("editPrice")){
                             sPrice = getIntent().getStringExtra("editPrice");
                             etPrice.setText(sPrice);
-//                            newPrice = etPrice.getText().toString().trim();
 
                             if (getIntent().hasExtra("editCapacity")){
                                 sCapacity = getIntent().getStringExtra("editCapacity");
                                 etCapacity.setText(sCapacity);
-//                                newCapacity = etCapacity.getText().toString().trim();
 
-                                if (getIntent().hasExtra("editMail")){
+                                if (getIntent().hasExtra("editMail")) {
                                     sEmail = getIntent().getStringExtra("editMail");
                                     etMail.setText(sEmail);
-//                                    newEmail = etMail.getText().toString().trim();
 
-                                    if (getIntent().hasExtra("editPhone")){
+                                    if (getIntent().hasExtra("editPhone")) {
                                         sPhone = getIntent().getStringExtra("editPhone");
                                         etPhone.setText(sPhone);
-//                                        newPhone = etPhone.getText().toString().trim();
 
-
-//                                        updatingDetails();
                                         changePhoto.setOnClickListener(this);
                                         changeBtn.setOnClickListener(this);
-//                                        changeBtn.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                Toast.makeText(MainActivity.this, "Updating Feature Coming Soon...", Toast.LENGTH_SHORT).show();
-//                                            }
-//                                        });
-                                    }
-                                    else {
-//                                        no phone
                                     }
                                 }
-                                else {
-//                                    no email
-                                }
-                            }
-                            else {
-//                                no capacity
                             }
                         }
-                        else {
-//                            no price
-                        }
-                    }
-                    else {
-//                        no location set
                     }
                 }
-                else {
-//                    No name set
-                }
-            }
-            else {
-//                What to do if there is no image
             }
         }
         else {
-//            receiveEntries();
             uploadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                editProductDetails();
                     receiveEntries();
                 }
             });
         }
-//        if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
-//                getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
-//                getIntent().hasExtra("image") && getIntent().hasExtra("key")){
-//            String pPhone, pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
-//            pPhone = getIntent().getStringExtra("phone");
-//            pName = getIntent().getStringExtra("name");
-//            pLocation = getIntent().getStringExtra("location");
-//            pPrice = getIntent().getStringExtra("price");
-//            pCapacity = getIntent().getStringExtra("capacity");
-//            pMail = getIntent().getStringExtra("mail");
-//            pImage = getIntent().getStringExtra("image");
-//            dKey = getIntent().getStringExtra("key");
-//        }
+
     }
 
     private void updatingDetails() {
-//        Toast.makeText(this, "Changes" + editKey, Toast.LENGTH_LONG).show();
+
         newName = etName.getText().toString().trim();
         newLocation = etLocation.getText().toString().trim();
         newPrice = etPrice.getText().toString().trim();
@@ -214,14 +166,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);
         final DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
-//        final Products updatedProduct = new Products();
-//        Toast.makeText(this, "rec:"+ receivedImage + "\nuri:" +image_uri, Toast.LENGTH_SHORT).show();
+
         String image = image_uri.toString();
         if (image.startsWith("https")) {
-            Toast.makeText(this, ".............................................................", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mProgress.setProgress(0);
+                }
+                }, 500);
+//            Toast.makeText(this, ".............................................................", Toast.LENGTH_SHORT).show();
             Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
             updateRef.child(editKey).setValue(updatedProduct);
             databaseReference.child(editKey).setValue(updatedProduct);
+            mProgress.setProgress(100);
         }
         else {
 
@@ -265,16 +224,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, 500);
                                         Toast.makeText(MainActivity.this, "Upload Successful..." + newImage, Toast.LENGTH_SHORT).show();
-//                                product = new Products(sName, sPhone, sEmail, sImage);
+
                                         Products updatedProduct = new Products(newName, newPhone, newLocation, newImage, newPrice, newCapacity, newEmail);
-//                                    product = new Products(sName, sPhone, sLocation, newImage, sPrice, sCapacity, sEmail);
-//                                    String key = databaseReference.push().getKey();
-//                                    databaseReference.child(key).setValue(product);
-//                                databaseReference.child(sPhone).child(key).setValue(product);
-//                                databaseReference.child(sPhone).setValue(product);
-//                                    Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
-//                                backToMain(sPhone);
-//                                    backToMain(key);
+
                                         updateRef.child(editKey).setValue(updatedProduct);
                                         databaseReference.child(editKey).setValue(updatedProduct);
                                     }
