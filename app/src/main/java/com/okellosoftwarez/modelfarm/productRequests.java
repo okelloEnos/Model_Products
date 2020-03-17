@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class productRequests extends AppCompatActivity {
+public class productRequests extends AppCompatActivity implements cartAdapter.onCartClickListener{
     RecyclerView requestRecyclerView;
     LinearLayoutManager requestLayoutManager;
     cartAdapter requestAdapter;
@@ -56,7 +57,7 @@ public class productRequests extends AppCompatActivity {
 
             requestAdapter = new cartAdapter(this, requestList);
             requestRecyclerView.setAdapter(requestAdapter);
-//        requestAdapter.setOnCartClickListener(this);
+            requestAdapter.setOnCartClickListener(this);
 
             requestDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -103,5 +104,30 @@ public class productRequests extends AppCompatActivity {
             Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
             ;
         }
+    }
+
+    @Override
+    public void cartItemClick(int position) {
+
+        orderModel requestProduct = requestList.get(position);
+        Intent requestIntent = new Intent(this, requestDetails.class);
+        requestIntent.putExtra("reqImage", requestProduct.getPrdOrderImage());
+        requestIntent.putExtra("reqName", requestProduct.getPrdOrderedName());
+        requestIntent.putExtra("reqLocation", requestProduct.getPrdOrderLocation());
+        requestIntent.putExtra("reqCapacity", requestProduct.getPrdOrderedCapacity());
+        requestIntent.putExtra("reqPrice", requestProduct.getPrdOrderedTotal());
+        requestIntent.putExtra("reqPhone", requestProduct.getPrdOrderPhone());
+        requestIntent.putExtra("reqMail", requestProduct.getPrdOrderedMail());
+        startActivity(requestIntent);
+    }
+
+    @Override
+    public void deleteCartItem(int position) {
+
+    }
+
+    @Override
+    public void editCartItem(int position) {
+
     }
 }

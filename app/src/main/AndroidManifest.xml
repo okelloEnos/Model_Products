@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".productRequests"></activity>
+        <activity android:name=".requestDetails"></activity>
+        <activity android:name=".productRequests" />
         <activity
             android:name=".placedOrders"
             android:label="Placed Orders" />
