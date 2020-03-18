@@ -1,5 +1,6 @@
 package com.okellosoftwarez.modelfarm;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -151,5 +153,56 @@ public class SignIn extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    public void forgotPassWord(View view) {
+        AlertDialog.Builder resetBuilder = new AlertDialog.Builder(this);
+        resetBuilder.setTitle("Reset");
+        resetBuilder.setMessage("Enter Email To Receive Password Resent Link");
+
+        final EditText resetInput = new EditText(this);
+        resetBuilder.setView(resetInput);
+        resetBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               String resetMail =  resetInput.getText().toString().trim();
+
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+//                String emailAddress = "user@example.com";
+
+                auth.sendPasswordResetEmail(resetMail)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email sent.");
+                                }
+                            }
+                        });
+
+            }
+        });
+
+        resetBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(SignIn.this, "Request Cancelled...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        resetBuilder.show();
+
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        FirebaseUser user = auth.getCurrentUser();
+//
+//        user.sendEmailVerification()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "Email sent.");
+//                        }
+//                    }
+//                });
     }
 }

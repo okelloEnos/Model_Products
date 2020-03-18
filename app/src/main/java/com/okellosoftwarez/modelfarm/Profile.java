@@ -3,6 +3,7 @@ package com.okellosoftwarez.modelfarm;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -119,17 +124,53 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
         if (changedName.isEmpty()) {
             dynamicProfileName.setError("Required User Name");
+
+        } else if (changedMail.isEmpty()) {
+            dynamicProfileMail.setError("E Mail Required");
+
         } else if (changedLocation.isEmpty()) {
             dynamicProfileLocation.setError("Location Required");
+
         } else {
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            user.updateEmail(changedMail)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+//                                Log.d(TAG, "User email address updated.");
+                                Toast.makeText(Profile.this, "User email address updated.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
 
             userModel changedProfile = new userModel(changedName, changedMail, phone, changedLocation);
             receiveProf.setValue(changedProfile);
+
+            updateSharedPref(changedName, changedMail, phone, changedLocation);
 
         }
 
 //        Intent restart = new Intent(getApplicationContext(), Profile.class);
 //        startActivity(restart);
+
+    }
+
+    private void updateSharedPref(String changedName, String changedMail, String phone, String changedLocation) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        SharedPreferences.Editor editorChanged = pref.edit();
+
+//                    Storing Preference Data
+        editorChanged.putString("eMail", changedMail);
+        editorChanged.putString("userName", changedName);
+        editorChanged.putString("phone", changedLocation);
+        editorChanged.putString("location", changedLocation );
+
+        // commit changes
+        editorChanged.commit();
 
     }
 
@@ -144,6 +185,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
                 dynamicProfileName.setEnabled(false);
                 dynamicProfileLocation.setEnabled(false);
+                dynamicProfileMail.setEnabled(false);
 
                 profileUpdateBtn.setVisibility(View.INVISIBLE);
                 editProfileBtn.setVisibility(View.VISIBLE);
@@ -153,6 +195,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
                 dynamicProfileName.setEnabled(true);
                 dynamicProfileLocation.setEnabled(true);
+                dynamicProfileMail.setEnabled(true);
 
                 editProfileBtn.setVisibility(View.INVISIBLE);
                 profileUpdateBtn.setVisibility(View.VISIBLE);

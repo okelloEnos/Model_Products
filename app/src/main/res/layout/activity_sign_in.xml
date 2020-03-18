@@ -8,6 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:id="@+id/overallSignIn"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +103,19 @@
                 android:inputType="number" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Forgot Password ?"
+        android:onClick="forgotPassWord"
+        android:textSize="@dimen/twenty_four_sp"
+        android:layout_marginTop="@dimen/forty_dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintTop_toBottomOf="@id/overallSignIn"/>
 
     <Button
         android:id="@+id/registerBtn_signIn"
