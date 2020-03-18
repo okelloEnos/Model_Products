@@ -169,12 +169,28 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         navPhone = headerView.findViewById(R.id.navPhone);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-
-        if (pref.getString("eMail", null) != null){
-            navMail.setText(pref.getString("eMail", null));
-        }
+//        String loadedNavPhone = pref.getString("phone", null);
+//        if (pref.getString("eMail", null) != null){
+//            navMail.setText(pref.getString("eMail", null));
+//        }
         if (pref.getString("phone", null) != null){
-            navPhone.setText(pref.getString("phone", null));
+//            navPhone.setText(pref.getString("phone", null));
+            String loadedNavPhone = pref.getString("phone", null);
+            DatabaseReference navRef = FirebaseDatabase.getInstance().getReference("userProfile").child(loadedNavPhone);
+
+            navRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    userModel navModel = dataSnapshot.getValue(userModel.class);
+                    navMail.setText(navModel.getEmail());
+                    navPhone.setText(navModel.getPhone());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(Products_view.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 //        receiveButtonIntents();
         personalProductsIntents();

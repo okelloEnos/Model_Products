@@ -132,7 +132,7 @@
                 <TextView
                     android:id="@+id/tv_productPriceRequest"
                     android:layout_width="0dp"
-                    android:layout_weight="40"
+                    android:layout_weight="45"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eight_dp"
                     android:text="Amount Expected : KES "
@@ -141,7 +141,7 @@
                 <TextView
                     android:id="@+id/tv_detailPriceRequest"
                     android:layout_width="0dp"
-                    android:layout_weight="60"
+                    android:layout_weight="55"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eight_dp"
                     android:text="TextView"

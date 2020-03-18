@@ -1,18 +1,30 @@
 package com.okellosoftwarez.modelfarm;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Profile extends AppCompatActivity {
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-    Button editProfileBtn;
-    TextView dynamicProfileName, dynamicProfileMail, dynamicProfilePhone;
+public class Profile extends AppCompatActivity implements View.OnClickListener {
+
+    Button editProfileBtn, profileUpdateBtn;
+    //    EditText ok;
+    EditText dynamicProfileName, dynamicProfileMail, dynamicProfilePhone, dynamicProfileLocation;
+    DatabaseReference receiveProf;
+    userModel profileModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +40,123 @@ public class Profile extends AppCompatActivity {
 //        pref.getString("eMail", null);
 //        pref.getString("passWord", null);
 //        pref.getString("userName", null);
-//        pref.getString("phone", null);
+        String phone = pref.getString("phone", null);
+        receiveProf = FirebaseDatabase.getInstance().getReference("userProfile").child(phone);
 
         editProfileBtn = findViewById(R.id.profileEditBtn);
+        profileUpdateBtn = findViewById(R.id.profileUpdateBtn);
         dynamicProfileName = findViewById(R.id.dynamicProfileName);
         dynamicProfileMail = findViewById(R.id.dynamicProfileMail);
         dynamicProfilePhone = findViewById(R.id.dynamicProfilePhone);
+        dynamicProfileLocation = findViewById(R.id.dynamicProfileLocation);
 
-        dynamicProfileName.setText(pref.getString("userName", null));
-        dynamicProfileMail.setText(pref.getString("eMail", null));
-        dynamicProfilePhone.setText(pref.getString("phone", null));
+//        dynamicProfileName.setText(pref.getString("userName", null));
+//        dynamicProfileMail.setText(pref.getString("eMail", null));
+//        dynamicProfilePhone.setText(pref.getString("phone", null));
+//        dynamicProfileLocation.setText(pref.getString("location", null));
 
-        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+        receiveProf.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(Profile.this, "Feature Coming Soon...", Toast.LENGTH_SHORT).show();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                profileModel = dataSnapshot.getValue(userModel.class);
+                dynamicProfileName.setText(profileModel.getUserName());
+                dynamicProfileMail.setText(profileModel.getEmail());
+                dynamicProfileLocation.setText(profileModel.getLocation());
+                dynamicProfilePhone.setText(profileModel.getPhone());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Profile.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
+//        profileUpdateBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                submitProfileUpdate();
+
+//                dynamicProfileName.setEnabled(false);
+//                dynamicProfileLocation.setEnabled(false);
+
+//                profileUpdateBtn.setVisibility(View.INVISIBLE);
+//                editProfileBtn.setVisibility(View.VISIBLE);
+
+//            }
+//        });
+
+        profileUpdateBtn.setOnClickListener(this);
+        editProfileBtn.setOnClickListener(this);
+//        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(Profile.this, "Feature Coming Soon...", Toast.LENGTH_SHORT).show();
+//                dynamicProfileName.setEnabled(true);
+//                dynamicProfileLocation.setEnabled(true);
+//
+//                editProfileBtn.setVisibility(View.INVISIBLE);
+//                profileUpdateBtn.setVisibility(View.VISIBLE);
+
+//                submitProfileUpdate();
+
+//                dynamicProfileName.setEnabled(false);
+//                dynamicProfileMail.setEnabled(false);
+//                dynamicProfileLocation.setEnabled(false);
+//                Intent restart = new Intent(getApplicationContext(), Profile.class);
+//                startActivity(restart);
+
+//            }
+//        });
+
+    }
+
+    private void submitProfileUpdate() {
+        String changedName, changedMail, changedLocation, phone;
+        changedName = dynamicProfileName.getText().toString().trim();
+        changedMail = dynamicProfileMail.getText().toString().trim();
+        changedLocation = dynamicProfileLocation.getText().toString();
+        phone = dynamicProfilePhone.getText().toString();
+
+        if (changedName.isEmpty()) {
+            dynamicProfileName.setError("Required User Name");
+        } else if (changedLocation.isEmpty()) {
+            dynamicProfileLocation.setError("Location Required");
+        } else {
+
+            userModel changedProfile = new userModel(changedName, changedMail, phone, changedLocation);
+            receiveProf.setValue(changedProfile);
+
+        }
+
+//        Intent restart = new Intent(getApplicationContext(), Profile.class);
+//        startActivity(restart);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            case R.id.profileUpdateBtn :
+
+                submitProfileUpdate();
+
+                dynamicProfileName.setEnabled(false);
+                dynamicProfileLocation.setEnabled(false);
+
+                profileUpdateBtn.setVisibility(View.INVISIBLE);
+                editProfileBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.profileEditBtn :
+
+                dynamicProfileName.setEnabled(true);
+                dynamicProfileLocation.setEnabled(true);
+
+                editProfileBtn.setVisibility(View.INVISIBLE);
+                profileUpdateBtn.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

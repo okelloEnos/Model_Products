@@ -125,7 +125,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);
         String buyerLocation = pref.getString("location", null);
-        String buyerMail = pref.getString("mail", null);
+        String buyerMail = pref.getString("eMail", null);
 
         DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
         DatabaseReference receivedRef = FirebaseDatabase.getInstance().getReference("receivedOrders");
@@ -139,8 +139,8 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 
             receivedRef.child(phone).child(placedKey).setValue(placedOrder);
 //            receivedRef.child(phone).child("prdOrderLocation").setValue(buyerLocation);
-            receivedRef.child(phone).child(placedKey).child("prdOrderLocation").setValue("Mwagosi");
-            receivedRef.child(phone).child(placedKey).child("prdOrderedMail").setValue("BJay@gmail.com");
+            receivedRef.child(phone).child(placedKey).child("prdOrderLocation").setValue(buyerLocation);
+            receivedRef.child(phone).child(placedKey).child("prdOrderedMail").setValue(buyerMail);
         }
 //        placedRef.setValue(ordersList);
 

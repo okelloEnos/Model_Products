@@ -1,6 +1,7 @@
 package com.okellosoftwarez.modelfarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
 
     private static final String TAG = "SignIn";
     private static FirebaseAuth signInmAuth;
-    private EditText signInMail, signInPassword;
+    private EditText signInMail, signInPassword, signInPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,7 @@ public class SignIn extends AppCompatActivity {
 
         signInMail = findViewById(R.id.etSignInMail);
         signInPassword = findViewById(R.id.etPassword_signIn);
+        signInPhone = findViewById(R.id.etPhone_signIn);
 
         Button next = findViewById(R.id.nextBtn_signIn);
 
@@ -52,6 +59,7 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View view) {
                 String email = signInMail.getText().toString().trim();
                 String password = signInPassword.getText().toString().trim();
+                String phone = signInPhone.getText().toString().trim();
 
                 if (email.isEmpty()) {
                     signInMail.setError("Missing Log In Mail");
@@ -62,12 +70,43 @@ public class SignIn extends AppCompatActivity {
                     signInPassword.setError("PassWord Too Short");
                 }
                 else {
+                    loadPreference(phone);
                     logInUser(email, password);
                 }
             }
         });
 
     }
+
+    private void loadPreference(String signInPhone) {
+        DatabaseReference signPreference = FirebaseDatabase.getInstance().getReference("userProfile").child(signInPhone);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        final SharedPreferences.Editor signEditor = pref.edit();
+
+        signPreference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userModel signInUser = dataSnapshot.getValue(userModel.class);
+
+//                    Storing Preference Data
+                signEditor.putString("eMail", signInUser.getEmail());
+//                editor.putString("passWord", signInUser.);
+                signEditor.putString("userName", signInUser.getUserName());
+                signEditor.putString("phone", signInUser.getPhone());
+                signEditor.putString("location", signInUser.getLocation());
+
+                // commit changes
+                signEditor.commit();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(SignIn.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void updateUI() {
         Intent autoIntent = new Intent(this, user.class);
         startActivity(autoIntent);

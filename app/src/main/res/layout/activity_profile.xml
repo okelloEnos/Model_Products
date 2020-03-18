@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".Profile">
 
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="@dimen/eight_dp"
-        android:foregroundGravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+<!--    <ImageView-->
+<!--        android:id="@+id/profileImage"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_margin="@dimen/eight_dp"-->
+<!--        android:foregroundGravity="center_horizontal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@mipmap/ic_launcher_round" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileImage">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/userNameLayout"
@@ -49,12 +49,13 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/dynamicProfileName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
                 android:layout_weight="60"
+                android:enabled="false"
                 android:text="User Name "
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
@@ -73,17 +74,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="40"
+                android:layout_weight="30"
                 android:text="E - Mail : "
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/dynamicProfileMail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="60"
+                android:layout_weight="70"
+                android:enabled="false"
                 android:text="E - Mail "
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
@@ -108,17 +110,80 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/dynamicProfilePhone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
                 android:layout_weight="60"
+                android:enabled="false"
                 android:text="Phone No "
                 android:textColor="@color/black"
                 android:textSize="@dimen/eighteen_sp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/locationProfileLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eight_dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/profileLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="55"
+                android:text="Current Location : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+            <EditText
+                android:id="@+id/dynamicProfileLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:layout_weight="45"
+                android:text="Location "
+                android:enabled="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp" />
+
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/locationProfileLayoutOk"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/eight_dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="100">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/profileLocationOk"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="@dimen/eight_dp"-->
+<!--                android:layout_weight="45"-->
+<!--                android:text="Current : "-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/eighteen_sp" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/dynamicProfileLocationOk"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="@dimen/eight_dp"-->
+<!--                android:layout_weight="55"-->
+<!--                android:text="CORONA "-->
+<!--                android:enabled="false"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/eighteen_sp" />-->
+
+<!--        </LinearLayout>-->
     </LinearLayout>
 
     <Button
@@ -128,6 +193,20 @@
         android:layout_margin="@dimen/eight_dp"
         android:background="@color/colorAccent"
         android:text="Edit Profile"
+        android:textColor="@color/black"
+        android:textSize="@dimen/eighteen_sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/profileUpdateBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:background="@color/colorAccent"
+        android:text="Update Profile"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="@dimen/eighteen_sp"
         app:layout_constraintBottom_toBottomOf="parent"
