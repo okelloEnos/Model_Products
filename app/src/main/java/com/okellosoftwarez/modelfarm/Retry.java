@@ -33,7 +33,7 @@ public class Retry extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(Retry.this, "Implementation Coming Soon...", Toast.LENGTH_SHORT).show();
-                Intent startIntent = new Intent(Retry.this, welcome_screen.class);
+                Intent startIntent = new Intent(Retry.this, Splash.class);
                 startActivity(startIntent);
             }
         });

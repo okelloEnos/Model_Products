@@ -1,6 +1,7 @@
 package com.okellosoftwarez.modelfarm;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -19,6 +20,12 @@ public class requestDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
+
+        Toolbar toolbarDetailReq = findViewById(R.id.toolbarDetailsReq);
+        setSupportActionBar(toolbarDetailReq);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         detail_ReqImage = findViewById(R.id.detailImageRequest);
         tv_nameReq = findViewById(R.id.tv_detailNameRequest);

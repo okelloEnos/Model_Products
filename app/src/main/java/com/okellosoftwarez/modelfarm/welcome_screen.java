@@ -25,7 +25,7 @@ public class welcome_screen extends AppCompatActivity {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent continueIntent = new Intent(welcome_screen.this,registration_screen.class);
+                Intent continueIntent = new Intent(welcome_screen.this, SignUp.class);
 
                 startActivity(continueIntent);
             }

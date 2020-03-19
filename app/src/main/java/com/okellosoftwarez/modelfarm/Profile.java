@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +36,13 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        Toolbar toolbarProfile = findViewById(R.id.profileToolbar);
+        setSupportActionBar(toolbarProfile);
+//        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
 //        SharedPreferences.Editor editor = pref.edit();

@@ -156,6 +156,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         String user;
         if (buttonString.equals("buyer")){
             user = "Seller";
+//            fab.setVisibility(View.INVISIBLE);
         }
         else { user = "Buyer" ;}
         switchUserItem.setTitle("Switch to " + user);
@@ -244,8 +245,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         Menu menu = navigationView.getMenu();
 
         if (userType.equals("buyer")) {
-            fab.setEnabled(false);
+//            fab.setEnabled(false);
 
+            fab.hide();
 //            Removing some features in the navigation view if user is a buyer
             menu.getItem(2).setVisible(false);
             menu.getItem(3).setVisible(false);

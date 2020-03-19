@@ -2,6 +2,7 @@ package com.okellosoftwarez.modelfarm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,12 @@ public class placedOrders extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_placed_orders);
+
+        Toolbar toolbarPlaced = findViewById(R.id.toolbarPlaced);
+        setSupportActionBar(toolbarPlaced);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);

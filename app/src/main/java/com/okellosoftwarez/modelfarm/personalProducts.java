@@ -2,6 +2,7 @@ package com.okellosoftwarez.modelfarm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +45,12 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_prducts);
+
+        Toolbar toolbarPersonal = findViewById(R.id.toolbarPersonal);
+        setSupportActionBar(toolbarPersonal);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
 //        String recPersonalPhone = "No";

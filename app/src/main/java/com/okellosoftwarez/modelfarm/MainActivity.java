@@ -1,8 +1,10 @@
 package com.okellosoftwarez.modelfarm;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -15,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -58,6 +61,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.tool);
+        setSupportActionBar(toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getSupportActionBar().setIcon(getDrawable(R.drawable.ic_keyboard_backspace_black_24dp));
+//        }
+        setTitle("New Product");
+
+
+//        toolbar.setTitle("New Product Okay");
+
         storageReference = FirebaseStorage.getInstance().getReference("Products");
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");
 
@@ -83,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         takeBtn.setOnClickListener(this);
 
 
-        editProductDetails();
+        editProductDetails(toolbar);
 //        uploadBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -93,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        });
     }
 
-    private void editProductDetails() {
+    private void editProductDetails(Toolbar toolbar) {
         if (getIntent().hasExtra("editKey")){
             editKey = getIntent().getStringExtra("editKey");
             setTitle("Edit Product");
@@ -135,6 +153,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         changePhoto.setOnClickListener(this);
                                         changeBtn.setOnClickListener(this);
+
+//                                        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//                                            @Override
+//                                            public boolean onMenuItemClick(MenuItem item) {
+//                                                Toast.makeText(MainActivity.this, "Back Clicked", Toast.LENGTH_SHORT).show();
+//                                                return true;
+//                                            }
+//                                        });
+                                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+//                                                Toast.makeText(MainActivity.this, "Back Clicked", Toast.LENGTH_SHORT).show();
+                                                Intent changeIntent = new Intent(getApplicationContext(), personalProducts.class);
+                                                startActivity(changeIntent);
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -143,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
+
+
         else {
             uploadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

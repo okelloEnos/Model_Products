@@ -15,19 +15,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".requestDetails"></activity>
-        <activity android:name=".productRequests" />
+        <activity
+            android:name=".requestDetails"
+            android:parentActivityName=".productRequests"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".productRequests"
+            android:label="Received Requests"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".placedOrders"
-            android:label="Placed Orders" />
+            android:label="Placed Orders"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".personalProducts"
-            android:label="Your Products" />
+            android:label="Your Products"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Order"
-            android:label="Cart List" />
-        <activity android:name=".Retry" />
-        <activity android:name=".user">
+            android:label="Cart List"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Retry"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".user"
+            android:theme="@style/AppTheme.NoActionBar">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -37,33 +53,40 @@
         </activity>
         <activity
             android:name=".Product_Details"
-            android:label="Product Details" />
+            android:label="Product Details"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Products_view"
             android:label="@string/title_activity_products_view"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="New Product"
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignUp"
             android:label="Registration"
-            android:parentActivityName=".registration_screen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/AppTheme.NoActionBar">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".SignIn"
             android:label="Validation"
-            android:parentActivityName=".registration_screen" />
-        <activity
-            android:name=".registration_screen"
-            android:label="Selection"
-            android:parentActivityName=".welcome_screen" />
+            android:theme="@style/AppTheme.NoActionBar"/>
+<!--        <activity-->
+<!--            android:name=".registration_screen"-->
+<!--            android:label="Selection"-->
+<!--            android:parentActivityName=".welcome_screen" />-->
         <activity
             android:name=".welcome_screen"
-            android:label="Welcome">
+            android:label="Welcome"
+            android:theme="@style/AppTheme.NoActionBar">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -72,17 +95,20 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".Splash">
+        <activity android:name=".Splash"
+            android:theme="@style/AppTheme.NoActionBar">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!--  -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
         <activity
             android:name=".Profile"
-            android:label=" Profile " />
+            android:label="Profile "
+            android:parentActivityName=".Products_view"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.okellosoftwarez.modelfarm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,12 @@ public class productRequests extends AppCompatActivity implements cartAdapter.on
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_requests);
+
+        Toolbar toolbarRequest = findViewById(R.id.toolbarRequest);
+        setSupportActionBar(toolbarRequest);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);

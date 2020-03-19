@@ -3,6 +3,7 @@ package com.okellosoftwarez.modelfarm;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +49,10 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        Toolbar toolbarOrder = findViewById(R.id.toolbarOrder);
+        setSupportActionBar(toolbarOrder);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        obtaining the order database Reference from the order
