@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -134,8 +135,11 @@ public class Product_Details extends AppCompatActivity {
     }
 
     private void uploadingData(int totalPrice, String value) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String loadedPhone = pref.getString("phone", null);
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Orders");
+        DatabaseReference ref = database.getReference("Orders").child(loadedPhone);
 //        String orderKey = ref.push().getKey();
 
 //        DatabaseReference orderDatabaseRef = FirebaseDatabase.getInstance().getReference("Products");

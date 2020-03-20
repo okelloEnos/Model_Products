@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="?attr/actionButtonStyle"
+    android:focusable="true"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_add_shopping_cart"/>
+
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/cartBadge"
+        android:layout_gravity="right|end|top"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginRight="-5dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:padding="3dp"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:text="0"
+        android:background="@drawable/badge"/>
+
+</FrameLayout>

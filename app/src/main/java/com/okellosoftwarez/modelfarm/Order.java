@@ -59,8 +59,11 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         remainder = getIntent().getIntExtra("remPrdCapacity", 0);
 
         Toast.makeText(this, "Rem Capacity :" + remainder, Toast.LENGTH_LONG).show();
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String loadPhone = pref.getString("phone", null);
 //        obtaining the order database Reference from the order
-        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
+        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders").child(loadPhone);
         ordersList = new ArrayList<>();
 
         payBtn = findViewById(R.id.paymentBtn);
@@ -241,6 +244,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(Order.this, "Updates Cancelled...", Toast.LENGTH_SHORT).show();
+
             }
         });
 

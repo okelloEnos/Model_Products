@@ -2,6 +2,8 @@ package com.okellosoftwarez.modelfarm;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -23,11 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Products_view extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "Products_view";
@@ -48,6 +52,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     FirebaseAuth signOutmAuth;
     Products personalProduct;
+
+    TextView cartText;
+    long cartCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +87,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 //            sendIntents_details(buttonString);
 //            Toast.makeText(this, "Phone No : " + phone, Toast.LENGTH_LONG).show();
 
-//        }
+//
 
         personalProduct = new Products();
 
@@ -174,6 +181,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 //        if (pref.getString("eMail", null) != null){
 //            navMail.setText(pref.getString("eMail", null));
 //        }
+//        String loadedNavPhone;
+
         if (pref.getString("phone", null) != null){
 //            navPhone.setText(pref.getString("phone", null));
             String loadedNavPhone = pref.getString("phone", null);
@@ -192,9 +201,38 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                     Toast.makeText(Products_view.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+
+
+            DatabaseReference orderDatabaseCount = FirebaseDatabase.getInstance().getReference("Orders").child(loadedNavPhone);
+            orderDatabaseCount.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    cartCount = dataSnapshot.getChildrenCount();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         }
 //        receiveButtonIntents();
         personalProductsIntents();
+
+//        DatabaseReference orderDatabaseCount = FirebaseDatabase.getInstance().getReference("Orders").child(loadedNavPhone);
+//        orderDatabaseCount.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                 cartCount = dataSnapshot.getChildrenCount();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
     }
 
     private void personalProductsIntents() {
@@ -276,12 +314,47 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.products_view, menu);
+
+        final MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
+
         if (buttonString.equals("seller")){
-            MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
+//            MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
             cartSellerItem.setVisible(false);
         }
+
+
+        View cartView = cartSellerItem.getActionView();
+        cartText = cartView.findViewById(R.id.cartBadge);
+
+        setUpBadge();
+
+        cartView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(cartSellerItem);
+            }
+        });
         return true;
     }
+
+    private void setUpBadge() {
+
+        if (cartText != null){
+            if (cartCount == 0) {
+                if (cartText.getVisibility() != View.GONE) {
+                    cartText.setVisibility(View.GONE);
+                }
+            }
+                else {
+                    cartText.setText(String.valueOf(cartCount));
+//                    cartText.setText(String.valueOf(Math.min(cartCount, 3)));
+                    if (cartText.getVisibility() != View.VISIBLE){
+                        cartText.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
