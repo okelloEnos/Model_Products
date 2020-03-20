@@ -423,6 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                                product = new Products(sName, sPhone, sEmail, sImage);
                                 product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
                                 String key = databaseReference.push().getKey();
+                                product.setID(key);
                                 databaseReference.child(key).setValue(product);
 //                                databaseReference.child(sPhone).child(key).setValue(product);
 //                                databaseReference.child(sPhone).setValue(product);

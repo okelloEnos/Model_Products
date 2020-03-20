@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class Product_Details extends AppCompatActivity {
 
-    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email;
+    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key;
     ImageView detail_image;
     TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email;
 
@@ -119,6 +119,7 @@ public class Product_Details extends AppCompatActivity {
                 cartIntent.putExtra("prdPhone", d_phone);
                 cartIntent.putExtra("prdCapacity", value);
                 cartIntent.putExtra("prdPrice", price);
+                cartIntent.putExtra("remPrdCapacity", (Integer.valueOf(d_capacity) - Integer.valueOf(value)));
                 startActivity(cartIntent);
             }
         });
@@ -135,13 +136,18 @@ public class Product_Details extends AppCompatActivity {
     private void uploadingData(int totalPrice, String value) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Orders");
-        String orderKey = ref.push().getKey();
+//        String orderKey = ref.push().getKey();
+
+//        DatabaseReference orderDatabaseRef = FirebaseDatabase.getInstance().getReference("Products");
+//        String orderKey = orderDatabaseRef.push().getKey();
 
 //        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
 //        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone);
 //        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location);
-        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location, d_email);
-        ref.child(orderKey).setValue(fullOrder);
+        int remCapacity = Integer.valueOf(d_capacity) - Integer.valueOf(value);
+
+        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location, d_email, Integer.toString(remCapacity));
+        ref.child(d_key).setValue(fullOrder);
 
         Toast.makeText(this, "Success Upload of Data...", Toast.LENGTH_SHORT).show();
     }
@@ -150,7 +156,7 @@ public class Product_Details extends AppCompatActivity {
         if (getIntent().hasExtra("name") && getIntent().hasExtra("phone")
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
-                && getIntent().hasExtra("capacity")){
+                && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")){
 //            String  d_email;
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
@@ -159,6 +165,7 @@ public class Product_Details extends AppCompatActivity {
             d_phone = getIntent().getStringExtra("phone");
             d_image = getIntent().getStringExtra("image");
             d_email = getIntent().getStringExtra("email");
+            d_key = getIntent().getStringExtra("key");
 
             Toast.makeText(this, "The Email : " + d_email, Toast.LENGTH_LONG).show();
 

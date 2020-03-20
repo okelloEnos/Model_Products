@@ -31,17 +31,17 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order extends AppCompatActivity implements cartAdapter.onCartClickListener{
+public class Order extends AppCompatActivity implements cartAdapter.onCartClickListener {
 
     RecyclerView ordersRecyclerView;
     LinearLayoutManager ordersLayoutManager;
-    cartAdapter cartAdapter ;
+    cartAdapter cartAdapter;
     List<orderModel> ordersList;
     Button payBtn;
     DatabaseReference orderDatabase;
     ProgressBar loadingOrders;
     TextView defaultOrderView;
-    private int priceSum;
+    private int priceSum, remainder;
 //    private orderModel orderedProduct;
 
     @Override
@@ -55,6 +55,10 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        remainder = getIntent().getIntExtra("remPrdCapacity", 0);
+
+        Toast.makeText(this, "Rem Capacity :" + remainder, Toast.LENGTH_LONG).show();
 //        obtaining the order database Reference from the order
         orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         ordersList = new ArrayList<>();
@@ -79,14 +83,14 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
                 ordersList.clear();
 
                 priceSum = 0;
-                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
                     orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
                     orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
                     ordersList.add(orderedProduct);
                     priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
 //                    writePlacedOrders(orderedProduct);
                 }
-                if (ordersList.isEmpty()){
+                if (ordersList.isEmpty()) {
                     defaultOrderView.setVisibility(View.VISIBLE);
                 }
                 cartAdapter.notifyDataSetChanged();
@@ -138,7 +142,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         for (orderModel placedOrder : ordersList) {
             String phone = placedOrder.getPrdOrderPhone();
             String placedKey = placedRef.push().getKey();
-
+//            String placedKey = placedOrder.getPrdOrderKey();
             placedRef.child(placedKey).setValue(placedOrder);
 
 
@@ -146,6 +150,10 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 //            receivedRef.child(phone).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderedMail").setValue(buyerMail);
+
+            DatabaseReference prodRef = FirebaseDatabase.getInstance().getReference("Products").child(placedOrder.getPrdOrderKey());
+            prodRef.child("capacity").setValue(placedOrder.getPrdRemCapacity());
+
         }
 //        placedRef.setValue(ordersList);
 
@@ -208,14 +216,18 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
                 String newOrderCapacity = capacity.getText().toString().trim();
                 int newOrder = Integer.parseInt(newOrderCapacity);
 
-                String initialCapacity, initialTotal;
+                String initialCapacity, initialTotal, initialRem;
                 initialCapacity = selectedOrder.getPrdOrderedCapacity();
                 initialTotal = selectedOrder.getPrdOrderedTotal();
+                initialRem = selectedOrder.getPrdRemCapacity();
+
                 int price = Integer.parseInt(initialTotal) / Integer.parseInt(initialCapacity);
                 int newTotal = newOrder * price;
+                int newRem = (Integer.valueOf(initialRem) + Integer.parseInt(initialCapacity)) - newOrder;
 
                 orderDatabase.child(selectedOrderKey).child("prdOrderedCapacity").setValue(newOrderCapacity);
                 orderDatabase.child(selectedOrderKey).child("prdOrderedTotal").setValue(Integer.toString(newTotal));
+                orderDatabase.child(selectedOrderKey).child("prdRemCapacity").setValue(Integer.toString(newRem));
 
 //                Toast.makeText(Order.this, "New Price : " + price, Toast.LENGTH_LONG).show();
 

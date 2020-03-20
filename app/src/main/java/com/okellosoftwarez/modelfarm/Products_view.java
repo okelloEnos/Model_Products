@@ -105,7 +105,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 productsList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Products receivedProduct = postSnapshot.getValue(Products.class);
-//                    receivedProduct.setID(postSnapshot.getKey());
+                    receivedProduct.setID(postSnapshot.getKey());
                     productsList.add(receivedProduct);
                 }
                 if (productsList.isEmpty()){

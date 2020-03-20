@@ -70,6 +70,9 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                     passIntent.putExtra("email", currentProducts.getEmail());
                     passIntent.putExtra("phone", currentProducts.getPhone());
                     passIntent.putExtra("image", currentProducts.getImage());
+                    passIntent.putExtra("key", currentProducts.getID());
+
+                    Toast.makeText(mcontext, "Key:" + currentProducts.getID(), Toast.LENGTH_LONG).show();
                     mcontext.startActivity(passIntent);
                     Log.d(TAG, "onClick: detail view...");
                 }

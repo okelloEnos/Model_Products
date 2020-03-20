@@ -3,7 +3,8 @@ package com.okellosoftwarez.modelfarm;
 import com.google.firebase.database.Exclude;
 
 public class orderModel {
-    String prdOrderedName, prdOrderedCapacity, prdOrderedTotal, prdOrderImage, prdOrderKey, prdOrderPhone, prdOrderLocation, prdOrderedMail;
+    String prdOrderedName, prdOrderedCapacity, prdOrderedTotal, prdOrderImage, prdOrderKey,
+            prdOrderPhone, prdOrderLocation, prdOrderedMail, prdRemCapacity;
 
     public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal) {
         this.prdOrderedName = prdOrderedName;
@@ -48,6 +49,26 @@ public class orderModel {
         this.prdOrderPhone = prdOrderPhone;
         this.prdOrderLocation = prdOrderLocation;
         this.prdOrderedMail = Mail;
+    }
+
+    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal,
+                      String prdOrderImage, String prdOrderPhone, String prdOrderLocation, String Mail, String prdRemCapacity) {
+        this.prdOrderedName = prdOrderedName;
+        this.prdOrderedCapacity = prdOrderedCapacity;
+        this.prdOrderedTotal = prdOrderedTotal;
+        this.prdOrderImage = prdOrderImage;
+        this.prdOrderPhone = prdOrderPhone;
+        this.prdOrderLocation = prdOrderLocation;
+        this.prdOrderedMail = Mail;
+        this.prdRemCapacity = prdRemCapacity;
+    }
+
+    public String getPrdRemCapacity() {
+        return prdRemCapacity;
+    }
+
+    public void setPrdRemCapacity(String prdRemCapacity) {
+        this.prdRemCapacity = prdRemCapacity;
     }
 
     public String getPrdOrderedMail() {
