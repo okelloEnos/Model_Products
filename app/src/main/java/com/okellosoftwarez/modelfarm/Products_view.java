@@ -119,7 +119,9 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                     setAdapter(s.toString());
                 }
                 else {
-                    recyclerView.removeAllViews();
+                    adapter = new productAdapter(Products_view.this, productsList);
+                    recyclerView.setAdapter(adapter);
+//                    recyclerView.removeAllViews();
                 }
             }
         });
@@ -276,7 +278,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                productsList.clear();
+//                productsList.clear();
                 filteredProductsList.clear();
                 recyclerView.removeAllViews();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){

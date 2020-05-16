@@ -19,5 +19,8 @@
         android:title="@string/action_cart"
         app:actionLayout="@layout/custom_layout"
         app:showAsAction="always"/>
+<!--    <EditText>-->
+<!--        -->
+<!--    </EditText>-->
 
 </menu>
