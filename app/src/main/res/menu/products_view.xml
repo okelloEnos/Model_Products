@@ -6,6 +6,13 @@
         <!--android:orderInCategory="100"-->
         <!--android:title="@string/action_cart"-->
         <!--app:showAsAction="always" />-->
+<!--    <item-->
+<!--        android:id="@+id/action_search"-->
+<!--        android:icon="@drawable/search_black"-->
+<!--        android:title="Search"-->
+<!--        app:showAsAction="always|collapseActionView"-->
+<!--        app:actionViewClass="androidx.appcompat.widget.SearchView"/>-->
+
     <item
         android:id="@+id/action_add_cart"
         android:icon="@drawable/ic_add_shopping_cart"

@@ -16,15 +16,19 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,11 +46,14 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     productAdapter adapter;
     LinearLayoutManager layoutManager;
     List<Products> productsList;
+    List<Products> filteredProductsList;
+    ArrayList<String> nameList;
     ProgressBar circleP_bar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private FloatingActionButton fab;
     TextView navMail, navPhone, defaultProductView;
+    EditText searchText;
 
     String pPhone;
 
@@ -91,9 +98,36 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         personalProduct = new Products();
 
+        searchText = findViewById(R.id.editTextSearch);
+
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (!s.toString().isEmpty()){
+
+                    setAdapter(s.toString());
+                }
+                else {
+                    recyclerView.removeAllViews();
+                }
+            }
+        });
 //        Obtaining reference to the firebase database
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
         productsList = new ArrayList<>();
+        filteredProductsList = new ArrayList<>();
+        nameList = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
 
@@ -235,6 +269,37 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     }
 
+    private void setAdapter(final String queryString) {
+
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                productsList.clear();
+                filteredProductsList.clear();
+                recyclerView.removeAllViews();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String uid = snapshot.getKey();
+                    String Fname = snapshot.child("name").getValue(String.class);
+                    Products filteredProduct = snapshot.getValue(Products.class);
+
+                    if (Fname.toLowerCase().contains(queryString.toLowerCase())){
+                        nameList.add(Fname);
+                        filteredProductsList.add(filteredProduct);
+                    }
+                }
+                adapter = new productAdapter(Products_view.this, filteredProductsList);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void personalProductsIntents() {
         if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
                 getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
@@ -317,6 +382,29 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         final MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
 
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                adapter.getFilter().filter(query);
+//                if (!query.isEmpty()){
+//                    productSearch(query);
+//                }
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                adapter.getFilter().filter(newText);
+//               if (!newText.isEmpty()){
+//                   productSearch(newText);
+//               }
+//                return false;
+//            }
+//        });
+
         if (buttonString.equals("seller")){
 //            MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
             cartSellerItem.setVisible(false);
@@ -335,6 +423,36 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             }
         });
         return true;
+    }
+
+    private void productSearch(final String query) {
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Products> filteredList = new ArrayList<>();
+                adapter = new productAdapter(Products_view.this, filteredList);
+                productsList.clear();
+
+                for (DataSnapshot prdSnapshot : dataSnapshot.getChildren()) {
+                    Products receivedProductSnap = prdSnapshot.getValue(Products.class);
+//                    receivedProductSnap.setID(prdSnapshot.getKey());
+                    if (receivedProductSnap.getName().toLowerCase().contains(query.toLowerCase())){
+                        filteredList.add(receivedProductSnap);
+                    }
+//                    productsList.add(receivedProduct);
+                }
+                if (filteredList.isEmpty()){
+                    defaultProductView.setVisibility(View.VISIBLE);
+                }
+                adapter.notifyDataSetChanged();
+                circleP_bar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setUpBadge() {

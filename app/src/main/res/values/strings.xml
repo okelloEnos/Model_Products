@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="preview_description">Your Image Would appear here ...</string>
     <string name="take_photo">Take Picture</string>
+    <string name="search_hint">Potato</string>
     <string name="tvAccess">How do you want to Access Our Services ? As a ...</string>
     <string name="tvBuyer">Buyer </string>
     <string name="tvSeller">Seller </string>
