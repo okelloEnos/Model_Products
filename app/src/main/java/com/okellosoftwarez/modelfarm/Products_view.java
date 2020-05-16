@@ -283,11 +283,20 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 recyclerView.removeAllViews();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     String uid = snapshot.getKey();
-                    String Fname = snapshot.child("name").getValue(String.class);
+                    String pName = snapshot.child("name").getValue(String.class);
+                    String pEmail = snapshot.child("email").getValue(String.class);
+                    String pLocation = snapshot.child("location").getValue(String.class);
+
                     Products filteredProduct = snapshot.getValue(Products.class);
 
-                    if (Fname.toLowerCase().contains(queryString.toLowerCase())){
-                        nameList.add(Fname);
+                    if (pName.toLowerCase().contains(queryString.toLowerCase())){
+                        nameList.add(pName);
+                        filteredProductsList.add(filteredProduct);
+                    }
+                    else if (pEmail.toLowerCase().contains(queryString.toLowerCase())){
+                        filteredProductsList.add(filteredProduct);
+                    }
+                    else if (pLocation.toLowerCase().contains(queryString.toLowerCase())){
                         filteredProductsList.add(filteredProduct);
                     }
                 }
