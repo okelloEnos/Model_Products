@@ -70,6 +70,17 @@ public class Product_Details extends AppCompatActivity {
         tv_email = findViewById(R.id.tv_detailEmail);
         Button orderBtn = findViewById(R.id.order_button);
 
+        tv_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mailIntent = new Intent(Intent.ACTION_SEND);
+                mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{ d_email });
+                mailIntent.putExtra(Intent.EXTRA_SUBJECT, "PLACING " + d_name.toUpperCase() + "PRODUCT ORDER ");
+                mailIntent.setType("message/rfc822");
+
+                startActivity(Intent.createChooser(mailIntent, "Choose an Email Client : "));
+            }
+        });
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

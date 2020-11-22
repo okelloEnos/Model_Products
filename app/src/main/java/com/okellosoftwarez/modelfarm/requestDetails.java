@@ -3,7 +3,9 @@ package com.okellosoftwarez.modelfarm;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,19 @@ public class requestDetails extends AppCompatActivity {
 
 
         requestDetailIntents();
+
+        tv_emailReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent reqMailIntent = new Intent(Intent.ACTION_SEND);
+                reqMailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { reqMail});
+                reqMailIntent.putExtra(Intent.EXTRA_SUBJECT, "YOUR " + reqName.toUpperCase() + "PRODUCT REQUEST ");
+
+                reqMailIntent.setType("message/rfc822");
+
+                startActivity(Intent.createChooser(reqMailIntent, "Choose Mail Client :: "));
+            }
+        });
     }
 
     private void requestDetailIntents() {
