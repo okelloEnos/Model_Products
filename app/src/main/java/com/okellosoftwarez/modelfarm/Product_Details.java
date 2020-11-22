@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -45,6 +49,8 @@ public class Product_Details extends AppCompatActivity {
     private DatabaseReference orderDatabaseReference;
     private orderModel fullOrder;
 
+    private static final int PHONE_PERMISSION = 30;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +76,36 @@ public class Product_Details extends AppCompatActivity {
         tv_email = findViewById(R.id.tv_detailEmail);
         Button orderBtn = findViewById(R.id.order_button);
 
+        tv_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + d_phone));
+
+                if (ActivityCompat.checkSelfPermission(Product_Details.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(Product_Details.this, "No Permission", Toast.LENGTH_SHORT).show();
+//                    Getting permission
+                    String[] callPerm = {Manifest.permission.CALL_PHONE};
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(callPerm, PHONE_PERMISSION);
+                        startActivity(callIntent);
+//                        Toast.makeText(Product_Details.this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Product_Details.this, "No Permission granted", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    startActivity(callIntent);
+                }
+            }
+        });
+
         tv_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mailIntent = new Intent(Intent.ACTION_SEND);
-                mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{ d_email });
+                mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{d_email});
                 mailIntent.putExtra(Intent.EXTRA_SUBJECT, "PLACING " + d_name.toUpperCase() + "PRODUCT ORDER ");
                 mailIntent.setType("message/rfc822");
 
@@ -125,9 +156,9 @@ public class Product_Details extends AppCompatActivity {
                 uploadingData(totalPrice, value);
 
                 Intent cartIntent = new Intent(Product_Details.this, Order.class);
-                cartIntent.putExtra("prdName", d_name );
-                cartIntent.putExtra("prdMail", d_email );
-                cartIntent.putExtra("prdLocation", d_location );
+                cartIntent.putExtra("prdName", d_name);
+                cartIntent.putExtra("prdMail", d_email);
+                cartIntent.putExtra("prdLocation", d_location);
                 cartIntent.putExtra("prdPhone", d_phone);
                 cartIntent.putExtra("prdCapacity", value);
                 cartIntent.putExtra("prdPrice", price);
@@ -161,7 +192,7 @@ public class Product_Details extends AppCompatActivity {
 //        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location);
         int remCapacity = Integer.valueOf(d_capacity) - Integer.valueOf(value);
 
-        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location, d_email, Integer.toString(remCapacity));
+        fullOrder = new orderModel(d_name, value, Integer.toString(totalPrice), d_image, d_phone, d_location, d_email, Integer.toString(remCapacity));
         ref.child(d_key).setValue(fullOrder);
 
         Toast.makeText(this, "Success Upload of Data...", Toast.LENGTH_SHORT).show();
@@ -171,7 +202,7 @@ public class Product_Details extends AppCompatActivity {
         if (getIntent().hasExtra("name") && getIntent().hasExtra("phone")
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
-                && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")){
+                && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")) {
 //            String  d_email;
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
