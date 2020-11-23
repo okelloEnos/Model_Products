@@ -196,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
                 android:text="TextView"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toEndOf="@id/tv_staticPhoneRequest"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -215,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
                 android:text="TextView"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toEndOf="@id/tv_staticMailRequest"
                 app:layout_constraintTop_toBottomOf="@id/tv_detailPhoneRequest" />
         </androidx.constraintlayout.widget.ConstraintLayout>

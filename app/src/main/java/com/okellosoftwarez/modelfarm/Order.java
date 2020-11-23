@@ -255,6 +255,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 //            receivedRef.child(phone).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderedMail").setValue(buyerMail);
+            receivedRef.child(phone).child(placedKey).child("prdOrderPhone").setValue(phoneNo);
 
             DatabaseReference prodRef = FirebaseDatabase.getInstance().getReference("Products").child(placedOrder.getPrdOrderKey());
             prodRef.child("capacity").setValue(placedOrder.getPrdRemCapacity());

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -16,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -79,25 +81,41 @@ public class Product_Details extends AppCompatActivity {
         tv_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + d_phone));
 
-                if (ActivityCompat.checkSelfPermission(Product_Details.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(Product_Details.this, "No Permission", Toast.LENGTH_SHORT).show();
-//                    Getting permission
-                    String[] callPerm = {Manifest.permission.CALL_PHONE};
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(callPerm, PHONE_PERMISSION);
-                        startActivity(callIntent);
-//                        Toast.makeText(Product_Details.this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Product_Details.this, "No Permission granted", Toast.LENGTH_SHORT).show();
-                        return;
+                if (Build.VERSION.SDK_INT >= 23){
+                    if (checkedPermission()){
+                        Log.e("permission", "Permission Already Granted");
                     }
-                } else {
+                    else {
+                        requestedPermission();
+                    }
+                }
+
+                if (checkedPermission()){
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:" + d_phone));
                     startActivity(callIntent);
                 }
+
+//                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+//                callIntent.setData(Uri.parse("tel:" + d_phone));
+
+//                if (ActivityCompat.checkSelfPermission(Product_Details.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(Product_Details.this, "No Permission", Toast.LENGTH_SHORT).show();
+//                    Getting permission
+//                    String[] callPerm = {Manifest.permission.CALL_PHONE};
+
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                        requestPermissions(callPerm, PHONE_PERMISSION);
+//                        startActivity(callIntent);
+//                        Toast.makeText(Product_Details.this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(Product_Details.this, "No Permission granted", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                } else {
+//                    startActivity(callIntent);
+//                }
             }
         });
 
@@ -132,6 +150,33 @@ public class Product_Details extends AppCompatActivity {
             }
         });
         receiveDetailIntents();
+    }
+
+    private void requestedPermission() {
+        ActivityCompat.requestPermissions(Product_Details.this, new String[] { Manifest.permission.CALL_PHONE}, PHONE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case PHONE_PERMISSION :
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "Permission Accepted...", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "Permission Denied...", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
+
+    }
+
+    private boolean checkedPermission() {
+        int callingPerm = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE);
+
+        return callingPerm == PackageManager.PERMISSION_GRANTED;
     }
 
     private void priceConfirmationDialog() {
