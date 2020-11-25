@@ -41,7 +41,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private static final String TAG = "Products_view";
 
     public static String buttonString;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase, personalRef;
     RecyclerView recyclerView;
     productAdapter adapter;
     LinearLayoutManager layoutManager;
@@ -127,6 +127,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         });
 //        Obtaining reference to the firebase database
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+//        personalRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
+
         productsList = new ArrayList<>();
         filteredProductsList = new ArrayList<>();
         nameList = new ArrayList<>();
@@ -149,7 +151,15 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Products receivedProduct = postSnapshot.getValue(Products.class);
                     receivedProduct.setID(postSnapshot.getKey());
-                    productsList.add(receivedProduct);
+
+                    if (Integer.valueOf(receivedProduct.getCapacity()) > 0){
+
+                        productsList.add(receivedProduct);
+                    }
+                    else {
+                        mDatabase.child(receivedProduct.getID()).removeValue();
+                    }
+//                    productsList.add(receivedProduct);
                 }
                 if (productsList.isEmpty()){
                     defaultProductView.setVisibility(View.VISIBLE);

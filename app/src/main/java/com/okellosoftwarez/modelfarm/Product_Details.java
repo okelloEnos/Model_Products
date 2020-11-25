@@ -196,6 +196,8 @@ public class Product_Details extends AppCompatActivity {
 
                 String price = Integer.toString(totalPrice);
 
+                int capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
+
 //                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
 
                 uploadingData(totalPrice, value);
@@ -207,8 +209,15 @@ public class Product_Details extends AppCompatActivity {
                 cartIntent.putExtra("prdPhone", d_phone);
                 cartIntent.putExtra("prdCapacity", value);
                 cartIntent.putExtra("prdPrice", price);
-                cartIntent.putExtra("remPrdCapacity", (Integer.valueOf(d_capacity) - Integer.valueOf(value)));
-                startActivity(cartIntent);
+                cartIntent.putExtra("remPrdCapacity", capacityRem);
+
+                if (capacityRem >= 0){
+                    startActivity(cartIntent);
+                }
+                else {
+                    Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity , Toast.LENGTH_SHORT).show();
+                }
+//                startActivity(cartIntent);
             }
         });
 
