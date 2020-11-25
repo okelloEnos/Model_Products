@@ -97,7 +97,15 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
                     for (DataSnapshot personalSnapShot : dataSnapshot.getChildren()) {
                         Products personalProduct = personalSnapShot.getValue(Products.class);
                         personalProduct.setID(personalSnapShot.getKey());
-                        personal_productsList.add(personalProduct);
+
+                        if (Integer.valueOf(personalProduct.getCapacity()) > 0) {
+
+                            personal_productsList.add(personalProduct);
+                        }
+                        else {
+                            Toast.makeText(personalProducts.this, "Your : " + personalProduct.getName() + " Product is out of stock", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                     if (personal_productsList.isEmpty()){
                         defaultView.setVisibility(View.VISIBLE);

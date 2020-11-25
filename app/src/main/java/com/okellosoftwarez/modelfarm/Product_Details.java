@@ -200,19 +200,32 @@ public class Product_Details extends AppCompatActivity {
 
 //                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
 
-                uploadingData(totalPrice, value);
-
-                Intent cartIntent = new Intent(Product_Details.this, Order.class);
-                cartIntent.putExtra("prdName", d_name);
-                cartIntent.putExtra("prdMail", d_email);
-                cartIntent.putExtra("prdLocation", d_location);
-                cartIntent.putExtra("prdPhone", d_phone);
-                cartIntent.putExtra("prdCapacity", value);
-                cartIntent.putExtra("prdPrice", price);
-                cartIntent.putExtra("remPrdCapacity", capacityRem);
+//                uploadingData(totalPrice, value);
+//
+//                Intent cartIntent = new Intent(Product_Details.this, Order.class);
+//                cartIntent.putExtra("prdName", d_name);
+//                cartIntent.putExtra("prdMail", d_email);
+//                cartIntent.putExtra("prdLocation", d_location);
+//                cartIntent.putExtra("prdPhone", d_phone);
+//                cartIntent.putExtra("prdCapacity", value);
+//                cartIntent.putExtra("prdPrice", price);
+//                cartIntent.putExtra("remPrdCapacity", capacityRem);
 
                 if (capacityRem >= 0){
+
+                    uploadingData(totalPrice, value, String.valueOf(capacityRem));
+
+                    Intent cartIntent = new Intent(Product_Details.this, Order.class);
+                    cartIntent.putExtra("prdName", d_name);
+                    cartIntent.putExtra("prdMail", d_email);
+                    cartIntent.putExtra("prdLocation", d_location);
+                    cartIntent.putExtra("prdPhone", d_phone);
+                    cartIntent.putExtra("prdCapacity", value);
+                    cartIntent.putExtra("prdPrice", price);
+                    cartIntent.putExtra("remPrdCapacity", capacityRem);
+
                     startActivity(cartIntent);
+//                    updatePersonalProducts();
                 }
                 else {
                     Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity , Toast.LENGTH_SHORT).show();
@@ -230,12 +243,19 @@ public class Product_Details extends AppCompatActivity {
         alert.show();
     }
 
-    private void uploadingData(int totalPrice, String value) {
+    private void updatePersonalProducts() {
+
+    }
+
+    private void uploadingData(int totalPrice, String value, String capRem) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String loadedPhone = pref.getString("phone", null);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Orders").child(loadedPhone);
+
+        DatabaseReference perPref = database.getReference("personalProducts").child(d_phone).child(d_key);
+        perPref.child("capacity").setValue(capRem);
 //        String orderKey = ref.push().getKey();
 
 //        DatabaseReference orderDatabaseRef = FirebaseDatabase.getInstance().getReference("Products");
