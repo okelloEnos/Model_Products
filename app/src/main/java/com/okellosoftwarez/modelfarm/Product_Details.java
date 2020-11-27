@@ -192,11 +192,16 @@ public class Product_Details extends AppCompatActivity {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
-                int totalPrice = Integer.valueOf(value) * Integer.valueOf(d_price);
 
-                String price = Integer.toString(totalPrice);
+                try {
 
-                int capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
+                    if (Integer.valueOf(value) >= 1) {
+
+                        int totalPrice = Integer.valueOf(value) * Integer.valueOf(d_price);
+
+                        String price = Integer.toString(totalPrice);
+
+                        int capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
 
 //                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
 
@@ -211,26 +216,34 @@ public class Product_Details extends AppCompatActivity {
 //                cartIntent.putExtra("prdPrice", price);
 //                cartIntent.putExtra("remPrdCapacity", capacityRem);
 
-                if (capacityRem >= 0){
+                        if (capacityRem >= 0) {
 
-                    uploadingData(totalPrice, value, String.valueOf(capacityRem));
+                            uploadingData(totalPrice, value, String.valueOf(capacityRem));
 
-                    Intent cartIntent = new Intent(Product_Details.this, Order.class);
-                    cartIntent.putExtra("prdName", d_name);
-                    cartIntent.putExtra("prdMail", d_email);
-                    cartIntent.putExtra("prdLocation", d_location);
-                    cartIntent.putExtra("prdPhone", d_phone);
-                    cartIntent.putExtra("prdCapacity", value);
-                    cartIntent.putExtra("prdPrice", price);
-                    cartIntent.putExtra("remPrdCapacity", capacityRem);
+                            tv_capacity.setText(String.valueOf(capacityRem));
 
-                    startActivity(cartIntent);
+                            Intent cartIntent = new Intent(Product_Details.this, Order.class);
+                            cartIntent.putExtra("prdName", d_name);
+                            cartIntent.putExtra("prdMail", d_email);
+                            cartIntent.putExtra("prdLocation", d_location);
+                            cartIntent.putExtra("prdPhone", d_phone);
+                            cartIntent.putExtra("prdCapacity", value);
+                            cartIntent.putExtra("prdPrice", price);
+                            cartIntent.putExtra("remPrdCapacity", capacityRem);
+
+                            startActivity(cartIntent);
 //                    updatePersonalProducts();
-                }
-                else {
-                    Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity , Toast.LENGTH_SHORT).show();
-                }
+                        } else {
+                            Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(Product_Details.this, "Capacity cannot be less than 1", Toast.LENGTH_SHORT).show();
+                    }
 //                startActivity(cartIntent);
+                }
+                catch (NumberFormatException e){
+                    Toast.makeText(Product_Details.this, value + " Is not a Valid Number input", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

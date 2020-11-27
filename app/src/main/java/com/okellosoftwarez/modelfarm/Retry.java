@@ -32,7 +32,7 @@ public class Retry extends AppCompatActivity {
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Retry.this, "Implementation Coming Soon...", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Retry.this, "Implementation Coming Soon...", Toast.LENGTH_SHORT).show();
                 Intent startIntent = new Intent(Retry.this, Splash.class);
                 startActivity(startIntent);
             }

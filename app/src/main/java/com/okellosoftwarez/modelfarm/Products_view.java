@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,6 +16,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +48,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     public static String buttonString;
     DatabaseReference mDatabase, personalRef;
+    FirebaseStorage storage;
     RecyclerView recyclerView;
     productAdapter adapter;
     LinearLayoutManager layoutManager;
@@ -127,6 +134,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         });
 //        Obtaining reference to the firebase database
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+
+        storage = FirebaseStorage.getInstance();
 //        personalRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
 
         productsList = new ArrayList<>();
@@ -149,7 +158,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
                 productsList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Products receivedProduct = postSnapshot.getValue(Products.class);
+                    final Products receivedProduct = postSnapshot.getValue(Products.class);
                     receivedProduct.setID(postSnapshot.getKey());
 
                     if (Integer.valueOf(receivedProduct.getCapacity()) > 0){
@@ -157,7 +166,21 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                         productsList.add(receivedProduct);
                     }
                     else {
-                        mDatabase.child(receivedProduct.getID()).removeValue();
+//                        mDatabase.child(receivedProduct.getID()).removeValue();
+                        StorageReference storeRef = storage.getReferenceFromUrl(receivedProduct.getImage());
+
+                        storeRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mDatabase.child(receivedProduct.getID()).removeValue();
+                            }
+                        })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(Products_view.this, "Error in Deletion", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
 //                    productsList.add(receivedProduct);
                 }
