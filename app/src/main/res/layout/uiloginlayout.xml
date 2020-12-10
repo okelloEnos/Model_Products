@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SignIn">
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/topView"
         android:layout_width="wrap_content"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,13 +21,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topView"
         android:layout_width="wrap_content"
-        android:layout_height="80dp" />
+        android:layout_height="100dp" />
 
     <ImageView
         android:id="@+id/logInImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_width="wrap_content"
@@ -40,13 +35,13 @@
         app:srcCompat="@drawable/ic_person" />
 
     <TextView
-        android:id="@+id/signInText"
+        android:id="@+id/logInTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/logInImage"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="30sp"
@@ -59,9 +54,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewWave"
-        android:layout_marginTop="12dp"
-        android:drawablePadding="8dp"
-        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
         android:background="@drawable/round"
         android:drawableStart="@drawable/ic_email"
         android:drawableLeft="@drawable/ic_email"
@@ -79,10 +74,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPhone_signIn"
         android:layout_marginTop="16dp"
-        android:drawablePadding="8dp"
+        android:drawablePadding="16dp"
         android:drawableStart="@drawable/ic_lock"
         android:drawableLeft="@drawable/ic_lock"
-        android:padding="8dp"
+        android:padding="16dp"
         android:background="@drawable/round"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
@@ -99,8 +94,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etSignInMail"
         android:layout_marginTop="16dp"
-        android:drawablePadding="8dp"
-        android:padding="8dp"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
         android:background="@drawable/round"
         android:drawableStart="@drawable/ic_phone"
         android:drawableLeft="@drawable/ic_phone"
@@ -151,7 +146,6 @@
         app:layout_constraintTop_toBottomOf="@id/nextBtn_signIn"/>
 
     <TextView
-        android:id="@+id/registerBtn_signIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -166,6 +160,4 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintTop_toBottomOf="@id/forgotPassword"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

@@ -245,7 +245,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         navMail = headerView.findViewById(R.id.navMail);
         navPhone = headerView.findViewById(R.id.navPhone);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
 //        String loadedNavPhone = pref.getString("phone", null);
 //        if (pref.getString("eMail", null) != null){
 //            navMail.setText(pref.getString("eMail", null));
@@ -261,8 +261,19 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     userModel navModel = dataSnapshot.getValue(userModel.class);
-                    navMail.setText(navModel.getEmail());
-                    navPhone.setText(navModel.getPhone());
+                    if (navModel.getEmail().isEmpty()){
+                        navMail.setText(pref.getString("eMail", "User@domain.com"));
+                    }
+                    else {
+
+                        navMail.setText(navModel.getEmail());
+                    }
+                    if (navModel.getPhone().isEmpty()){
+                        navPhone.setText(pref.getString("phone", "07xxxxxxxx"));
+                    }
+                    else {
+                        navPhone.setText(navModel.getPhone());
+                    }
                 }
 
                 @Override

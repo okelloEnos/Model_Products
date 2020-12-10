@@ -59,18 +59,19 @@ public class Splash extends AppCompatActivity {
     }
 
 //    This method checks whether mobile is connected to internet and returns true if connected:
-    private boolean isNetworkConnected() {
+    public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
+
 //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
     public boolean isInternetAvailable() {
         try {
             InetAddress ipAddr = InetAddress.getByName("google.com");
-            //You can replace it with your name
-            return !ipAddr.equals("");
+
+                      return !ipAddr.equals("");
 
         } catch (Exception e) {
             return false;

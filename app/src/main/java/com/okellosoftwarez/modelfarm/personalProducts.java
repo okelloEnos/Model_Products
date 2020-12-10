@@ -1,14 +1,20 @@
 package com.okellosoftwarez.modelfarm;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -178,5 +184,38 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
     protected void onDestroy() {
         super.onDestroy();
         personalReference.removeEventListener(personalValueEventListener);
+    }
+
+    public static AlertDialog displayMobileDataSettingDialog(final Activity activity, final Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("NO INTERNET");
+        builder.setMessage("Please connect to your internet");
+        builder.setPositiveButton("WiFi", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                context.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                dialog.cancel();
+            }
+        });
+
+        builder.setNegativeButton("Mobile Data", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent mobileIntent = new Intent();
+                mobileIntent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$DataUsageSummaryActivity"));
+                dialog.cancel();
+                context.startActivity(mobileIntent);
+                activity.finish();
+            }
+        });
+        builder.show();
+
+        return builder.create();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 }

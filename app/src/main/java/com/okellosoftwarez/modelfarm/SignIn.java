@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,7 @@ public class SignIn extends AppCompatActivity {
 
         Button next = findViewById(R.id.nextBtn_signIn);
 
-        Button registerBtn = findViewById(R.id.registerBtn_signIn);
+        TextView registerBtn = findViewById(R.id.registerBtn_signIn);
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
