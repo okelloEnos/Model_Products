@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class SignUp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         etMail = findViewById(R.id.etMail);
-        etPassword = findViewById(R.id.etPassword_signIn);
+        etPassword = findViewById(R.id.etPassword);
         etUserName = findViewById(R.id.etUserName);
         etPhone = findViewById(R.id.etPhone);
         etConfirmPassword = findViewById(R.id.etConfirmPassword_signUp);
@@ -47,7 +48,7 @@ public class SignUp extends AppCompatActivity {
 
         Button registerBtn = findViewById(R.id.registerBtn_signUp);
 
-        Button logBtn = findViewById(R.id.logInBtn_signUp);
+        TextView logBtn = findViewById(R.id.logInTxt_signUp);
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

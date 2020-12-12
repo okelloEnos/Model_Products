@@ -48,7 +48,7 @@ public class SignIn extends AppCompatActivity {
 
         Button next = findViewById(R.id.nextBtn_signIn);
 
-        TextView registerBtn = findViewById(R.id.registerBtn_signIn);
+        TextView registerBtn = findViewById(R.id.registerTxt_signIn);
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -25,7 +25,7 @@ public class welcome_screen extends AppCompatActivity {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent continueIntent = new Intent(welcome_screen.this, SignUp.class);
+                Intent continueIntent = new Intent(welcome_screen.this, SignIn.class);
 
                 startActivity(continueIntent);
             }
@@ -49,6 +49,7 @@ public class welcome_screen extends AppCompatActivity {
         };
         spannableString.setSpan(terms,52,69, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(policy,74,88, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 
         tvTerms.setText(spannableString);
         tvTerms.setMovementMethod(LinkMovementMethod.getInstance());
