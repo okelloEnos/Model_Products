@@ -135,9 +135,16 @@
 
         <Button
             android:id="@+id/choosePhoto"
+            android:background="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:padding="@dimen/eight_dp"
             android:text="Choose Photo" />
 
         <Button
@@ -146,6 +153,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/eight_dp"
+            android:background="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
             android:visibility="gone"
             android:text="Change Photo" />
 
@@ -154,6 +167,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:background="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:padding="@dimen/eight_dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:text="Take Photo" />
     </LinearLayout>
@@ -254,6 +274,10 @@
         android:layout_marginBottom="10dp"
         android:background="@color/colorAccent"
         android:text="UPLOAD"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:padding="@dimen/eight_dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/phoneLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -267,6 +291,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="10dp"
         android:visibility="gone"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:padding="@dimen/eight_dp"
         android:background="@color/colorAccent"
         android:text="Update Changes"
         app:layout_constraintBottom_toBottomOf="parent"
