@@ -75,6 +75,7 @@ public class placedOrders extends AppCompatActivity {
 
                     if (placed_productsList.isEmpty()) {
                         defaultPlacedView.setVisibility(View.VISIBLE);
+                        clearBtn.setVisibility(View.INVISIBLE);
                     }
                     placedAdapter.notifyDataSetChanged();
                     placed_progressBar.setVisibility(View.INVISIBLE);

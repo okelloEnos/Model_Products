@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,6 +67,10 @@ public class SignIn extends AppCompatActivity {
 
                 if (email.isEmpty()) {
                     signInMail.setError("Missing Log In Mail");
+                } else if (phone.isEmpty()) {
+                    signInPhone.setError("Phone Number required");
+                } else if (phone.length() < 10){
+                    signInPhone.setError("Short Phone Number");
                 } else if (password.isEmpty()) {
                     signInPassword.setError("Missing Log In PassWord");
                 }
@@ -139,16 +144,17 @@ public class SignIn extends AppCompatActivity {
 //                            Toast.makeText(SignIn.this, "Authentication failed : " + task.getException().getMessage(),
 //                                    Toast.LENGTH_LONG).show();
                             if (task.getException().getMessage().equals("The email address is badly formatted.")){
-                                Toast.makeText(SignIn.this, "Bad Format E mail...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignIn.this, "Bad Format E mail...", Toast.LENGTH_LONG).show();
+                                signInMail.setError("Bad Format for E-Mail Address");
                             }
                             if (task.getException().getMessage().equals("The password is invalid or the user does not have a password.")){
-                                Toast.makeText(SignIn.this, "PassWord or E mail is Incorrect...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignIn.this, "PassWord or E mail is Incorrect...", Toast.LENGTH_LONG).show();
                             }
                             if (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")){
-                                Toast.makeText(SignIn.this, "Your E mail is Not Registered Try Create Account...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignIn.this, "Your E mail is Not Registered Try Create Account...", Toast.LENGTH_LONG).show();
                             }
                             if (task.getException().getMessage().equals(attempts)){
-                                Toast.makeText(SignIn.this, "Too Many Attempts !!! Get The Right Password and Try Again Later...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignIn.this, "Too Many Attempts !!! Get The Right Password and Try Again Later...", Toast.LENGTH_LONG).show();
                             }
                         }
 
@@ -168,18 +174,40 @@ public class SignIn extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                String resetMail =  resetInput.getText().toString().trim();
 
-                FirebaseAuth auth = FirebaseAuth.getInstance();
+               if(resetMail.isEmpty()){
+                   Toast.makeText(SignIn.this, "The Email Address is Blank...", Toast.LENGTH_SHORT).show();
+               }
+
+               if (Patterns.EMAIL_ADDRESS.matcher(resetMail).matches()){
+                   FirebaseAuth auth = FirebaseAuth.getInstance();
 //                String emailAddress = "user@example.com";
 
-                auth.sendPasswordResetEmail(resetMail)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "Email sent.");
-                                }
-                            }
-                        });
+                   auth.sendPasswordResetEmail(resetMail)
+                           .addOnCompleteListener(new OnCompleteListener<Void>() {
+                               @Override
+                               public void onComplete(@NonNull Task<Void> task) {
+                                   if (task.isSuccessful()) {
+                                       Log.d(TAG, "Email sent.");
+
+                                   }
+                               }
+                           });
+               }
+               else {
+                   Toast.makeText(SignIn.this, "Invalid E-Mail Address...", Toast.LENGTH_LONG).show();
+               }
+//                FirebaseAuth auth = FirebaseAuth.getInstance();
+////                String emailAddress = "user@example.com";
+//
+//                auth.sendPasswordResetEmail(resetMail)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d(TAG, "Email sent.");
+//                                }
+//                            }
+//                        });
 
             }
         });

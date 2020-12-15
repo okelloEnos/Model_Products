@@ -8,50 +8,84 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class welcome_screen extends AppCompatActivity {
+public class welcome_screen extends AppCompatActivity implements View.OnClickListener {
+
+    Button wlcCreateBtn, wlcLogBtn;
+    ImageView welcomeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_screen);
 
-        Button continueBtn = findViewById(R.id.continueBtn);
+//        Button continueBtn = findViewById(R.id.continueBtn);
 
-        continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent continueIntent = new Intent(welcome_screen.this, SignIn.class);
+        wlcCreateBtn = findViewById(R.id.welcomeCreateAccountBtn);
+        wlcLogBtn = findViewById(R.id.welcomeLogInBtn);
 
-                startActivity(continueIntent);
-            }
-        });
+        welcomeImage = findViewById(R.id.imageViewWelcome);
+//        welcomeImage.setImageResource(R.drawable.w);
 
-        TextView tvTerms = findViewById(R.id.tvTerms);
-        String text = getString(R.string.tvTerms);
-        SpannableString spannableString = new SpannableString(text);
-
-        ClickableSpan terms = new ClickableSpan() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(welcome_screen.this, "Our Terms of Service", Toast.LENGTH_SHORT).show();
-            }
-        };
-        ClickableSpan policy = new ClickableSpan() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(welcome_screen.this, "Our Privacy Policy", Toast.LENGTH_SHORT).show();
-            }
-        };
-        spannableString.setSpan(terms,52,69, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(policy,74,88, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        wlcLogBtn.setOnClickListener(this);
+        wlcCreateBtn.setOnClickListener(this);
 
 
-        tvTerms.setText(spannableString);
-        tvTerms.setMovementMethod(LinkMovementMethod.getInstance());
+//        continueBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent continueIntent = new Intent(welcome_screen.this, SignIn.class);
+//
+//                startActivity(continueIntent);
+//            }
+//        });
+
+//        TextView tvTerms = findViewById(R.id.tvTerms);
+//        String text = getString(R.string.tvTerms);
+//        SpannableString spannableString = new SpannableString(text);
+//
+//        ClickableSpan terms = new ClickableSpan() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(welcome_screen.this, "Our Terms of Service", Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        ClickableSpan policy = new ClickableSpan() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(welcome_screen.this, "Our Privacy Policy", Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        spannableString.setSpan(terms,52,69, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(policy,74,88, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+//        tvTerms.setText(spannableString);
+//        tvTerms.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case R.id.welcomeCreateAccountBtn :
+//                open create account screen
+                Intent accountScreenIntent = new Intent(welcome_screen.this, SignUp.class);
+                startActivity(accountScreenIntent);
+
+                break;
+
+            case R.id.welcomeLogInBtn :
+//                open log in screen
+                Intent logInScreenIntent = new Intent(welcome_screen.this, SignIn.class);
+                startActivity(logInScreenIntent);
+
+                break;
+        }
     }
 }

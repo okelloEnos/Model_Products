@@ -81,6 +81,7 @@ public class productRequests extends AppCompatActivity implements cartAdapter.on
                     }
                     if (requestList.isEmpty()) {
                         defaultRequestView.setVisibility(View.VISIBLE);
+                        clearReqBtn.setVisibility(View.INVISIBLE);
                     }
                     requestAdapter.notifyDataSetChanged();
                     loadingRequestOrders.setVisibility(View.INVISIBLE);

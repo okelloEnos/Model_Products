@@ -3,6 +3,10 @@ package com.okellosoftwarez.modelfarm;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +33,8 @@ public class SignUp extends AppCompatActivity {
 //    public static  SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);;
 
     EditText  etPassword, etUserName, etPhone, etMail, etConfirmPassword, etLocation;
+    TextView tvTermsPolicy;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,31 @@ public class SignUp extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etConfirmPassword = findViewById(R.id.etConfirmPassword_signUp);
         etLocation = findViewById(R.id.etLocation);
+
+        tvTermsPolicy = findViewById(R.id.tvTermsPolicy);
+
+        String text = getString(R.string.tvTermsPolicy);
+        SpannableString spannableString = new SpannableString(text);
+
+        ClickableSpan terms = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SignUp.this, "Our Terms of Service", Toast.LENGTH_SHORT).show();
+            }
+        };
+        ClickableSpan policy = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SignUp.this, "Our Privacy Policy", Toast.LENGTH_SHORT).show();
+            }
+        };
+        spannableString.setSpan(terms,56,73, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(policy,78,92, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        tvTermsPolicy.setText(spannableString);
+        tvTermsPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+
 
         Button registerBtn = findViewById(R.id.registerBtn_signUp);
 
@@ -69,31 +100,31 @@ public class SignUp extends AppCompatActivity {
                 String location = etLocation.getText().toString().trim();
 
                 if (userName.isEmpty()) {
-                    etUserName.setError("Missing User Name");
-
-                } else if (password.isEmpty()) {
-                    etPassword.setError("Missing PassWord");
-
-                } else if (confirmPassword.isEmpty()) {
-                    etConfirmPassword.setError("Missing Confirm Password");
-
-                } else if (phone.isEmpty()) {
-                    etPhone.setError("Missing Phone Number");
+                    etUserName.setError("User Name Required");
 
                 } else if (email.isEmpty()) {
-                    etMail.setError("Missing Mail");
+                    etMail.setError("E-Mail Address Required");
+
+                } else if (phone.isEmpty()) {
+                    etPhone.setError("Phone Number Required");
+
+                } else if (phone.length() < 10){
+                    etPhone.setError("Phone Number Too Short");
 
                 } else if (location.isEmpty()){
                     etLocation.setError("Location Required");
 
+                } else if (password.isEmpty()) {
+                    etPassword.setError("Password Required");
+
                 }else if (password.length() < 6) {
                     etPassword.setError("PassWord Too Short");
 
-                } else if (!password.equals(confirmPassword)){
-                    etConfirmPassword.setError("Confirm PassWord Do not Match ");
+                } else if (confirmPassword.isEmpty()) {
+                    etConfirmPassword.setError("Confirm Password Required");
 
-                } else if (phone.length() < 10){
-                    etPhone.setError("Phone Number Too Short");
+                } else if (!password.equals(confirmPassword)){
+                    etConfirmPassword.setError("Confirm Password Do not Match ");
 
                 }
                 else {
@@ -144,7 +175,7 @@ public class SignUp extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(SignUp.this, "Successfull Registration...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "Successful Registration...", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null){
@@ -162,7 +193,8 @@ public class SignUp extends AppCompatActivity {
                             }
 
                             if (task.getException().getMessage().equals("The email address is badly formatted.")){
-                                Toast.makeText(SignUp.this, "Bad Format E mail...", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SignUp.this, "Bad Format E mail...", Toast.LENGTH_LONG).show();
+                                etMail.setError("Bad Format for E-Mail Address");
                             }
                         }
 
@@ -185,4 +217,5 @@ public class SignUp extends AppCompatActivity {
 //        Intent outIntent = new Intent(getApplicationContext(), SignUp.class);
 //        startActivity(outIntent);
 //    }
+
 }

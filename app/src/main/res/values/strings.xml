@@ -11,6 +11,7 @@
     <string name="tvSeller">Seller </string>
     <string name="continueBtn">CONTINUE</string>
     <string name="tvTerms">By Tapping on the CONTINUE Button above, I agree to Terms of Services and Privacy Policy.</string>
+    <string name="tvTermsPolicy">Clicking on the CREATE ACCOUNT Button, I have agreed to Terms of Services and Privacy Policy.</string>
     <string name="signInBtn">Sign In</string>
     <string name="signUpBtn">Sign Up</string>
     <string name="tvUserName">User Name :</string>
