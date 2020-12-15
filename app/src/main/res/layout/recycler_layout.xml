@@ -25,7 +25,7 @@
                 android:layout_height="100dp"
                 android:layout_weight="70"
                 android:layout_marginLeft="8dp"
-                app:srcCompat="@drawable/ic_launcher_background" />
+                app:srcCompat="@drawable/defaultimage" />
 
             <LinearLayout
                 android:layout_width="match_parent"

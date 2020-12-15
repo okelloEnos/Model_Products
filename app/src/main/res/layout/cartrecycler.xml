@@ -18,7 +18,7 @@
             android:layout_margin="@dimen/eight_dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+            app:srcCompat="@drawable/defaultimage" />
 
         <TextView
             android:id="@+id/selectedStaticPrdName"
