@@ -1,11 +1,10 @@
 package com.okellosoftwarez.modelfarm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.os.Build;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -18,27 +17,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +43,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private static final String TAG = "Products_view";
 
     public static String buttonString;
-    DatabaseReference mDatabase, personalRef;
+    DatabaseReference mDatabase;
     FirebaseStorage storage;
     RecyclerView recyclerView;
     productAdapter adapter;
@@ -61,13 +57,11 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private FloatingActionButton fab;
     TextView navMail, navPhone, defaultProductView;
     EditText searchText;
-
     String pPhone;
-
     FirebaseAuth signOutmAuth;
     Products personalProduct;
-
     TextView cartText;
+
     long cartCount = 0;
 
     @Override
@@ -83,25 +77,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         // Initialize Firebase Auth
         signOutmAuth = FirebaseAuth.getInstance();
-//        navMail = findViewById(R.id.navMail);
-//        navPhone = findViewById(R.id.navPhone);
-
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//
-//        if (pref.getString("eMail", null) != null){
-//            navMail.setText(pref.getString("eMail", null));
-//        }
-//        if (pref.getString("phone", null) != null){
-//            navPhone.setText(pref.getString("phone", null));
-//        }
-
-//        String phone = "NoPath";
-//        if (getIntent().hasExtra("phone")){
-//            phone = getIntent().getStringExtra("phone");
-//            sendIntents_details(buttonString);
-//            Toast.makeText(this, "Phone No : " + phone, Toast.LENGTH_LONG).show();
-
-//
 
         personalProduct = new Products();
 
@@ -128,7 +103,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 else {
                     adapter = new productAdapter(Products_view.this, productsList);
                     recyclerView.setAdapter(adapter);
-//                    recyclerView.removeAllViews();
                 }
             }
         });
@@ -136,7 +110,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
 
         storage = FirebaseStorage.getInstance();
-//        personalRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
 
         productsList = new ArrayList<>();
         filteredProductsList = new ArrayList<>();
@@ -152,54 +125,94 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         adapter = new productAdapter(Products_view.this, productsList);
         recyclerView.setAdapter(adapter);
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if (isNetworkConnected()) {
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                productsList.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    final Products receivedProduct = postSnapshot.getValue(Products.class);
-                    receivedProduct.setID(postSnapshot.getKey());
+                    productsList.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        final Products receivedProduct = postSnapshot.getValue(Products.class);
+                        receivedProduct.setID(postSnapshot.getKey());
 
-                    if (Integer.valueOf(receivedProduct.getCapacity()) > 0){
+                        if (Integer.valueOf(receivedProduct.getCapacity()) > 0) {
 
-                        productsList.add(receivedProduct);
-                    }
-                    else {
-//                        mDatabase.child(receivedProduct.getID()).removeValue();
-                        StorageReference storeRef = storage.getReferenceFromUrl(receivedProduct.getImage());
+                            productsList.add(receivedProduct);
+                        } else {
+                            StorageReference storeRef = storage.getReferenceFromUrl(receivedProduct.getImage());
 
-                        storeRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                mDatabase.child(receivedProduct.getID()).removeValue();
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Products_view.this, "Error in Deletion", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
+                            storeRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mDatabase.child(receivedProduct.getID()).removeValue();
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(Products_view.this, "Error in Deletion", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
 //                    productsList.add(receivedProduct);
+                    }
+//                if (isNetworkConnected()){
+//                    if (isInternetAvailable()){
+//
+//                    }
+//                    else {
+//
+//                        Toast.makeText(Products_view.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//                    }
+//
+//                }
+//                else {
+//                    Toast.makeText(Products_view.this, R.string.No_network, Toast.LENGTH_lo).show();
+//                }
+
+                    if (productsList.isEmpty()) {
+                        defaultProductView.setVisibility(View.VISIBLE);
+                        circleP_bar.setVisibility(View.INVISIBLE);
+                    }
+
+                    adapter.notifyDataSetChanged();
+                    circleP_bar.setVisibility(View.INVISIBLE);
                 }
-                if (productsList.isEmpty()){
-                    defaultProductView.setVisibility(View.VISIBLE);
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    Toast.makeText(Products_view.this, "Permission Denied...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Products_view.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    circleP_bar.setVisibility(View.INVISIBLE);
                 }
-                adapter.notifyDataSetChanged();
-                circleP_bar.setVisibility(View.INVISIBLE);
-            }
+            });
+        }
+        else {
+//            Thread prdThread = new Thread(){
+//                @Override
+//                public void run() {
+//                    super.run();
+//
+//                    try {
+//                        sleep(3000);
+//                        circleP_bar.setVisibility(View.INVISIBLE);
+//                        defaultProductView.setVisibility(View.VISIBLE);
+//                        defaultProductView.setText(R.string.No_network);
+//                        Toast.makeText(this, "Okello Check out", Toast.LENGTH_LONG).show();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                Toast.makeText(Products_view.this, "Permission Denied...", Toast.LENGTH_SHORT).show();
-                Toast.makeText(Products_view.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                circleP_bar.setVisibility(View.INVISIBLE);
-            }
-        });
-
+//                    }
+//                    catch (InterruptedException ex){
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            };
+//            prdThread.start();
+            circleP_bar.setVisibility(View.INVISIBLE);
+            defaultProductView.setVisibility(View.VISIBLE);
+            defaultProductView.setText(R.string.No_network);
+            Toast.makeText(this, "Okello Check out", Toast.LENGTH_LONG).show();
+        }
 //        Floating Btn to add new Product
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -616,7 +629,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     private void signOut() {
         signOutmAuth.signOut();
-        Intent outIntent = new Intent(this, SignUp.class);
+        Intent outIntent = new Intent(this, SignIn.class);
         startActivity(outIntent);
     }
     private void switchUser() {
@@ -633,5 +646,23 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         Intent profileIntent = new Intent(this, Profile.class);
         startActivity(profileIntent);
     }
+    //    This method checks whether mobile is connected to internet and returns true if connected:
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

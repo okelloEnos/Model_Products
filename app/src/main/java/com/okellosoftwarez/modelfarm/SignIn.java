@@ -1,8 +1,10 @@
 package com.okellosoftwarez.modelfarm;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -27,11 +29,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.InetAddress;
+
 public class SignIn extends AppCompatActivity {
 
     private static final String TAG = "SignIn";
     private static FirebaseAuth signInmAuth;
     private EditText signInMail, signInPassword, signInPhone;
+//    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,32 +66,66 @@ public class SignIn extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = signInMail.getText().toString().trim();
-                String password = signInPassword.getText().toString().trim();
-                String phone = signInPhone.getText().toString().trim();
+                if (isNetworkConnected()){
+//                    if (isInternetAvailable()){
 
-                if (email.isEmpty()) {
-                    signInMail.setError("Missing Log In Mail");
-                } else if (phone.isEmpty()) {
-                    signInPhone.setError("Phone Number required");
-                } else if (phone.length() < 10){
-                    signInPhone.setError("Short Phone Number");
-                } else if (password.isEmpty()) {
-                    signInPassword.setError("Missing Log In PassWord");
-                }
-                else if (password.length() < 6) {
-                    signInPassword.setError("PassWord Too Short");
+                        String email = signInMail.getText().toString().trim();
+                        String password = signInPassword.getText().toString().trim();
+                        String phone = signInPhone.getText().toString().trim();
+
+                        if (email.isEmpty()) {
+                            signInMail.setError("Missing Log In Mail");
+                        } else if (phone.isEmpty()) {
+                            signInPhone.setError("Phone Number required");
+                        } else if (phone.length() < 10){
+                            signInPhone.setError("Short Phone Number");
+                        } else if (password.isEmpty()) {
+                            signInPassword.setError("Missing Log In PassWord");
+                        }
+                        else if (password.length() < 6) {
+                            signInPassword.setError("PassWord Too Short");
+                        }
+                        else {
+                            loadPreference(phone, email, password);
+//                            logInUser(email, password);
+                        }
+
+//                    }
+//                    else {
+
+//                        Toast.makeText(SignIn.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//                    }
+
                 }
                 else {
-                    loadPreference(phone);
-                    logInUser(email, password);
+                    Toast.makeText(SignIn.this, R.string.No_network, Toast.LENGTH_LONG).show();
                 }
+//                String email = signInMail.getText().toString().trim();
+//                String password = signInPassword.getText().toString().trim();
+//                String phone = signInPhone.getText().toString().trim();
+//
+//                if (email.isEmpty()) {
+//                    signInMail.setError("Missing Log In Mail");
+//                } else if (phone.isEmpty()) {
+//                    signInPhone.setError("Phone Number required");
+//                } else if (phone.length() < 10){
+//                    signInPhone.setError("Short Phone Number");
+//                } else if (password.isEmpty()) {
+//                    signInPassword.setError("Missing Log In PassWord");
+//                }
+//                else if (password.length() < 6) {
+//                    signInPassword.setError("PassWord Too Short");
+//                }
+//                else {
+//                    loadPreference(phone);
+//                    logInUser(email, password);
+//                }
             }
         });
 
     }
 
-    private void loadPreference(String signInPhone) {
+    private void loadPreference(String signInPhone, final String signInMail, final String signInPassword) {
         DatabaseReference signPreference = FirebaseDatabase.getInstance().getReference("userProfile").child(signInPhone);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
@@ -97,15 +136,32 @@ public class SignIn extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userModel signInUser = dataSnapshot.getValue(userModel.class);
 
+                if (signInUser != null) {
 //                    Storing Preference Data
-                signEditor.putString("eMail", signInUser.getEmail());
+                    signEditor.putString("eMail", signInUser.getEmail());
 //                editor.putString("passWord", signInUser.);
-                signEditor.putString("userName", signInUser.getUserName());
-                signEditor.putString("phone", signInUser.getPhone());
-                signEditor.putString("location", signInUser.getLocation());
+                    signEditor.putString("userName", signInUser.getUserName());
+                    signEditor.putString("phone", signInUser.getPhone());
+                    signEditor.putString("location", signInUser.getLocation());
 
-                // commit changes
-                signEditor.commit();
+                    // commit changes
+                    signEditor.commit();
+
+                    String confMail = signInUser.getEmail();
+                    if (!confMail.isEmpty()) {
+                        if (confMail.equals(signInMail)) {
+                            logInUser(signInMail, signInPassword);
+                        } else {
+                            Toast.makeText(SignIn.this, "Incorrect Phone Number", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(SignIn.this, "No Retrieved User Mail", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+                else {
+                    Toast.makeText(SignIn.this, "Invalid Phone Number", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -132,10 +188,17 @@ public class SignIn extends AppCompatActivity {
                             Toast.makeText(SignIn.this, "Welcome Back to Agriculture Commerce...", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = signInmAuth.getCurrentUser();
                             if (user != null){
-                                updateUI();
+//                                if (user.getPhoneNumber() == phone) {
+//                                    loadPreference(phone);
+                                    updateUI();
+                                }
+//                                else {
+//                                    signInPhone.setError("Incorrect Phone Number");
+//                                    Toast.makeText(SignIn.this, "Incorrect Number...", Toast.LENGTH_LONG).show();
+//                                }
                             }
 
-                        }
+//                        }
                         else {
 
                             // If sign in fails, display a message to the user.
@@ -163,39 +226,98 @@ public class SignIn extends AppCompatActivity {
     }
 
     public void forgotPassWord(View view) {
-        AlertDialog.Builder resetBuilder = new AlertDialog.Builder(this);
-        resetBuilder.setTitle("Reset");
-        resetBuilder.setMessage("Enter Email To Receive Password Resent Link");
+        if (isNetworkConnected()){
+//            if (isInternetAvailable()){
 
-        final EditText resetInput = new EditText(this);
-        resetBuilder.setView(resetInput);
-        resetBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               String resetMail =  resetInput.getText().toString().trim();
+                AlertDialog.Builder resetBuilder = new AlertDialog.Builder(this);
+                resetBuilder.setTitle("Reset");
+                resetBuilder.setMessage("Enter Email To Receive Password Resent Link");
 
-               if(resetMail.isEmpty()){
-                   Toast.makeText(SignIn.this, "The Email Address is Blank...", Toast.LENGTH_SHORT).show();
-               }
+                final EditText resetInput = new EditText(this);
+                resetBuilder.setView(resetInput);
+                resetBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String resetMail =  resetInput.getText().toString().trim();
 
-               if (Patterns.EMAIL_ADDRESS.matcher(resetMail).matches()){
-                   FirebaseAuth auth = FirebaseAuth.getInstance();
+                        if(resetMail.isEmpty()){
+                            Toast.makeText(SignIn.this, "The Email Address is Blank...", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (Patterns.EMAIL_ADDRESS.matcher(resetMail).matches()){
+                            FirebaseAuth auth = FirebaseAuth.getInstance();
 //                String emailAddress = "user@example.com";
 
-                   auth.sendPasswordResetEmail(resetMail)
-                           .addOnCompleteListener(new OnCompleteListener<Void>() {
-                               @Override
-                               public void onComplete(@NonNull Task<Void> task) {
-                                   if (task.isSuccessful()) {
-                                       Log.d(TAG, "Email sent.");
+                            auth.sendPasswordResetEmail(resetMail)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "Email sent.");
 
-                                   }
-                               }
-                           });
-               }
-               else {
-                   Toast.makeText(SignIn.this, "Invalid E-Mail Address...", Toast.LENGTH_LONG).show();
-               }
+                                                Toast.makeText(SignIn.this, "Recovery Email has been Sent to : " + resetMail, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
+                        else {
+                            Toast.makeText(SignIn.this, "Invalid E-Mail Address...", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+                resetBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(SignIn.this, "Request Cancelled...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                resetBuilder.show();
+//            }
+//            else {
+//
+//                Toast.makeText(SignIn.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//            }
+
+        }
+        else {
+            Toast.makeText(SignIn.this, R.string.No_network, Toast.LENGTH_LONG).show();
+        }
+//        AlertDialog.Builder resetBuilder = new AlertDialog.Builder(this);
+//        resetBuilder.setTitle("Reset");
+//        resetBuilder.setMessage("Enter Email To Receive Password Resent Link");
+//
+//        final EditText resetInput = new EditText(this);
+//        resetBuilder.setView(resetInput);
+//        resetBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//               String resetMail =  resetInput.getText().toString().trim();
+//
+//               if(resetMail.isEmpty()){
+//                   Toast.makeText(SignIn.this, "The Email Address is Blank...", Toast.LENGTH_SHORT).show();
+//               }
+
+//               if (Patterns.EMAIL_ADDRESS.matcher(resetMail).matches()){
+//                   FirebaseAuth auth = FirebaseAuth.getInstance();
+////                String emailAddress = "user@example.com";
+//
+//                   auth.sendPasswordResetEmail(resetMail)
+//                           .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                               @Override
+//                               public void onComplete(@NonNull Task<Void> task) {
+//                                   if (task.isSuccessful()) {
+//                                       Log.d(TAG, "Email sent.");
+//
+//                                   }
+//                               }
+//                           });
+//               }
+//               else {
+//                   Toast.makeText(SignIn.this, "Invalid E-Mail Address...", Toast.LENGTH_LONG).show();
+//               }
 //                FirebaseAuth auth = FirebaseAuth.getInstance();
 ////                String emailAddress = "user@example.com";
 //
@@ -209,17 +331,17 @@ public class SignIn extends AppCompatActivity {
 //                            }
 //                        });
 
-            }
-        });
-
-        resetBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(SignIn.this, "Request Cancelled...", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        resetBuilder.show();
+//            }
+//        });
+//
+//        resetBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Toast.makeText(SignIn.this, "Request Cancelled...", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        resetBuilder.show();
 
 //        FirebaseAuth auth = FirebaseAuth.getInstance();
 //        FirebaseUser user = auth.getCurrentUser();
@@ -233,5 +355,24 @@ public class SignIn extends AppCompatActivity {
 //                        }
 //                    }
 //                });
+    }
+    //    This method checks whether mobile is connected to internet and returns true if connected:
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

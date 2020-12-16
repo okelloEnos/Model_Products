@@ -19,6 +19,10 @@ public class Retry extends AppCompatActivity {
         TextView tvRetry = findViewById(R.id.tvRetry);
         Button retryBtn = findViewById(R.id.retry_button);
 
+//        if (getIntent().hasExtra("activity")){
+//            String activityName = getIntent().getStringExtra("activity");
+//            Toast.makeText(this, "From : " + activityName, Toast.LENGTH_SHORT).show();
+//        }
         if (getIntent().hasExtra("internet")){
             String connection = getIntent().getStringExtra("internet");
 

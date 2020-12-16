@@ -1,6 +1,5 @@
 package com.okellosoftwarez.modelfarm;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,15 +8,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -37,11 +37,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.net.InetAddress;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int IMAGE_REQUEST = 1, CAMERA_REQUEST = 2;
-    private static final int PERMISSION_CODE = 1000 ;
+    private static final int PERMISSION_CODE = 1000;
 
     EditText etName, etLocation, etPrice, etCapacity, etPhone, etMail;
     Button chooseBtn, takeBtn, uploadBtn, changeBtn, changePhoto;
@@ -63,38 +65,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toolbar toolbar = findViewById(R.id.tool);
         setSupportActionBar(toolbar);
-//        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getSupportActionBar().setIcon(getDrawable(R.drawable.ic_keyboard_backspace_black_24dp));
-//        }
         setTitle("New Product");
 
-
-//        toolbar.setTitle("New Product Okay");
 
         storageReference = FirebaseStorage.getInstance().getReference("Products");
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");
 
         product = new Products();
+
         etName = findViewById(R.id.et_addName);
         etLocation = findViewById(R.id.et_addLocation);
         etPrice = findViewById(R.id.et_addPrice);
         etCapacity = findViewById(R.id.et_addCapacity);
         etPhone = findViewById(R.id.et_addPhone);
         etMail = findViewById(R.id.et_addEmail);
-
-
         chooseBtn = findViewById(R.id.choosePhoto);
         takeBtn = findViewById(R.id.takePhoto);
         uploadBtn = findViewById(R.id.upload);
         changePhoto = findViewById(R.id.updatePhoto);
         changeBtn = findViewById(R.id.uploadChanges);
         addImage = findViewById(R.id.addImage);
-
         mProgress = findViewById(R.id.progressBar);
 
         chooseBtn.setOnClickListener(this);
@@ -102,44 +96,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         editProductDetails(toolbar);
-//        uploadBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                editProductDetails();
-//                receiveEntries();
-//            }
-//        });
+
     }
 
     private void editProductDetails(Toolbar toolbar) {
-        if (getIntent().hasExtra("editKey")){
+        if (getIntent().hasExtra("editKey")) {
             editKey = getIntent().getStringExtra("editKey");
+
             setTitle("Edit Product");
+
             changePhoto.setVisibility(View.VISIBLE);
             chooseBtn.setVisibility(View.INVISIBLE);
             takeBtn.setVisibility(View.INVISIBLE);
             changeBtn.setVisibility(View.VISIBLE);
-
             uploadBtn.setVisibility(View.INVISIBLE);
-            if (getIntent().hasExtra("editImage")){
+
+            if (getIntent().hasExtra("editImage")) {
                 receivedImage = getIntent().getStringExtra("editImage");
                 Picasso.with(this).load(receivedImage).placeholder(R.mipmap.ic_launcher)
-                                    .fit().centerCrop().into(addImage);
+                        .fit().centerCrop().into(addImage);
                 image_uri = Uri.parse(receivedImage);
 
-                if (getIntent().hasExtra("editName")){
+                if (getIntent().hasExtra("editName")) {
                     sName = getIntent().getStringExtra("editName");
                     etName.setText(sName);
 
-                    if (getIntent().hasExtra("editLocation")){
+                    if (getIntent().hasExtra("editLocation")) {
                         sLocation = getIntent().getStringExtra("editLocation");
                         etLocation.setText(sLocation);
 
-                        if (getIntent().hasExtra("editPrice")){
+                        if (getIntent().hasExtra("editPrice")) {
                             sPrice = getIntent().getStringExtra("editPrice");
                             etPrice.setText(sPrice);
 
-                            if (getIntent().hasExtra("editCapacity")){
+                            if (getIntent().hasExtra("editCapacity")) {
                                 sCapacity = getIntent().getStringExtra("editCapacity");
                                 etCapacity.setText(sCapacity);
 
@@ -154,17 +144,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         changePhoto.setOnClickListener(this);
                                         changeBtn.setOnClickListener(this);
 
-//                                        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//                                            @Override
-//                                            public boolean onMenuItemClick(MenuItem item) {
-//                                                Toast.makeText(MainActivity.this, "Back Clicked", Toast.LENGTH_SHORT).show();
-//                                                return true;
-//                                            }
-//                                        });
                                         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-//                                                Toast.makeText(MainActivity.this, "Back Clicked", Toast.LENGTH_SHORT).show();
                                                 Intent changeIntent = new Intent(getApplicationContext(), personalProducts.class);
                                                 startActivity(changeIntent);
                                             }
@@ -176,10 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-        }
-
-
-        else {
+        } else {
             uploadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -218,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mProgress.setProgress(0);
                         }
                     }, 500);
-//            Toast.makeText(this, ".............................................................", Toast.LENGTH_SHORT).show();
+
                     Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
                     updateRef.child(editKey).setValue(updatedProduct);
                     databaseReference.child(editKey).setValue(updatedProduct);
@@ -233,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         Toast.makeText(this, "UP " + uploadUpdateTask, Toast.LENGTH_SHORT).show();
 
-                        // Register observers to listen for when the download is done or if it fails
                         uploadUpdateTask.addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
@@ -293,31 +271,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-//        FirebaseStorage updateImageStorage = FirebaseStorage.getInstance();
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String phoneNo = pref.getString("phone", null);
-//        DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
-//        Products updatedProduct = new Products();
-//        Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
-
-//            Toast.makeText(this, "Updating :" + image + "\n" + "\n" + newName + "\n" + newPrice + "\n" + newCapacity + "\n" + newEmail + "\n" + image_uri, Toast.LENGTH_LONG).show();
-
-//        StorageReference updateImageRef = updateImageStorage.getReferenceFromUrl(receivedImage);
-//        updateImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void aVoid) {
-//                updateRef.child(editKey).setValue(updatedProduct);
-//                databaseReference.child(editKey).setValue(updatedProduct);
-//                Toast.makeText(MainActivity.this, "Update Success...", Toast.LENGTH_SHORT).show();
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(MainActivity.this, "Update Failed..." + e.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        updateRef.child(editKey).setValue(updatedProduct);
-//        databaseReference.child(editKey).setValue(updatedProduct);
         }
     }
 
@@ -332,27 +285,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         backIntent.putExtra("mail", product.getEmail());
         backIntent.putExtra("image", product.getImage());
         backIntent.putExtra("key", key);
-//        Toast.makeText(this, "Inserted Values are :" +
-//                "\nName : " + product.getName() +
-//                "\nLocation : " + product.getLocation() +
-//                "\nPrice : " + product.getPrice() +
-//                "\nCapacity : " + product.getCapacity() +
-//                "\nPhone : " + product.getPhone() +
-//                "\n Email : " + product.getLocation() +
-//                "\n Image Name : " + product.getImageUrl() +
-//                "\nProduct ID : " + product.getID() +
-//                "\nImage String : " + product.getImage(), Toast.LENGTH_LONG).show();
+
         startActivity(backIntent);
-//        Toast.makeText(this, "Inserted Values are :" +
-//                "\nName : " + product.getName() +
-//                "\nLocation : " + product.getLocation() +
-//                "\nPrice : " + product.getPrice() +
-//                "\nCapacity : " + product.getCapacity() +
-//                "\nPhone : " + product.getPhone() +
-//                "\n Email : " + product.getLocation() +
-////                "\n Image Name : " + product.getImageUrl() +
-//                "\nProduct ID : " + product.getID() +
-//                "\nImage String : " + product.getImage(), Toast.LENGTH_LONG).show();
+
     }
 
     private void receiveEntries() {
@@ -371,19 +306,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Missing Fields...", Toast.LENGTH_SHORT).show();
         } else {
 
-//            Toast.makeText(this, "Check Field else part.......", Toast.LENGTH_SHORT).show();
-            if (Integer.valueOf(sPrice) < 1){
+            if (Integer.valueOf(sPrice) < 1) {
                 Toast.makeText(this, "Please Enter a Valid Price", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if (Integer.valueOf(sCapacity) < 1){
+            } else {
+                if (Integer.valueOf(sCapacity) < 1) {
                     Toast.makeText(this, "Please Enter a Valid Capacity", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    uploadDetails();
+                } else {
+
+                    if (isNetworkConnected()) {
+//                        if (isInternetAvailable()){
+
+                        uploadDetails();
+                    }
+//                        else {
+
+//                            Toast.makeText(MainActivity.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//                        }
+
+//                    }
+                    else {
+                        Toast.makeText(MainActivity.this, R.string.No_network, Toast.LENGTH_LONG).show();
+                    }
                 }
             }
-//            uploadDetails();
         }
     }
 
@@ -439,15 +384,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }, 500);
                                 Toast.makeText(MainActivity.this, "Upload Successful..." + sImage, Toast.LENGTH_SHORT).show();
-//                                product = new Products(sName, sPhone, sEmail, sImage);
+
                                 product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
                                 String key = databaseReference.push().getKey();
                                 product.setID(key);
                                 databaseReference.child(key).setValue(product);
-//                                databaseReference.child(sPhone).child(key).setValue(product);
-//                                databaseReference.child(sPhone).setValue(product);
+
                                 Toast.makeText(MainActivity.this, "Success Key retention...", Toast.LENGTH_LONG).show();
-//                                backToMain(sPhone);
                                 backToMain(key);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -490,21 +433,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.choosePhoto:
 //                Choose a photo from gallery
-                        choosingPhoto();
-//                Intent chooseIntent = new Intent();
-//                chooseIntent.setType("image/*");
-//                chooseIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(chooseIntent, IMAGE_REQUEST);
+                choosingPhoto();
                 break;
 
             case R.id.updatePhoto:
                 chooserPhoto();
-//                    Toast.makeText(this, "Changing Photo Feature...", Toast.LENGTH_SHORT).show();
-                    break;
+                break;
 
-            case R.id.uploadChanges :
-//                Toast.makeText(MainActivity.this, "Updating Feature Coming Soon...", Toast.LENGTH_SHORT).show();
-                updatingDetails();
+            case R.id.uploadChanges:
+                if (isNetworkConnected()) {
+                    updatingDetails();
+                }
+                else {
+                    Toast.makeText(this, R.string.No_network, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -527,20 +469,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //        if system OS is greater than Marshmallow require Permissions at run time
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
 //                Permissions not enabled so request for them
-                String [] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
                 requestPermissions(permissions, PERMISSION_CODE);
-            }
-            else {
+            } else {
 //                Permission already granted
                 openCamera();
             }
-        }
-        else {
+        } else {
 //            For OS lesser than Marshmallow
             openCamera();
         }
@@ -563,13 +503,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //        This Method is called when user selects either allow or deny in the pop up notification
-        switch (requestCode){
-            case PERMISSION_CODE : {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                    Permission from pop up was granted
                     openCamera();
-                }
-                else {
+                } else {
 //                    Permission from pop up was denied
                     Toast.makeText(this, "Permission Denied ...", Toast.LENGTH_SHORT).show();
                 }
@@ -593,6 +532,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Picasso.with(this).load(image_uri).into(addImage);
 
             }
+        }
+    }
+
+    //    This method checks whether mobile is connected to internet and returns true if connected:
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
         }
     }
 }

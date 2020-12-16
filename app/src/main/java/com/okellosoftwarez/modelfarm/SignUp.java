@@ -1,7 +1,9 @@
 package com.okellosoftwarez.modelfarm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -24,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.net.InetAddress;
 
 public class SignUp extends AppCompatActivity {
     private static final String TAG = "SignUp";
@@ -92,57 +96,60 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String email = etMail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
-                String confirmPassword = etConfirmPassword.getText().toString().trim();
-                String userName = etUserName.getText().toString().trim();
-                String phone = etPhone.getText().toString().trim();
-                String location = etLocation.getText().toString().trim();
+                if (isNetworkConnected()){
+//                    if (isInternetAvailable()){
 
-                if (userName.isEmpty()) {
-                    etUserName.setError("User Name Required");
+                        String email = etMail.getText().toString().trim();
+                        String password = etPassword.getText().toString().trim();
+                        String confirmPassword = etConfirmPassword.getText().toString().trim();
+                        String userName = etUserName.getText().toString().trim();
+                        String phone = etPhone.getText().toString().trim();
+                        String location = etLocation.getText().toString().trim();
 
-                } else if (email.isEmpty()) {
-                    etMail.setError("E-Mail Address Required");
+                        if (userName.isEmpty()) {
+                            etUserName.setError("User Name Required");
 
-                } else if (phone.isEmpty()) {
-                    etPhone.setError("Phone Number Required");
+                        } else if (email.isEmpty()) {
+                            etMail.setError("E-Mail Address Required");
 
-                } else if (phone.length() < 10){
-                    etPhone.setError("Phone Number Too Short");
+                        } else if (phone.isEmpty()) {
+                            etPhone.setError("Phone Number Required");
 
-                } else if (location.isEmpty()){
-                    etLocation.setError("Location Required");
+                        } else if (phone.length() < 10){
+                            etPhone.setError("Phone Number Too Short");
 
-                } else if (password.isEmpty()) {
-                    etPassword.setError("Password Required");
+                        } else if (location.isEmpty()){
+                            etLocation.setError("Location Required");
 
-                }else if (password.length() < 6) {
-                    etPassword.setError("PassWord Too Short");
+                        } else if (password.isEmpty()) {
+                            etPassword.setError("Password Required");
 
-                } else if (confirmPassword.isEmpty()) {
-                    etConfirmPassword.setError("Confirm Password Required");
+                        }else if (password.length() < 6) {
+                            etPassword.setError("PassWord Too Short");
 
-                } else if (!password.equals(confirmPassword)){
-                    etConfirmPassword.setError("Confirm Password Do not Match ");
+                        } else if (confirmPassword.isEmpty()) {
+                            etConfirmPassword.setError("Confirm Password Required");
 
-                }
+                        } else if (!password.equals(confirmPassword)){
+                            etConfirmPassword.setError("Confirm Password Do not Match ");
+
+                        }
+//                    }
                 else {
-
-                   SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-                    SharedPreferences.Editor editor = pref.edit();
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+                        SharedPreferences.Editor editor = pref.edit();
 
 //                    Storing Preference Data
-                    editor.putString("eMail", email);
-                    editor.putString("passWord", password);
-                    editor.putString("userName", userName);
-                    editor.putString("phone", phone);
-                    editor.putString("location", location);
+                        editor.putString("eMail", email);
+                        editor.putString("passWord", password);
+                        editor.putString("userName", userName);
+                        editor.putString("phone", phone);
+                        editor.putString("location", location);
 
-                    // commit changes
-                    editor.commit();
+                        // commit changes
+                        editor.commit();
 
-                    DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference("userProfile").child(phone);
+                        DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference("userProfile").child(phone);
 //                    String profileKey = profileRef.push().getKey();
 //                    String profMail, profUserName, profPhone, profLocation;
 //                    profUserName = pref.getString("eMail", null);
@@ -151,14 +158,94 @@ public class SignUp extends AppCompatActivity {
 //                    profLocation = pref.getString("location", null);
 
 //                    currentUser = new userModel(profUserName, profMail, profPhone, profLocation);
-                    currentUser = new userModel(userName, email, phone, location);
+                        currentUser = new userModel(userName, email, phone, location);
 
-                    profileRef.setValue(currentUser);
+                        profileRef.setValue(currentUser);
 
-                    registerUser(email, password);
+//                        profileRef.setValue(currentUser);
+
+                        registerUser(email, password);
+
+                    }
+//                    }
+//                    else {
+//
+//                        Toast.makeText(SignUp.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//                    }
+
                 }
-            }
-        });
+                else {
+                    Toast.makeText(SignUp.this, R.string.No_network, Toast.LENGTH_LONG).show();
+                }
+//                String email = etMail.getText().toString().trim();
+//                String password = etPassword.getText().toString().trim();
+//                String confirmPassword = etConfirmPassword.getText().toString().trim();
+//                String userName = etUserName.getText().toString().trim();
+//                String phone = etPhone.getText().toString().trim();
+//                String location = etLocation.getText().toString().trim();
+//
+
+
+//                if (userName.isEmpty()) {
+//                    etUserName.setError("User Name Required");
+//
+//                } else if (email.isEmpty()) {
+//                    etMail.setError("E-Mail Address Required");
+//
+//                } else if (phone.isEmpty()) {
+//                    etPhone.setError("Phone Number Required");
+//
+//                } else if (phone.length() < 10){
+//                    etPhone.setError("Phone Number Too Short");
+//
+//                } else if (location.isEmpty()){
+//                    etLocation.setError("Location Required");
+//
+//                } else if (password.isEmpty()) {
+//                    etPassword.setError("Password Required");
+//
+//                }else if (password.length() < 6) {
+//                    etPassword.setError("PassWord Too Short");
+//
+//                } else if (confirmPassword.isEmpty()) {
+//                    etConfirmPassword.setError("Confirm Password Required");
+//
+//                } else if (!password.equals(confirmPassword)){
+//                    etConfirmPassword.setError("Confirm Password Do not Match ");
+//
+//                }
+//                else {
+
+//                   SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+//                    SharedPreferences.Editor editor = pref.edit();
+//
+////                    Storing Preference Data
+//                    editor.putString("eMail", email);
+//                    editor.putString("passWord", password);
+//                    editor.putString("userName", userName);
+//                    editor.putString("phone", phone);
+//                    editor.putString("location", location);
+//
+//                    // commit changes
+//                    editor.commit();
+//
+//                    DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference("userProfile").child(phone);
+////                    String profileKey = profileRef.push().getKey();
+////                    String profMail, profUserName, profPhone, profLocation;
+////                    profUserName = pref.getString("eMail", null);
+////                    profMail = pref.getString("userName", null);
+////                    profPhone = pref.getString("phone", null);
+////                    profLocation = pref.getString("location", null);
+//
+////                    currentUser = new userModel(profUserName, profMail, profPhone, profLocation);
+//                    currentUser = new userModel(userName, email, phone, location);
+
+//                    profileRef.setValue(currentUser);
+//
+//                    registerUser(email, password);
+                }
+            });
+//        });
 
 
     }
@@ -217,5 +304,23 @@ public class SignUp extends AppCompatActivity {
 //        Intent outIntent = new Intent(getApplicationContext(), SignUp.class);
 //        startActivity(outIntent);
 //    }
+//    This method checks whether mobile is connected to internet and returns true if connected:
+public boolean isNetworkConnected() {
+    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+    return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+}
+
+
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.net.InetAddress;
 
 public class Splash extends AppCompatActivity {
+//    String activityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,8 @@ public class Splash extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_splash);
+
+//        activityName = this.getLocalClassName();
 
         final Thread thread = new Thread(){
             @Override
@@ -39,13 +42,16 @@ public class Splash extends AppCompatActivity {
                             finish();
                         }
                         else {
+
                             retryIntent.putExtra("internet", "first");
+//                            retryIntent.putExtra("activity", activityName);
                             startActivity(retryIntent);
                         }
 
                     }
                     else {
                         retryIntent.putExtra("internet", "second");
+//                        retryIntent.putExtra("activity", activityName );
                         startActivity(retryIntent);
                     }
 

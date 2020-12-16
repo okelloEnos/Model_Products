@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,61 +48,161 @@ public class placedOrders extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-        String phoneNo = pref.getString("phone", null);
-        if (phoneNo != null) {
-            placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
-            placed_productsList = new ArrayList<>();
+//        if (isNetworkConnected()){
+//            if (isInternetAvailable()){
 
-            placed_progressBar = findViewById(R.id.loadingPlacedOrders);
-            defaultPlacedView = findViewById(R.id.defaultPlacedView);
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+                String phoneNo = pref.getString("phone", null);
+                if (phoneNo != null) {
+                    placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
+                    placed_productsList = new ArrayList<>();
 
-            placedRecyclerView = findViewById(R.id.placedOrderList);
-            placedRecyclerView.setHasFixedSize(true);
+                    placed_progressBar = findViewById(R.id.loadingPlacedOrders);
+                    defaultPlacedView = findViewById(R.id.defaultPlacedView);
 
-            placedLayoutManager = new LinearLayoutManager(this);
-            placedRecyclerView.setLayoutManager(placedLayoutManager);
+                    clearBtn = findViewById(R.id.clearOrderBtn);
+                    placedRecyclerView = findViewById(R.id.placedOrderList);
+                    placedRecyclerView.setHasFixedSize(true);
 
-            placedAdapter = new cartAdapter(this, placed_productsList);
-            placedRecyclerView.setAdapter(placedAdapter);
+                    placedLayoutManager = new LinearLayoutManager(this);
+                    placedRecyclerView.setLayoutManager(placedLayoutManager);
 
-            placedReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    placed_productsList.clear();
+                    placedAdapter = new cartAdapter(this, placed_productsList);
+                    placedRecyclerView.setAdapter(placedAdapter);
 
-                    for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
-                        orderModel placedOrder = placedShot.getValue(orderModel.class);
-                        placed_productsList.add(placedOrder);
-                    }
+                    if (isNetworkConnected()) {
+                        placedReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                placed_productsList.clear();
 
-                    if (placed_productsList.isEmpty()) {
+                                for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
+                                    orderModel placedOrder = placedShot.getValue(orderModel.class);
+                                    placed_productsList.add(placedOrder);
+                                }
+
+                                if (placed_productsList.isEmpty()) {
+                                    defaultPlacedView.setVisibility(View.VISIBLE);
+                                    clearBtn.setVisibility(View.INVISIBLE);
+                                }
+                                placedAdapter.notifyDataSetChanged();
+                                placed_progressBar.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                placed_progressBar.setVisibility(View.INVISIBLE);
+
+                            }
+                        });
+
+//                    clearBtn = findViewById(R.id.clearOrderBtn);
+                        clearBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                placedReference.removeValue();
+                            }
+                        });
+                    } else {
+                        placed_progressBar.setVisibility(View.INVISIBLE);
                         defaultPlacedView.setVisibility(View.VISIBLE);
-                        clearBtn.setVisibility(View.INVISIBLE);
+                        defaultPlacedView.setText(R.string.No_network);
                     }
-                    placedAdapter.notifyDataSetChanged();
-                    placed_progressBar.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    placed_progressBar.setVisibility(View.INVISIBLE);
-
-                }
-            });
-
-
-            clearBtn = findViewById(R.id.clearOrderBtn);
-            clearBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    placedReference.removeValue();
-                }
-            });
+//            }
+//            else {
+//
+//                placed_progressBar.setVisibility(View.INVISIBLE);
+//                defaultPlacedView.setText(R.string.No_internet);
+//                Toast.makeText(placedOrders.this, R.string.No_internet, Toast.LENGTH_LONG).show();
+//            }
+//
         }
-        else {
-            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
+//        else {??
+//            placed_progressBar.setVisibility(View.INVISIBLE);
+//            defaultPlacedView.setText(R.string.No_network);
+//            Toast.makeText(placedOrders.this, R.string.No_network, Toast.LENGTH_LONG).show();
+//        }
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+//        String phoneNo = pref.getString("phone", null);
+//        if (phoneNo != null) {
+//            placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
+//            placed_productsList = new ArrayList<>();
+//
+//            placed_progressBar = findViewById(R.id.loadingPlacedOrders);
+//            defaultPlacedView = findViewById(R.id.defaultPlacedView);
+//
+//            placedRecyclerView = findViewById(R.id.placedOrderList);
+//            placedRecyclerView.setHasFixedSize(true);
+//
+//            placedLayoutManager = new LinearLayoutManager(this);
+//            placedRecyclerView.setLayoutManager(placedLayoutManager);
+//
+//            placedAdapter = new cartAdapter(this, placed_productsList);
+//            placedRecyclerView.setAdapter(placedAdapter);
+//
+//            placedReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    placed_productsList.clear();
+//
+//                    for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
+//                        orderModel placedOrder = placedShot.getValue(orderModel.class);
+//                        placed_productsList.add(placedOrder);
+//                    }
+//
+//                    if (placed_productsList.isEmpty()) {
+//                        defaultPlacedView.setVisibility(View.VISIBLE);
+//                        clearBtn.setVisibility(View.INVISIBLE);
+//                    }
+//                    placedAdapter.notifyDataSetChanged();
+//                    placed_progressBar.setVisibility(View.INVISIBLE);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    placed_progressBar.setVisibility(View.INVISIBLE);
+//
+//                }
+//            });
+//
+//
+//            clearBtn = findViewById(R.id.clearOrderBtn);
+//            clearBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    placedReference.removeValue();
+//                }
+//            });
+//        }
+//        else {
+//            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
+//        }
+
+//    }
+    //    This method checks whether mobile is connected to internet and returns true if connected:
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
         }
     }
 }
