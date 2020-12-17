@@ -1,4 +1,4 @@
-package com.okellosoftwarez.modelfarm;
+package com.okellosoftwarez.modelfarm.adapters;
 
 import android.content.Context;
 import android.view.ContextMenu;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.okellosoftwarez.modelfarm.R;
+import com.okellosoftwarez.modelfarm.orderModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

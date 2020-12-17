@@ -34,12 +34,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.okellosoftwarez.modelfarm.adapters.cartAdapter;
+import com.okellosoftwarez.modelfarm.models.NotificationModel;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order extends AppCompatActivity implements cartAdapter.onCartClickListener {
+public class Order extends AppCompatActivity implements com.okellosoftwarez.modelfarm.adapters.cartAdapter.onCartClickListener {
 
     RecyclerView ordersRecyclerView;
     LinearLayoutManager ordersLayoutManager;

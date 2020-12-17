@@ -1,14 +1,11 @@
-package com.okellosoftwarez.modelfarm;
+package com.okellosoftwarez.modelfarm.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,10 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.okellosoftwarez.modelfarm.Product_Details;
+import com.okellosoftwarez.modelfarm.models.Products;
+import com.okellosoftwarez.modelfarm.Products_view;
+import com.okellosoftwarez.modelfarm.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class productAdapter extends RecyclerView.Adapter<productAdapter.productViewHolder> {

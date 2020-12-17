@@ -30,12 +30,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.okellosoftwarez.modelfarm.adapters.personalAdapter;
+import com.okellosoftwarez.modelfarm.models.Products;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class personalProducts extends AppCompatActivity implements personalAdapter.onItemClickListener {
+public class personalProducts extends AppCompatActivity implements com.okellosoftwarez.modelfarm.adapters.personalAdapter.onItemClickListener {
 
     RecyclerView personalRecyclerView;
     LinearLayoutManager personalLayoutManager;

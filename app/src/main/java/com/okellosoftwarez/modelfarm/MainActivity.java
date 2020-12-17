@@ -35,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.okellosoftwarez.modelfarm.models.Products;
 import com.squareup.picasso.Picasso;
 
 import java.net.InetAddress;

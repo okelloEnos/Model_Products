@@ -1,4 +1,4 @@
-package com.okellosoftwarez.modelfarm;
+package com.okellosoftwarez.modelfarm.models;
 
 public class userModel {
     private String userName, email, phone, location;

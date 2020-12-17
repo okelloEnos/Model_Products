@@ -18,6 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.okellosoftwarez.modelfarm.adapters.productAdapter;
+import com.okellosoftwarez.modelfarm.models.Products;
+import com.okellosoftwarez.modelfarm.models.userModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;

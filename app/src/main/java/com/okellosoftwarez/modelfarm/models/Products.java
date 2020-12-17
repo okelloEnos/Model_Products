@@ -1,4 +1,4 @@
-package com.okellosoftwarez.modelfarm;
+package com.okellosoftwarez.modelfarm.models;
 
 import com.google.firebase.database.Exclude;
 
