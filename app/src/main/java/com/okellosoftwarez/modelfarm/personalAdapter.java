@@ -56,31 +56,6 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
                 .centerCrop()
                 .into(holder.recImage);
 
-
-//        holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(personalContext, "Editing Coming Soon...", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//            if (Products_view.buttonString.equals("buyer")) {
-//
-//                holder.clickedLayout.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Intent passIntent = new Intent(mcontext, Product_Details.class);
-//                        passIntent.putExtra("name", currentProducts.getName());
-//                        passIntent.putExtra("location", currentProducts.getLocation());
-//                        passIntent.putExtra("price", currentProducts.getPrice());
-//                        passIntent.putExtra("capacity", currentProducts.getCapacity());
-//                        passIntent.putExtra("email", currentProducts.getEmail());
-//                        passIntent.putExtra("phone", currentProducts.getPhone());
-//                        passIntent.putExtra("image", currentProducts.getImage());
-//                        mcontext.startActivity(passIntent);
-//                        Log.d(TAG, "onClick: detail view...");
-//                    }
-//                });
-//            }
         Log.d(TAG, "onBindViewHolder: done binding....");
     }
 
@@ -102,7 +77,7 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         TextView recName, recLocation, recPrice;
         LinearLayout clickedLayout;
 
-        public personalViewHolder(@NonNull View itemView)  {
+        public personalViewHolder(@NonNull View itemView) {
             super(itemView);
             Log.d(TAG, "productViewHolder: Initializing recycler items...");
             recImage = itemView.findViewById(R.id.recycleImage);
@@ -118,9 +93,9 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         @Override
         public void onClick(View v) {
 
-            if (clickListener != null){
+            if (clickListener != null) {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
                     clickListener.onItemClick(position);
                 }
             }
@@ -141,16 +116,16 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         @Override
         public boolean onMenuItemClick(MenuItem item) {
 
-            if (clickListener != null){
+            if (clickListener != null) {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
 
-                    switch (item.getItemId()){
-                        case 1 :
+                    switch (item.getItemId()) {
+                        case 1:
                             clickListener.editProductDetails(position);
                             return true;
 
-                        case 2 :
+                        case 2:
                             clickListener.onDeleteItem(position);
                             return true;
                     }
@@ -161,17 +136,17 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
         }
     }
 
-    public interface onItemClickListener{
+    public interface onItemClickListener {
 
         void onItemClick(int position);
 
-        void  onDeleteItem(int position);
+        void onDeleteItem(int position);
 
         void editProductDetails(int position);
 
     }
 
-    public void setOnItemClickListener(onItemClickListener listener){
+    public void setOnItemClickListener(onItemClickListener listener) {
         clickListener = listener;
     }
 }

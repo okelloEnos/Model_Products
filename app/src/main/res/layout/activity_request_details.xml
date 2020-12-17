@@ -1,251 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbarDetailsReq"/>
+        android:id="@+id/toolbarDetailsReq"
+        layout="@layout/toolbar" />
 
-<ScrollView
-    android:layout_below="@id/toolbarDetailsReq"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".requestDetails">
-
-        <ImageView
-            android:id="@+id/detailImageRequest"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="8dp"
-            android:foregroundGravity="center_horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/back_image" />
-
-        <LinearLayout
-            android:id="@+id/detailLayoutRequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailImageRequest">
-
-            <TextView
-                android:id="@+id/tv_detailRequest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Detailed Information Of the Ordered Crop/Product ...."
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/productNameLayoutRequest"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/tv_prdNameRequest"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="Product Name : "
-                    android:layout_weight="40"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_detailNameRequest"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="TextView"
-                    android:layout_weight="60"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/productLocationLayoutRequest"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/tv_productLocationRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="40"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="Buyers Location : "
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_detailLocationRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="60"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="TextView"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/productCapacityLayoutRequest"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/tv_productCapacityRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="45"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:layout_height="wrap_content"
-                    android:text="Ordered Capacity in KG : "
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_detailCapacityRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="55"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/productPriceLayoutRequest"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/tv_productPriceRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="45"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="Amount Expected : KES "
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_detailPriceRequest"
-                    android:layout_width="0dp"
-                    android:layout_weight="55"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/eight_dp"
-                    android:text="TextView"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_detailContactRequest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Contact The Buyer Through : "
-            android:textColor="@color/black"
-            android:textSize="@dimen/eighteen_sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailLayoutRequest" />
+        android:layout_below="@id/toolbarDetailsReq">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/contactLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/eight_dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_detailContactRequest">
+            android:layout_height="match_parent"
+            tools:context=".requestDetails">
 
-            <TextView
-                android:id="@+id/tv_staticPhoneRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:text="Phone No : "
-                android:textColor="@color/black"
+            <ImageView
+                android:id="@+id/detailImageRequest"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/back_image" />
 
-            <TextView
-                android:id="@+id/tv_detailPhoneRequest"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/detailLayoutRequest"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:text="TextView"
-                android:textColor="?attr/colorPrimary"
-                app:layout_constraintStart_toEndOf="@id/tv_staticPhoneRequest"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_staticMailRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:text="Email : "
-                android:textColor="@color/black"
+                android:layout_margin="8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_staticPhoneRequest" />
+                app:layout_constraintTop_toBottomOf="@id/detailImageRequest">
+
+                <TextView
+                    android:id="@+id/tv_detailRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Detailed Information Of the Ordered Crop/Product ...."
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <LinearLayout
+                    android:id="@+id/productNameLayoutRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/tv_prdNameRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="40"
+                        android:text="Product Name : "
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_detailNameRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="60"
+                        android:text="TextView"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/productLocationLayoutRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/tv_productLocationRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="40"
+                        android:text="Buyers Location : "
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_detailLocationRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="60"
+                        android:text="TextView"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/productCapacityLayoutRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/tv_productCapacityRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="45"
+                        android:text="Ordered Capacity in KG : "
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_detailCapacityRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="55"
+                        android:text="TextView"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/productPriceLayoutRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/tv_productPriceRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="45"
+                        android:text="Amount Expected : KES "
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_detailPriceRequest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight_dp"
+                        android:layout_weight="55"
+                        android:text="TextView"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/tv_detailEmailRequest"
+                android:id="@+id/tv_detailContactRequest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Contact The Buyer Through : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailLayoutRequest" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contactLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
-                android:text="TextView"
-                android:textColor="?attr/colorPrimary"
-                app:layout_constraintStart_toEndOf="@id/tv_staticMailRequest"
-                app:layout_constraintTop_toBottomOf="@id/tv_detailPhoneRequest" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detailContactRequest">
+
+                <TextView
+                    android:id="@+id/tv_staticPhoneRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:text="Phone No : "
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_detailPhoneRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:text="TextView"
+                    android:textColor="?attr/colorPrimary"
+                    app:layout_constraintStart_toEndOf="@id/tv_staticPhoneRequest"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_staticMailRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:text="Email : "
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staticPhoneRequest" />
+
+                <TextView
+                    android:id="@+id/tv_detailEmailRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:text="TextView"
+                    android:textColor="?attr/colorPrimary"
+                    app:layout_constraintStart_toEndOf="@id/tv_staticMailRequest"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detailPhoneRequest" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--        <Button-->
-<!--            android:id="@+id/order_button"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="@dimen/eight_dp"-->
-<!--            android:layout_marginEnd="@dimen/eight_dp"-->
-<!--            android:layout_marginBottom="@dimen/eight_dp"-->
-<!--            android:layout_marginTop="25dp"-->
-<!--            android:background="@color/colorAccent"-->
-<!--            android:text="Place Order"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="@dimen/eighteen_sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/contactLayout"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+    </ScrollView>
 </RelativeLayout>
-    <!--
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".requestDetails">-->
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

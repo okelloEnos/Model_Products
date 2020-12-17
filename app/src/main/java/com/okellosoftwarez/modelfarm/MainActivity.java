@@ -443,8 +443,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.uploadChanges:
                 if (isNetworkConnected()) {
                     updatingDetails();
-                }
-                else {
+                } else {
                     Toast.makeText(this, R.string.No_network, Toast.LENGTH_SHORT).show();
                 }
                 break;

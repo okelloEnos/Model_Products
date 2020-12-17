@@ -1,13 +1,10 @@
 package com.okellosoftwarez.modelfarm;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 public class Profile extends AppCompatActivity implements View.OnClickListener {
 
     Button editProfileBtn, profileUpdateBtn;
-    //    EditText ok;
     EditText dynamicProfileName, dynamicProfileMail, dynamicProfilePhone, dynamicProfileLocation;
     DatabaseReference receiveProf;
     userModel profileModel;
@@ -39,20 +35,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
         Toolbar toolbarProfile = findViewById(R.id.profileToolbar);
         setSupportActionBar(toolbarProfile);
-//        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        SharedPreferences.Editor editor = pref.edit();
-
-//        Retrieving Data
-
-        // getting String
-//        pref.getString("eMail", null);
-//        pref.getString("passWord", null);
-//        pref.getString("userName", null);
         String phone = pref.getString("phone", null);
         receiveProf = FirebaseDatabase.getInstance().getReference("userProfile").child(phone);
 
@@ -62,11 +49,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         dynamicProfileMail = findViewById(R.id.dynamicProfileMail);
         dynamicProfilePhone = findViewById(R.id.dynamicProfilePhone);
         dynamicProfileLocation = findViewById(R.id.dynamicProfileLocation);
-
-//        dynamicProfileName.setText(pref.getString("userName", null));
-//        dynamicProfileMail.setText(pref.getString("eMail", null));
-//        dynamicProfilePhone.setText(pref.getString("phone", null));
-//        dynamicProfileLocation.setText(pref.getString("location", null));
 
         receiveProf.addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,42 +66,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             }
         });
 
-//        profileUpdateBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                submitProfileUpdate();
-
-//                dynamicProfileName.setEnabled(false);
-//                dynamicProfileLocation.setEnabled(false);
-
-//                profileUpdateBtn.setVisibility(View.INVISIBLE);
-//                editProfileBtn.setVisibility(View.VISIBLE);
-
-//            }
-//        });
-
         profileUpdateBtn.setOnClickListener(this);
         editProfileBtn.setOnClickListener(this);
-//        editProfileBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(Profile.this, "Feature Coming Soon...", Toast.LENGTH_SHORT).show();
-//                dynamicProfileName.setEnabled(true);
-//                dynamicProfileLocation.setEnabled(true);
-//
-//                editProfileBtn.setVisibility(View.INVISIBLE);
-//                profileUpdateBtn.setVisibility(View.VISIBLE);
-
-//                submitProfileUpdate();
-
-//                dynamicProfileName.setEnabled(false);
-//                dynamicProfileMail.setEnabled(false);
-//                dynamicProfileLocation.setEnabled(false);
-//                Intent restart = new Intent(getApplicationContext(), Profile.class);
-//                startActivity(restart);
-
-//            }
-//        });
 
     }
 
@@ -162,9 +110,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
         }
 
-//        Intent restart = new Intent(getApplicationContext(), Profile.class);
-//        startActivity(restart);
-
     }
 
     private void updateSharedPref(String changedName, String changedMail, String phone, String changedLocation) {
@@ -175,7 +120,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         editorChanged.putString("eMail", changedMail);
         editorChanged.putString("userName", changedName);
         editorChanged.putString("phone", changedLocation);
-        editorChanged.putString("location", changedLocation );
+        editorChanged.putString("location", changedLocation);
 
         // commit changes
         editorChanged.commit();
@@ -185,9 +130,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
-            case R.id.profileUpdateBtn :
+            case R.id.profileUpdateBtn:
 
                 submitProfileUpdate();
 
@@ -199,7 +144,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 editProfileBtn.setVisibility(View.VISIBLE);
                 break;
 
-            case R.id.profileEditBtn :
+            case R.id.profileEditBtn:
 
                 dynamicProfileName.setEnabled(true);
                 dynamicProfileLocation.setEnabled(true);

@@ -53,55 +53,27 @@ public class requestDetails extends AppCompatActivity {
         tv_phoneReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent reqIntent = new Intent(Intent.ACTION_DIAL);
-//                reqIntent.setData(Uri.parse("tel:" + reqPhone));
 
-
-                if (Build.VERSION.SDK_INT >= 23){
-                    if (checked_Permission()){
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (checked_Permission()) {
                         Log.e("permission", "Permission Already Granted");
-                    }
-                    else {
+                    } else {
                         requested_Permission();
                     }
                 }
 
-                if (checked_Permission()){
+                if (checked_Permission()) {
                     Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(Uri.parse("tel:" + reqPhone));
                     startActivity(callIntent);
                 }
-
-
-
-//                if (ActivityCompat.checkSelfPermission(requestDetails.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
-//                    String[] phonePerm = {Manifest.permission.CALL_PHONE};
-
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-//                        requestPermissions(phonePerm, REQ_PERMISSION);
-//                        Toast.makeText(requestDetails.this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
-//                        startActivity(reqIntent);
-//                    }
-//                    else {
-//                        Toast.makeText(requestDetails.this, "No Permission...", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                }
-
-//                Intent reqIntent = new Intent(Intent.ACTION_DIAL);
-//                reqIntent.setData(Uri.parse("tel:" + reqPhone));
-//                startActivity(reqIntent);
-//                else {
-//                    startActivity(reqIntent);
-//                }
             }
         });
         tv_emailReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent reqMailIntent = new Intent(Intent.ACTION_SEND);
-                reqMailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { reqMail});
+                reqMailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{reqMail});
                 reqMailIntent.putExtra(Intent.EXTRA_SUBJECT, "YOUR " + reqName.toUpperCase() + " PRODUCT REQUEST ");
 
                 reqMailIntent.setType("message/rfc822");
@@ -118,18 +90,17 @@ public class requestDetails extends AppCompatActivity {
     }
 
     private void requested_Permission() {
-        ActivityCompat.requestPermissions(requestDetails.this, new String[] { Manifest.permission.CALL_PHONE}, REQ_PERMISSION) ;
+        ActivityCompat.requestPermissions(requestDetails.this, new String[]{Manifest.permission.CALL_PHONE}, REQ_PERMISSION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQ_PERMISSION :
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case REQ_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission Accepted...", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission Denied...", Toast.LENGTH_SHORT).show();
                 }
 
@@ -142,8 +113,8 @@ public class requestDetails extends AppCompatActivity {
         if (getIntent().hasExtra("reqName") && getIntent().hasExtra("reqPhone")
                 && getIntent().hasExtra("reqImage") && getIntent().hasExtra("reqMail")
                 && getIntent().hasExtra("reqLocation") && getIntent().hasExtra("reqPrice")
-                && getIntent().hasExtra("reqCapacity")){
-//            String  d_email;
+                && getIntent().hasExtra("reqCapacity")) {
+
             reqName = getIntent().getStringExtra("reqName");
             reqLocation = getIntent().getStringExtra("reqLocation");
             reqPrice = getIntent().getStringExtra("reqPrice");
@@ -156,7 +127,6 @@ public class requestDetails extends AppCompatActivity {
 
             assignDetails(reqName, reqPhone, reqImage, reqMail, reqLocation, reqPrice, reqCapacity);
 
-//            uploadOrders();
         }
     }
 

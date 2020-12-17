@@ -19,24 +19,18 @@ public class Retry extends AppCompatActivity {
         TextView tvRetry = findViewById(R.id.tvRetry);
         Button retryBtn = findViewById(R.id.retry_button);
 
-//        if (getIntent().hasExtra("activity")){
-//            String activityName = getIntent().getStringExtra("activity");
-//            Toast.makeText(this, "From : " + activityName, Toast.LENGTH_SHORT).show();
-//        }
-        if (getIntent().hasExtra("internet")){
+        if (getIntent().hasExtra("internet")) {
             String connection = getIntent().getStringExtra("internet");
 
-            if (connection.equals("first")){
+            if (connection.equals("first")) {
                 tvRetry.setText(R.string.No_internet);
-            }
-            else if (connection.equals("second")){
+            } else if (connection.equals("second")) {
                 tvRetry.setText(R.string.No_network);
             }
         }
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(Retry.this, "Implementation Coming Soon...", Toast.LENGTH_SHORT).show();
                 Intent startIntent = new Intent(Retry.this, Splash.class);
                 startActivity(startIntent);
             }

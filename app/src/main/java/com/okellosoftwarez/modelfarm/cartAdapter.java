@@ -20,7 +20,7 @@ import java.util.List;
 public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterViewHolder> {
     private List<orderModel> orderModelList;
     private Context ordersContext;
-    private  onCartClickListener cartClickListener;
+    private onCartClickListener cartClickListener;
 
     public cartAdapter(Context ordersContext, List<orderModel> orderModelList) {
         this.ordersContext = ordersContext;
@@ -54,7 +54,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
 
     @Override
     public int getItemCount() {
-        if (orderModelList != null){
+        if (orderModelList != null) {
             return orderModelList.size();
         }
         return 0;
@@ -80,9 +80,9 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
         @Override
         public void onClick(View v) {
 
-            if (cartClickListener != null){
+            if (cartClickListener != null) {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
                     cartClickListener.cartItemClick(position);
                 }
             }
@@ -102,17 +102,17 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            if (cartClickListener != null){
+            if (cartClickListener != null) {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
 
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
 
-                        case 1 :
+                        case 1:
                             cartClickListener.editCartItem(position);
                             return true;
 
-                        case 2 :
+                        case 2:
                             cartClickListener.deleteCartItem(position);
                             return true;
                     }
@@ -123,7 +123,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
         }
     }
 
-    public interface onCartClickListener{
+    public interface onCartClickListener {
         void cartItemClick(int position);
 
         void deleteCartItem(int position);
@@ -131,7 +131,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
         void editCartItem(int position);
     }
 
-    public void setOnCartClickListener(onCartClickListener listener){
+    public void setOnCartClickListener(onCartClickListener listener) {
         cartClickListener = listener;
     }
 }

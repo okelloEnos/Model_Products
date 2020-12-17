@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.net.InetAddress;
 
 public class Splash extends AppCompatActivity {
-//    String activityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,37 +25,30 @@ public class Splash extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-//        activityName = this.getLocalClassName();
-
-        final Thread thread = new Thread(){
+        final Thread thread = new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     sleep(3000);
                     Intent retryIntent = new Intent(getApplicationContext(), Retry.class);
-                    if (isNetworkConnected()){
-                        if (isInternetAvailable()){
+                    if (isNetworkConnected()) {
+                        if (isInternetAvailable()) {
                             Intent startIntent = new Intent(getApplicationContext(), welcome_screen.class);
                             startActivity(startIntent);
                             finish();
-                        }
-                        else {
+                        } else {
 
                             retryIntent.putExtra("internet", "first");
-//                            retryIntent.putExtra("activity", activityName);
                             startActivity(retryIntent);
                         }
 
-                    }
-                    else {
+                    } else {
                         retryIntent.putExtra("internet", "second");
-//                        retryIntent.putExtra("activity", activityName );
                         startActivity(retryIntent);
                     }
 
-                }
-                catch (InterruptedException ex){
+                } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -64,7 +56,7 @@ public class Splash extends AppCompatActivity {
         thread.start();
     }
 
-//    This method checks whether mobile is connected to internet and returns true if connected:
+    //    This method checks whether mobile is connected to internet and returns true if connected:
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -72,12 +64,12 @@ public class Splash extends AppCompatActivity {
     }
 
 
-//    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
+    //    This method actually checks if device is connected to internet(There is a possibility it's connected to a network but not to internet).
     public boolean isInternetAvailable() {
         try {
             InetAddress ipAddr = InetAddress.getByName("google.com");
 
-                      return !ipAddr.equals("");
+            return !ipAddr.equals("");
 
         } catch (Exception e) {
             return false;

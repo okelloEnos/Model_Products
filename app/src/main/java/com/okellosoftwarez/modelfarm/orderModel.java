@@ -6,49 +6,8 @@ public class orderModel {
     String prdOrderedName, prdOrderedCapacity, prdOrderedTotal, prdOrderImage, prdOrderKey,
             prdOrderPhone, prdOrderLocation, prdOrderedMail, prdRemCapacity;
 
-    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal) {
-        this.prdOrderedName = prdOrderedName;
-        this.prdOrderedCapacity = prdOrderedCapacity;
-        this.prdOrderedTotal = prdOrderedTotal;
-    }
 
     public orderModel() {
-    }
-
-    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal, String prdOrderImage) {
-        this.prdOrderedName = prdOrderedName;
-        this.prdOrderedCapacity = prdOrderedCapacity;
-        this.prdOrderedTotal = prdOrderedTotal;
-        this.prdOrderImage = prdOrderImage;
-    }
-
-    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal, String prdOrderImage, String prdOrderPhone) {
-        this.prdOrderedName = prdOrderedName;
-        this.prdOrderedCapacity = prdOrderedCapacity;
-        this.prdOrderedTotal = prdOrderedTotal;
-        this.prdOrderImage = prdOrderImage;
-        this.prdOrderPhone = prdOrderPhone;
-    }
-
-    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal,
-                      String prdOrderImage, String prdOrderPhone, String prdOrderLocation) {
-        this.prdOrderedName = prdOrderedName;
-        this.prdOrderedCapacity = prdOrderedCapacity;
-        this.prdOrderedTotal = prdOrderedTotal;
-        this.prdOrderImage = prdOrderImage;
-        this.prdOrderPhone = prdOrderPhone;
-        this.prdOrderLocation = prdOrderLocation;
-    }
-
-    public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal,
-                      String prdOrderImage, String prdOrderPhone, String prdOrderLocation, String Mail) {
-        this.prdOrderedName = prdOrderedName;
-        this.prdOrderedCapacity = prdOrderedCapacity;
-        this.prdOrderedTotal = prdOrderedTotal;
-        this.prdOrderImage = prdOrderImage;
-        this.prdOrderPhone = prdOrderPhone;
-        this.prdOrderLocation = prdOrderLocation;
-        this.prdOrderedMail = Mail;
     }
 
     public orderModel(String prdOrderedName, String prdOrderedCapacity, String prdOrderedTotal,

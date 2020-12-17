@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    app:titleTextColor="@color/white"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     app:layout_scrollFlags="snap"
-    app:popupTheme="@style/AppTheme.PopupOverlay" />
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    app:titleTextColor="@color/white" />

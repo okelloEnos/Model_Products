@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -34,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +86,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         searchText = findViewById(R.id.editTextSearch);
 
+        defaultProductView.setVisibility(View.INVISIBLE);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -96,11 +101,11 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (!s.toString().isEmpty()){
+                if (!s.toString().isEmpty()) {
 
-                    setAdapter(s.toString());
-                }
-                else {
+//                    productSearch(s.toString());
+                    settAdapter(s.toString());
+                } else {
                     adapter = new productAdapter(Products_view.this, productsList);
                     recyclerView.setAdapter(adapter);
                 }
@@ -154,21 +159,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                                         }
                                     });
                         }
-//                    productsList.add(receivedProduct);
                     }
-//                if (isNetworkConnected()){
-//                    if (isInternetAvailable()){
-//
-//                    }
-//                    else {
-//
-//                        Toast.makeText(Products_view.this, R.string.No_internet, Toast.LENGTH_LONG).show();
-//                    }
-//
-//                }
-//                else {
-//                    Toast.makeText(Products_view.this, R.string.No_network, Toast.LENGTH_lo).show();
-//                }
 
                     if (productsList.isEmpty()) {
                         defaultProductView.setVisibility(View.VISIBLE);
@@ -187,27 +178,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                     circleP_bar.setVisibility(View.INVISIBLE);
                 }
             });
-        }
-        else {
-//            Thread prdThread = new Thread(){
-//                @Override
-//                public void run() {
-//                    super.run();
-//
-//                    try {
-//                        sleep(3000);
-//                        circleP_bar.setVisibility(View.INVISIBLE);
-//                        defaultProductView.setVisibility(View.VISIBLE);
-//                        defaultProductView.setText(R.string.No_network);
-//                        Toast.makeText(this, "Okello Check out", Toast.LENGTH_LONG).show();
-
-//                    }
-//                    catch (InterruptedException ex){
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            };
-//            prdThread.start();
+        } else {
             circleP_bar.setVisibility(View.INVISIBLE);
             defaultProductView.setVisibility(View.VISIBLE);
             defaultProductView.setText(R.string.No_network);
@@ -235,7 +206,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         receiveButtonIntents();
 
-//        invalidateOptionsMenu();
 //        get navigation Menu
         Menu menu = navigationView.getMenu();
 
@@ -243,30 +213,23 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 //        find the Item
         MenuItem switchUserItem = menu.findItem(R.id.nav_switchUser);
         String user;
-        if (buttonString.equals("buyer")){
+        if (buttonString.equals("buyer")) {
             user = "Seller";
-//            fab.setVisibility(View.INVISIBLE);
+        } else {
+            user = "Buyer";
         }
-        else { user = "Buyer" ;}
         switchUserItem.setTitle("Switch to " + user);
 
         //        Listen to the selected item
         navigationView.setNavigationItemSelectedListener(this);
 
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         navMail = headerView.findViewById(R.id.navMail);
         navPhone = headerView.findViewById(R.id.navPhone);
 
         final SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String loadedNavPhone = pref.getString("phone", null);
-//        if (pref.getString("eMail", null) != null){
-//            navMail.setText(pref.getString("eMail", null));
-//        }
-//        String loadedNavPhone;
 
-        if (pref.getString("phone", null) != null){
-//            navPhone.setText(pref.getString("phone", null));
+        if (pref.getString("phone", null) != null) {
             String loadedNavPhone = pref.getString("phone", null);
             DatabaseReference navRef = FirebaseDatabase.getInstance().getReference("userProfile").child(loadedNavPhone);
 
@@ -274,17 +237,15 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     userModel navModel = dataSnapshot.getValue(userModel.class);
-                    if (navModel.getEmail().isEmpty()){
+                    if (navModel.getEmail().isEmpty()) {
                         navMail.setText(pref.getString("eMail", "User@domain.com"));
-                    }
-                    else {
+                    } else {
 
                         navMail.setText(navModel.getEmail());
                     }
-                    if (navModel.getPhone().isEmpty()){
+                    if (navModel.getPhone().isEmpty()) {
                         navPhone.setText(pref.getString("phone", "07xxxxxxxx"));
-                    }
-                    else {
+                    } else {
                         navPhone.setText(navModel.getPhone());
                     }
                 }
@@ -310,35 +271,20 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             });
 
         }
-//        receiveButtonIntents();
         personalProductsIntents();
-
-//        DatabaseReference orderDatabaseCount = FirebaseDatabase.getInstance().getReference("Orders").child(loadedNavPhone);
-//        orderDatabaseCount.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                 cartCount = dataSnapshot.getChildrenCount();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
     }
 
-    private void setAdapter(final String queryString) {
+    private void settAdapter(final String queryString) {
 
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-//                productsList.clear();
                 filteredProductsList.clear();
                 recyclerView.removeAllViews();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String uid = snapshot.getKey();
                     String pName = snapshot.child("name").getValue(String.class);
                     String pEmail = snapshot.child("email").getValue(String.class);
@@ -346,19 +292,40 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
                     Products filteredProduct = snapshot.getValue(Products.class);
 
-                    if (pName.toLowerCase().contains(queryString.toLowerCase())){
-                        nameList.add(pName);
-                        filteredProductsList.add(filteredProduct);
-                    }
-                    else if (pEmail.toLowerCase().contains(queryString.toLowerCase())){
-                        filteredProductsList.add(filteredProduct);
-                    }
-                    else if (pLocation.toLowerCase().contains(queryString.toLowerCase())){
-                        filteredProductsList.add(filteredProduct);
+                    if (pName.equals(null)) {
+                        Toast.makeText(Products_view.this, "Name is null", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (pName.toLowerCase().contains(queryString.toLowerCase())) {
+                            nameList.add(pName);
+                            filteredProductsList.add(filteredProduct);
+                        }
+
+                        if (pEmail.equals(null)) {
+                            Toast.makeText(Products_view.this, "Mail is Null", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (pEmail.toLowerCase().contains(queryString.toLowerCase())) {
+                                filteredProductsList.add(filteredProduct);
+                            }
+
+                            if (pLocation.equals(null)) {
+                                Toast.makeText(Products_view.this, "Location is null", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (pLocation.toLowerCase().contains(queryString.toLowerCase())) {
+                                    filteredProductsList.add(filteredProduct);
+                                }
+                            }
+                        }
                     }
                 }
-                adapter = new productAdapter(Products_view.this, filteredProductsList);
-                recyclerView.setAdapter(adapter);
+
+                if (!filteredProductsList.isEmpty()) {
+                    defaultProductView.setVisibility(View.INVISIBLE);
+                    adapter = new productAdapter(Products_view.this, filteredProductsList);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    defaultProductView.setVisibility(View.VISIBLE);
+                    defaultProductView.setText("No Products based on Your Search Criteria... Try Again");
+                }
             }
 
             @Override
@@ -371,8 +338,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     private void personalProductsIntents() {
         if (getIntent().hasExtra("phone") && getIntent().hasExtra("name") && getIntent().hasExtra("location") &&
                 getIntent().hasExtra("price") && getIntent().hasExtra("capacity") && getIntent().hasExtra("mail") &&
-                getIntent().hasExtra("image") && getIntent().hasExtra("key")){
-            String pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey ;
+                getIntent().hasExtra("image") && getIntent().hasExtra("key")) {
+            String pName, pLocation, pPrice, pCapacity, pMail, pImage, dKey;
             pPhone = getIntent().getStringExtra("phone");
             pName = getIntent().getStringExtra("name");
             pLocation = getIntent().getStringExtra("location");
@@ -384,9 +351,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
             FirebaseDatabase personalDatabase = FirebaseDatabase.getInstance();
             DatabaseReference personalDatabaseReference = personalDatabase.getReference("personalProducts");
-//            String personalKey = personalDatabaseReference.push().getKey();
-
-//            String personalKey = productsList
             personalProduct = new Products(pName, pPhone, pLocation, pImage, pPrice, pCapacity, pMail);
             personalDatabaseReference.child(pPhone).child(dKey).setValue(personalProduct);
 
@@ -402,21 +366,21 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         startActivity(addIntent);
 
     }
+
     private void receiveButtonIntents() {
-        if (getIntent().hasExtra("button")){
+        if (getIntent().hasExtra("button")) {
             buttonString = getIntent().getStringExtra("button");
-//            sendIntents_details(buttonString);
             Toast.makeText(this, "Which Button : " + buttonString, Toast.LENGTH_LONG).show();
 
         }
         checkUser(buttonString);
     }
+
     private void checkUser(String userType) {
 
         Menu menu = navigationView.getMenu();
 
         if (userType.equals("buyer")) {
-//            fab.setEnabled(false);
 
             fab.hide();
 //            Removing some features in the navigation view if user is a buyer
@@ -424,11 +388,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             menu.getItem(3).setVisible(false);
             menu.getItem(5).setVisible(false);
 
-        }
-        else {
-//            MenuItem cartItem ;
-//            int sellerCart = cartItem.getItemId();
-//            int sCart = MenuItem.
+        } else {
             menu.getItem(4).setVisible(false);
         }
     }
@@ -450,31 +410,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         final MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
 
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) searchItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                adapter.getFilter().filter(query);
-//                if (!query.isEmpty()){
-//                    productSearch(query);
-//                }
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
-//               if (!newText.isEmpty()){
-//                   productSearch(newText);
-//               }
-//                return false;
-//            }
-//        });
-
-        if (buttonString.equals("seller")){
-//            MenuItem cartSellerItem = menu.findItem(R.id.action_add_cart);
+        if (buttonString.equals("seller")) {
             cartSellerItem.setVisible(false);
         }
 
@@ -504,12 +440,12 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
                 for (DataSnapshot prdSnapshot : dataSnapshot.getChildren()) {
                     Products receivedProductSnap = prdSnapshot.getValue(Products.class);
 //                    receivedProductSnap.setID(prdSnapshot.getKey());
-                    if (receivedProductSnap.getName().toLowerCase().contains(query.toLowerCase())){
+                    if (receivedProductSnap.getName().toLowerCase().contains(query.toLowerCase())) {
                         filteredList.add(receivedProductSnap);
                     }
 //                    productsList.add(receivedProduct);
                 }
-                if (filteredList.isEmpty()){
+                if (filteredList.isEmpty()) {
                     defaultProductView.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -525,21 +461,19 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     private void setUpBadge() {
 
-        if (cartText != null){
+        if (cartText != null) {
             if (cartCount == 0) {
                 if (cartText.getVisibility() != View.GONE) {
                     cartText.setVisibility(View.GONE);
                 }
-            }
-                else {
-                    cartText.setText(String.valueOf(cartCount));
-//                    cartText.setText(String.valueOf(Math.min(cartCount, 3)));
-                    if (cartText.getVisibility() != View.VISIBLE){
-                        cartText.setVisibility(View.VISIBLE);
-                    }
+            } else {
+                cartText.setText(String.valueOf(cartCount));
+                if (cartText.getVisibility() != View.VISIBLE) {
+                    cartText.setVisibility(View.VISIBLE);
                 }
             }
         }
+    }
 
 
     @Override
@@ -561,7 +495,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
     private void cartOrderedList() {
         Intent cartIntent = new Intent(this, Order.class);
-//        cartIntent.putExtra("Iphone", pPhone);
         startActivity(cartIntent);
     }
 
@@ -588,7 +521,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
             //              Handle user logout procedure
             signOut();
 
-        } else if (id == R.id.nav_switchUser){
+        } else if (id == R.id.nav_switchUser) {
             switchUser();
         } else if (id == R.id.nav_prdRequest) {
             //              Handle how you can display posts belonging to the user
@@ -616,15 +549,8 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     }
 
     private void loadPersonalProducts() {
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        phoneNo = pref.getString("phone", null);
-//        if (phoneNo.equals(null)) {
-//            Toast.makeText(this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
-//        } else {
-            Intent loadIntent = new Intent(this, personalProducts.class);
-//            loadIntent.putExtra("pPhone", phoneNo);
-            startActivity(loadIntent);
-//        }
+        Intent loadIntent = new Intent(this, personalProducts.class);
+        startActivity(loadIntent);
     }
 
     private void signOut() {
@@ -632,9 +558,10 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         Intent outIntent = new Intent(this, SignIn.class);
         startActivity(outIntent);
     }
+
     private void switchUser() {
-        if (buttonString.equals("buyer")){
-            buttonString = "seller" ;
+        if (buttonString.equals("buyer")) {
+            buttonString = "seller";
         } else {
             buttonString = "buyer";
         }
@@ -646,6 +573,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
         Intent profileIntent = new Intent(this, Profile.class);
         startActivity(profileIntent);
     }
+
     //    This method checks whether mobile is connected to internet and returns true if connected:
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

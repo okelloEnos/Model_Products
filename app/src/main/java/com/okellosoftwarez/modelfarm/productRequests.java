@@ -35,7 +35,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class productRequests extends AppCompatActivity implements cartAdapter.onCartClickListener{
+public class productRequests extends AppCompatActivity implements cartAdapter.onCartClickListener {
     RecyclerView requestRecyclerView;
     LinearLayoutManager requestLayoutManager;
     cartAdapter requestAdapter;
@@ -59,82 +59,74 @@ public class productRequests extends AppCompatActivity implements cartAdapter.on
 //        if (isNetworkConnected()){
 //            if (isInternetAvailable()){
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-                String phoneNo = pref.getString("phone", null);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
 
-                if (phoneNo != null) {
-                    requestDatabase = FirebaseDatabase.getInstance().getReference("receivedOrders").child(phoneNo);
-                    requestList = new ArrayList<>();
+        if (phoneNo != null) {
+            requestDatabase = FirebaseDatabase.getInstance().getReference("receivedOrders").child(phoneNo);
+            requestList = new ArrayList<>();
 
-                    clearReqBtn = findViewById(R.id.clearRequestBtn);
-                    loadingRequestOrders = findViewById(R.id.loadingRequestOrders);
-                    defaultRequestView = findViewById(R.id.defaultRequestView);
+            clearReqBtn = findViewById(R.id.clearRequestBtn);
+            loadingRequestOrders = findViewById(R.id.loadingRequestOrders);
+            defaultRequestView = findViewById(R.id.defaultRequestView);
 
-                    requestRecyclerView = findViewById(R.id.requestList);
-                    requestRecyclerView.setHasFixedSize(true);
+            requestRecyclerView = findViewById(R.id.requestList);
+            requestRecyclerView.setHasFixedSize(true);
 
-                    requestLayoutManager = new LinearLayoutManager(this);
-                    requestRecyclerView.setLayoutManager(requestLayoutManager);
+            requestLayoutManager = new LinearLayoutManager(this);
+            requestRecyclerView.setLayoutManager(requestLayoutManager);
 
-                    requestAdapter = new cartAdapter(this, requestList);
-                    requestRecyclerView.setAdapter(requestAdapter);
-                    requestAdapter.setOnCartClickListener(this);
+            requestAdapter = new cartAdapter(this, requestList);
+            requestRecyclerView.setAdapter(requestAdapter);
+            requestAdapter.setOnCartClickListener(this);
 
-                    if (isNetworkConnected()) {
-                        requestDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                requestList.clear();
+            if (isNetworkConnected()) {
+                requestDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        requestList.clear();
 
-//                priceSum = 0;
-                                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                                    orderModel requestProduct = requestSnapshot.getValue(orderModel.class);
-//                    orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
-                                    requestList.add(requestProduct);
-//                    priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
-//                    writePlacedOrders(orderedProduct);
-                                }
-                                if (requestList.isEmpty()) {
-                                    loadingRequestOrders.setVisibility(View.INVISIBLE);
-                                    clearReqBtn.setVisibility(View.INVISIBLE);
-                                    defaultRequestView.setVisibility(View.VISIBLE);
+                        for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                            orderModel requestProduct = requestSnapshot.getValue(orderModel.class);
+                            requestList.add(requestProduct);
+                        }
+                        if (requestList.isEmpty()) {
+                            loadingRequestOrders.setVisibility(View.INVISIBLE);
+                            clearReqBtn.setVisibility(View.INVISIBLE);
+                            defaultRequestView.setVisibility(View.VISIBLE);
 
-                                }
-                                requestAdapter.notifyDataSetChanged();
-                                loadingRequestOrders.setVisibility(View.INVISIBLE);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                Toast.makeText(productRequests.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                loadingRequestOrders.setVisibility(View.INVISIBLE);
-
-                            }
-                        });
-
-                        clearReqBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(productRequests.this, "Feature Coming Soon... : Clearing Requests ", Toast.LENGTH_SHORT).show();
-//                paymentMethod(priceSum);
-//                ordersList.clear();
-//                passingPlacedOrders();
-                                requestDatabase.removeValue();
-
-                                defaultRequestView.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    } else {
+                        }
+                        requestAdapter.notifyDataSetChanged();
                         loadingRequestOrders.setVisibility(View.INVISIBLE);
-                        defaultRequestView.setVisibility(View.VISIBLE);
-                        defaultRequestView.setText(R.string.No_internet);
                     }
-                }
-                else {
-                    Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
-                    ;
-                }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        Toast.makeText(productRequests.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        loadingRequestOrders.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+
+                clearReqBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(productRequests.this, "Feature Coming Soon... : Clearing Requests ", Toast.LENGTH_SHORT).show();
+                        requestDatabase.removeValue();
+
+                        defaultRequestView.setVisibility(View.VISIBLE);
+                    }
+                });
+            } else {
+                loadingRequestOrders.setVisibility(View.INVISIBLE);
+                defaultRequestView.setVisibility(View.VISIBLE);
+                defaultRequestView.setText(R.string.No_internet);
+            }
+        } else {
+            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
+            ;
+        }
 
 //            }
 //            else {
@@ -144,84 +136,7 @@ public class productRequests extends AppCompatActivity implements cartAdapter.on
 //                Toast.makeText(productRequests.this, R.string.No_internet, Toast.LENGTH_LONG).show();
 //            }
 
-        }
-//        else {
-//            loadingRequestOrders.setVisibility(View.INVISIBLE);
-//            defaultRequestView.setText(R.string.No_network);
-//            Toast.makeText(productRequests.this, R.string.No_network, Toast.LENGTH_LONG).show();
-//        }
-
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String phoneNo = pref.getString("phone", null);
-//
-//        if (phoneNo != null) {
-//            requestDatabase = FirebaseDatabase.getInstance().getReference("receivedOrders").child(phoneNo);
-//            requestList = new ArrayList<>();
-//
-//            clearReqBtn = findViewById(R.id.clearRequestBtn);
-//            loadingRequestOrders = findViewById(R.id.loadingRequestOrders);
-//            defaultRequestView = findViewById(R.id.defaultRequestView);
-//
-//            requestRecyclerView = findViewById(R.id.requestList);
-//            requestRecyclerView.setHasFixedSize(true);
-//
-//            requestLayoutManager = new LinearLayoutManager(this);
-//            requestRecyclerView.setLayoutManager(requestLayoutManager);
-//
-//            requestAdapter = new cartAdapter(this, requestList);
-//            requestRecyclerView.setAdapter(requestAdapter);
-//            requestAdapter.setOnCartClickListener(this);
-//
-//            loadingRequestOrders.setVisibility(View.VISIBLE);
-//            requestDatabase.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    requestList.clear();
-//
-////                priceSum = 0;
-//                    for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-//                        orderModel requestProduct = requestSnapshot.getValue(orderModel.class);
-////                    orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
-//                        requestList.add(requestProduct);
-////                    priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
-////                    writePlacedOrders(orderedProduct);
-//                    }
-//                    if (requestList.isEmpty()) {
-//                        loadingRequestOrders.setVisibility(View.INVISIBLE);
-//                        clearReqBtn.setVisibility(View.INVISIBLE);
-//                        defaultRequestView.setVisibility(View.VISIBLE);
-//
-//                    }
-//                    requestAdapter.notifyDataSetChanged();
-//                    loadingRequestOrders.setVisibility(View.INVISIBLE);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    Toast.makeText(productRequests.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                    loadingRequestOrders.setVisibility(View.INVISIBLE);
-//
-//                }
-//            });
-//
-//            clearReqBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(productRequests.this, "Feature Coming Soon... : Clearing Requests ", Toast.LENGTH_SHORT).show();
-////                paymentMethod(priceSum);
-////                ordersList.clear();
-////                passingPlacedOrders();
-//                    requestDatabase.removeValue();
-//
-//                    defaultRequestView.setVisibility(View.VISIBLE);
-//                }
-//            });
-//        } else {
-//            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
-//            ;
-//        }
-//    }
+    }
 
     @Override
     public void cartItemClick(int position) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rec"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rec"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -9,9 +9,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:background="@color/card"
-        app:cardCornerRadius="5dp"
-        android:layout_margin="5dp">
+        app:cardCornerRadius="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
                 android:id="@+id/recycleImage"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_weight="70"
                 android:layout_marginLeft="8dp"
+                android:layout_weight="70"
                 app:srcCompat="@drawable/back_image" />
 
             <LinearLayout
@@ -53,13 +53,13 @@
 
                 <TextView
                     android:id="@+id/recyclePrice"
-                    android:textSize="@dimen/eighteen_sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="TextView"
-                    android:textStyle="bold"
-                    android:textColor="#F10B0B" />
+                    android:textColor="#F10B0B"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 

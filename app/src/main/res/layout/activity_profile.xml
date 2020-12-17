@@ -1,240 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Profile">
+    android:layout_height="match_parent">
 
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/profileToolbar"/>
-<!--    <ImageView-->
-<!--        android:id="@+id/profileImage"-->
-<!--        android:layout_width="150dp"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:layout_margin="@dimen/eight_dp"-->
-<!--        android:foregroundGravity="center_horizontal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:srcCompat="@mipmap/ic_launcher_round" />-->
-
-    <ImageView
-        android:id="@+id/imageViewProfile"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:srcCompat="@drawable/ic_account"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/forty_dp"
-        app:layout_constraintTop_toBottomOf="@id/profileToolbar"/>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/eight_dp"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="@dimen/eight_dp"
-        android:layout_marginRight="@dimen/eight_dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageViewProfile">
+        android:layout_height="match_parent"
+        tools:context=".Profile">
+
+        <include
+            android:id="@+id/profileToolbar"
+            layout="@layout/toolbar" />
+
+        <ImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="@dimen/forty_dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileToolbar"
+            app:srcCompat="@drawable/ic_account" />
 
         <LinearLayout
-            android:id="@+id/userNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/eight_dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:layout_marginStart="@dimen/eight_dp"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:layout_marginRight="@dimen/eight_dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewProfile">
 
-            <TextView
-                android:id="@+id/profileName"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/userNameLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="40"
-                android:text="User Name : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-            <EditText
-                android:id="@+id/dynamicProfileName"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="40"
+                    android:text="User Name : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <EditText
+                    android:id="@+id/dynamicProfileName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="60"
+                    android:enabled="false"
+                    android:text="User Name "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/emailProfileLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="60"
-                android:enabled="false"
-                android:text="User Name "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/profileMail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="30"
+                    android:text="E - Mail : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <EditText
+                    android:id="@+id/dynamicProfileMail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="70"
+                    android:enabled="false"
+                    android:text="E - Mail "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/phoneProfileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/profilePhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="40"
+                    android:text="Phone No : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <EditText
+                    android:id="@+id/dynamicProfilePhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="60"
+                    android:enabled="false"
+                    android:text="Phone No "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/locationProfileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/profileLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="55"
+                    android:text="Current Location : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+                <EditText
+                    android:id="@+id/dynamicProfileLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/eight_dp"
+                    android:layout_weight="45"
+                    android:enabled="false"
+                    android:text="Location "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/eighteen_sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/emailProfileLayout"
+        <Button
+            android:id="@+id/profileEditBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/eight_dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:background="@color/colorPrimary"
+            android:padding="8dp"
+            android:text="Edit Profile"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/profileMail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="30"
-                android:text="E - Mail : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <EditText
-                android:id="@+id/dynamicProfileMail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="70"
-                android:enabled="false"
-                android:text="E - Mail "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/phoneProfileLayout"
+        <Button
+            android:id="@+id/profileUpdateBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/eight_dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/profilePhone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="40"
-                android:text="Phone No : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <EditText
-                android:id="@+id/dynamicProfilePhone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="60"
-                android:enabled="false"
-                android:text="Phone No "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/locationProfileLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/eight_dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/profileLocation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="55"
-                android:text="Current Location : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <EditText
-                android:id="@+id/dynamicProfileLocation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/eight_dp"
-                android:layout_weight="45"
-                android:text="Location "
-                android:enabled="false"
-                android:textColor="@color/black"
-                android:textSize="@dimen/eighteen_sp" />
-
-        </LinearLayout>
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/locationProfileLayoutOk"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="@dimen/eight_dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:weightSum="100">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/profileLocationOk"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="@dimen/eight_dp"-->
-<!--                android:layout_weight="45"-->
-<!--                android:text="Current : "-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/eighteen_sp" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/dynamicProfileLocationOk"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="@dimen/eight_dp"-->
-<!--                android:layout_weight="55"-->
-<!--                android:text="CORONA "-->
-<!--                android:enabled="false"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/eighteen_sp" />-->
-
-<!--        </LinearLayout>-->
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/profileEditBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/eight_dp"
-        android:text="Edit Profile"
-        android:background="@color/colorPrimary"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/profileUpdateBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/eight_dp"
-        android:text="Update Profile"
-        android:visibility="gone"
-        android:background="@color/colorPrimary"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@color/colorPrimary"
+            android:padding="8dp"
+            android:text="Update Profile"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

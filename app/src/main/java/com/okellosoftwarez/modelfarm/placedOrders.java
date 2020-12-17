@@ -51,68 +51,66 @@ public class placedOrders extends AppCompatActivity {
 //        if (isNetworkConnected()){
 //            if (isInternetAvailable()){
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-                String phoneNo = pref.getString("phone", null);
-                if (phoneNo != null) {
-                    placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
-                    placed_productsList = new ArrayList<>();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
+        if (phoneNo != null) {
+            placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
+            placed_productsList = new ArrayList<>();
 
-                    placed_progressBar = findViewById(R.id.loadingPlacedOrders);
-                    defaultPlacedView = findViewById(R.id.defaultPlacedView);
+            placed_progressBar = findViewById(R.id.loadingPlacedOrders);
+            defaultPlacedView = findViewById(R.id.defaultPlacedView);
 
-                    clearBtn = findViewById(R.id.clearOrderBtn);
-                    placedRecyclerView = findViewById(R.id.placedOrderList);
-                    placedRecyclerView.setHasFixedSize(true);
+            clearBtn = findViewById(R.id.clearOrderBtn);
+            placedRecyclerView = findViewById(R.id.placedOrderList);
+            placedRecyclerView.setHasFixedSize(true);
 
-                    placedLayoutManager = new LinearLayoutManager(this);
-                    placedRecyclerView.setLayoutManager(placedLayoutManager);
+            placedLayoutManager = new LinearLayoutManager(this);
+            placedRecyclerView.setLayoutManager(placedLayoutManager);
 
-                    placedAdapter = new cartAdapter(this, placed_productsList);
-                    placedRecyclerView.setAdapter(placedAdapter);
+            placedAdapter = new cartAdapter(this, placed_productsList);
+            placedRecyclerView.setAdapter(placedAdapter);
 
-                    if (isNetworkConnected()) {
-                        placedReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                placed_productsList.clear();
+            if (isNetworkConnected()) {
+                placedReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        placed_productsList.clear();
 
-                                for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
-                                    orderModel placedOrder = placedShot.getValue(orderModel.class);
-                                    placed_productsList.add(placedOrder);
-                                }
+                        for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
+                            orderModel placedOrder = placedShot.getValue(orderModel.class);
+                            placed_productsList.add(placedOrder);
+                        }
 
-                                if (placed_productsList.isEmpty()) {
-                                    defaultPlacedView.setVisibility(View.VISIBLE);
-                                    clearBtn.setVisibility(View.INVISIBLE);
-                                }
-                                placedAdapter.notifyDataSetChanged();
-                                placed_progressBar.setVisibility(View.INVISIBLE);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                placed_progressBar.setVisibility(View.INVISIBLE);
-
-                            }
-                        });
-
-//                    clearBtn = findViewById(R.id.clearOrderBtn);
-                        clearBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                placedReference.removeValue();
-                            }
-                        });
-                    } else {
+                        if (placed_productsList.isEmpty()) {
+                            defaultPlacedView.setVisibility(View.VISIBLE);
+                            clearBtn.setVisibility(View.INVISIBLE);
+                        }
+                        placedAdapter.notifyDataSetChanged();
                         placed_progressBar.setVisibility(View.INVISIBLE);
-                        defaultPlacedView.setVisibility(View.VISIBLE);
-                        defaultPlacedView.setText(R.string.No_network);
                     }
-                }
-                else {
-                    Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
-                }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        placed_progressBar.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+
+                clearBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        placedReference.removeValue();
+                    }
+                });
+            } else {
+                placed_progressBar.setVisibility(View.INVISIBLE);
+                defaultPlacedView.setVisibility(View.VISIBLE);
+                defaultPlacedView.setText(R.string.No_network);
+            }
+        } else {
+            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
+        }
 
 //            }
 //            else {
@@ -122,70 +120,8 @@ public class placedOrders extends AppCompatActivity {
 //                Toast.makeText(placedOrders.this, R.string.No_internet, Toast.LENGTH_LONG).show();
 //            }
 //
-        }
-//        else {??
-//            placed_progressBar.setVisibility(View.INVISIBLE);
-//            defaultPlacedView.setText(R.string.No_network);
-//            Toast.makeText(placedOrders.this, R.string.No_network, Toast.LENGTH_LONG).show();
-//        }
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String phoneNo = pref.getString("phone", null);
-//        if (phoneNo != null) {
-//            placedReference = FirebaseDatabase.getInstance().getReference("placedOrders").child(phoneNo);
-//            placed_productsList = new ArrayList<>();
-//
-//            placed_progressBar = findViewById(R.id.loadingPlacedOrders);
-//            defaultPlacedView = findViewById(R.id.defaultPlacedView);
-//
-//            placedRecyclerView = findViewById(R.id.placedOrderList);
-//            placedRecyclerView.setHasFixedSize(true);
-//
-//            placedLayoutManager = new LinearLayoutManager(this);
-//            placedRecyclerView.setLayoutManager(placedLayoutManager);
-//
-//            placedAdapter = new cartAdapter(this, placed_productsList);
-//            placedRecyclerView.setAdapter(placedAdapter);
-//
-//            placedReference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    placed_productsList.clear();
-//
-//                    for (DataSnapshot placedShot : dataSnapshot.getChildren()) {
-//                        orderModel placedOrder = placedShot.getValue(orderModel.class);
-//                        placed_productsList.add(placedOrder);
-//                    }
-//
-//                    if (placed_productsList.isEmpty()) {
-//                        defaultPlacedView.setVisibility(View.VISIBLE);
-//                        clearBtn.setVisibility(View.INVISIBLE);
-//                    }
-//                    placedAdapter.notifyDataSetChanged();
-//                    placed_progressBar.setVisibility(View.INVISIBLE);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//                    Toast.makeText(placedOrders.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                    placed_progressBar.setVisibility(View.INVISIBLE);
-//
-//                }
-//            });
-//
-//
-//            clearBtn = findViewById(R.id.clearOrderBtn);
-//            clearBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    placedReference.removeValue();
-//                }
-//            });
-//        }
-//        else {
-//            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_SHORT).show();
-//        }
+    }
 
-//    }
     //    This method checks whether mobile is connected to internet and returns true if connected:
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

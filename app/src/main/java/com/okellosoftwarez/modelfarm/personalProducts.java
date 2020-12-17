@@ -35,7 +35,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class personalProducts extends AppCompatActivity implements personalAdapter.onItemClickListener{
+public class personalProducts extends AppCompatActivity implements personalAdapter.onItemClickListener {
 
     RecyclerView personalRecyclerView;
     LinearLayoutManager personalLayoutManager;
@@ -63,168 +63,80 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
 //        if (isNetworkConnected()){
 //            if (isInternetAvailable()){
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String recPersonalPhone = "No";
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String phoneNo = pref.getString("phone", null);
+        if (!phoneNo.equals(null)) {
+            personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
 
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-                String phoneNo = pref.getString("phone", null);
-//        Toast.makeText(this, "Phone :" + phoneNo, Toast.LENGTH_SHORT).show();
-                if (!phoneNo.equals(null)) {
-//        if (getIntent().hasExtra("pPhone")) {
-//            recPersonalPhone = getIntent().getStringExtra("pPhone");
-                    personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
+            personalStorage = FirebaseStorage.getInstance();
 
-                    personalStorage = FirebaseStorage.getInstance();
+            delProductRef = FirebaseDatabase.getInstance().getReference("Products");
 
-                    delProductRef = FirebaseDatabase.getInstance().getReference("Products");
+            personal_productsList = new ArrayList<>();
 
-//        if (recPersonalPhone.equals(null)){
-
-//            recPersonalPhone = pref.getString("phone", null);
-//        }
-//        Obtaining the reference of personal database
-//        personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(recPersonalPhone);
-                    personal_productsList = new ArrayList<>();
-
-                    personal_progressBar = findViewById(R.id.loadingPersonalProducts);
-                    defaultView = findViewById(R.id.defaultPersonalView);
+            personal_progressBar = findViewById(R.id.loadingPersonalProducts);
+            defaultView = findViewById(R.id.defaultPersonalView);
 
 
-                    personalRecyclerView = findViewById(R.id.personalList);
-                    personalRecyclerView.setHasFixedSize(true);
+            personalRecyclerView = findViewById(R.id.personalList);
+            personalRecyclerView.setHasFixedSize(true);
 
-                    personalLayoutManager = new LinearLayoutManager(this);
-                    personalRecyclerView.setLayoutManager(personalLayoutManager);
+            personalLayoutManager = new LinearLayoutManager(this);
+            personalRecyclerView.setLayoutManager(personalLayoutManager);
 
-                    personalAdapter = new personalAdapter(this, personal_productsList);
-                    personalRecyclerView.setAdapter(personalAdapter);
-                    personalAdapter.setOnItemClickListener(this);
+            personalAdapter = new personalAdapter(this, personal_productsList);
+            personalRecyclerView.setAdapter(personalAdapter);
+            personalAdapter.setOnItemClickListener(this);
 
-                    if (isNetworkConnected()) {
-                        personalValueEventListener = personalReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                personal_productsList.clear();
+            if (isNetworkConnected()) {
+                personalValueEventListener = personalReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        personal_productsList.clear();
 
-                                for (DataSnapshot personalSnapShot : dataSnapshot.getChildren()) {
-                                    Products personalProduct = personalSnapShot.getValue(Products.class);
-                                    personalProduct.setID(personalSnapShot.getKey());
+                        for (DataSnapshot personalSnapShot : dataSnapshot.getChildren()) {
+                            Products personalProduct = personalSnapShot.getValue(Products.class);
+                            personalProduct.setID(personalSnapShot.getKey());
 
-                                    if (Integer.valueOf(personalProduct.getCapacity()) > 0) {
+                            if (Integer.valueOf(personalProduct.getCapacity()) > 0) {
 
-                                        personal_productsList.add(personalProduct);
-                                    } else {
-                                        Toast.makeText(personalProducts.this, "Your : " + personalProduct.getName() + " Product is out of stock", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                                if (personal_productsList.isEmpty()) {
-                                    defaultView.setVisibility(View.VISIBLE);
-//                        Toast.makeText(personalProducts.this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
-                                }
-                                personalAdapter.notifyDataSetChanged();
-                                personal_progressBar.setVisibility(View.INVISIBLE);
+                                personal_productsList.add(personalProduct);
+                            } else {
+                                Toast.makeText(personalProducts.this, "Your : " + personalProduct.getName() + " Product is out of stock", Toast.LENGTH_SHORT).show();
 
                             }
+                        }
+                        if (personal_productsList.isEmpty()) {
+                            defaultView.setVisibility(View.VISIBLE);
+                        }
+                        personalAdapter.notifyDataSetChanged();
+                        personal_progressBar.setVisibility(View.INVISIBLE);
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(personalProducts.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                personal_progressBar.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(personalProducts.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        personal_progressBar.setVisibility(View.INVISIBLE);
+                    }
+                });
 //            else {
 //
 //                personal_progressBar.setVisibility(View.INVISIBLE);
 //                defaultView.setText(R.string.No_internet);
 //                Toast.makeText(personalProducts.this, R.string.No_internet, Toast.LENGTH_LONG).show();
 //            }
-                    } else {
+            } else {
 
-                        personal_progressBar.setVisibility(View.INVISIBLE);
-                        defaultView.setVisibility(View.VISIBLE);
-                        defaultView.setText(R.string.No_network);
-                        Toast.makeText(personalProducts.this, R.string.No_network, Toast.LENGTH_LONG).show();
-                    }
-                }
-        else {
-                        Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_LONG).show();
+                personal_progressBar.setVisibility(View.INVISIBLE);
+                defaultView.setVisibility(View.VISIBLE);
+                defaultView.setText(R.string.No_network);
+                Toast.makeText(personalProducts.this, R.string.No_network, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_LONG).show();
 
-                    }
-
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-////        String recPersonalPhone = "No";
-//
-////        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String phoneNo = pref.getString("phone", null);
-////        Toast.makeText(this, "Phone :" + phoneNo, Toast.LENGTH_SHORT).show();
-//        if (!phoneNo.equals(null)){
-////        if (getIntent().hasExtra("pPhone")) {
-////            recPersonalPhone = getIntent().getStringExtra("pPhone");
-//            personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(phoneNo);
-//
-//            personalStorage = FirebaseStorage.getInstance();
-//
-//            delProductRef = FirebaseDatabase.getInstance().getReference("Products");
-//
-////        if (recPersonalPhone.equals(null)){
-//
-////            recPersonalPhone = pref.getString("phone", null);
-////        }
-////        Obtaining the reference of personal database
-////        personalReference = FirebaseDatabase.getInstance().getReference("personalProducts").child(recPersonalPhone);
-//            personal_productsList = new ArrayList<>();
-//
-//            personal_progressBar = findViewById(R.id.loadingPersonalProducts);
-//            defaultView = findViewById(R.id.defaultPersonalView);
-//
-//
-//            personalRecyclerView = findViewById(R.id.personalList);
-//            personalRecyclerView.setHasFixedSize(true);
-//
-//            personalLayoutManager = new LinearLayoutManager(this);
-//            personalRecyclerView.setLayoutManager(personalLayoutManager);
-//
-//            personalAdapter = new personalAdapter(this, personal_productsList);
-//            personalRecyclerView.setAdapter(personalAdapter);
-//            personalAdapter.setOnItemClickListener(this);
-//
-//            personalValueEventListener = personalReference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    personal_productsList.clear();
-//
-//                    for (DataSnapshot personalSnapShot : dataSnapshot.getChildren()) {
-//                        Products personalProduct = personalSnapShot.getValue(Products.class);
-//                        personalProduct.setID(personalSnapShot.getKey());
-//
-//                        if (Integer.valueOf(personalProduct.getCapacity()) > 0) {
-//
-//                            personal_productsList.add(personalProduct);
-//                        }
-//                        else {
-//                            Toast.makeText(personalProducts.this, "Your : " + personalProduct.getName() + " Product is out of stock", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//                    if (personal_productsList.isEmpty()){
-//                        defaultView.setVisibility(View.VISIBLE);
-////                        Toast.makeText(personalProducts.this, "Nothing to Show...", Toast.LENGTH_SHORT).show();
-//                    }
-//                    personalAdapter.notifyDataSetChanged();
-//                    personal_progressBar.setVisibility(View.INVISIBLE);
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//                    Toast.makeText(personalProducts.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                    personal_progressBar.setVisibility(View.INVISIBLE);
-//                }
-//            });
-//        } else {
-//
-//            Toast.makeText(this, "Did not Register AS Expected Try Creating a New Account...", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -235,9 +147,8 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
 
     @Override
     public void onDeleteItem(int position) {
-//        Toast.makeText(this, "Delete Click... " + position, Toast.LENGTH_SHORT).show();
-    Products selectedProduct = personal_productsList.get(position);
-    final String selectedKey = selectedProduct.getID();
+        Products selectedProduct = personal_productsList.get(position);
+        final String selectedKey = selectedProduct.getID();
 
         StorageReference selectedRef = personalStorage.getReferenceFromUrl(selectedProduct.getImage());
         selectedRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -270,16 +181,9 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
         updateIntent.putExtra("editMail", selectedProduct.getEmail());
         updateIntent.putExtra("editPhone", selectedProduct.getPhone());
         startActivity(updateIntent);
-//        Toast.makeText(this, "Whatever Click... " + position, Toast.LENGTH_SHORT).show();
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        personalReference.removeEventListener(personalValueEventListener);
-//    }
-
-    public static AlertDialog displayMobileDataSettingDialog(final Activity activity, final Context context){
+    public static AlertDialog displayMobileDataSettingDialog(final Activity activity, final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("NO INTERNET");
         builder.setMessage("Please connect to your internet");
@@ -295,7 +199,7 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent mobileIntent = new Intent();
-                mobileIntent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$DataUsageSummaryActivity"));
+                mobileIntent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                 dialog.cancel();
                 context.startActivity(mobileIntent);
                 activity.finish();
@@ -305,12 +209,14 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
 
         return builder.create();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
 
     }
+
     //    This method checks whether mobile is connected to internet and returns true if connected:
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -82,40 +82,19 @@ public class Product_Details extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= 23){
-                    if (checkedPermission()){
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (checkedPermission()) {
                         Log.e("permission", "Permission Already Granted");
-                    }
-                    else {
+                    } else {
                         requestedPermission();
                     }
                 }
 
-                if (checkedPermission()){
+                if (checkedPermission()) {
                     Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(Uri.parse("tel:" + d_phone));
                     startActivity(callIntent);
                 }
-
-//                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-//                callIntent.setData(Uri.parse("tel:" + d_phone));
-
-//                if (ActivityCompat.checkSelfPermission(Product_Details.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(Product_Details.this, "No Permission", Toast.LENGTH_SHORT).show();
-//                    Getting permission
-//                    String[] callPerm = {Manifest.permission.CALL_PHONE};
-
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                        requestPermissions(callPerm, PHONE_PERMISSION);
-//                        startActivity(callIntent);
-//                        Toast.makeText(Product_Details.this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(Product_Details.this, "No Permission granted", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                } else {
-//                    startActivity(callIntent);
-//                }
             }
         });
 
@@ -134,17 +113,6 @@ public class Product_Details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(Product_Details.this, "Making Order ...", Toast.LENGTH_SHORT).show();
-//                @Provides
-//                @Singleton
-//                Daraja providesDaraja() {
-//                    return Daraja.Builder(Config.CONSUMER_KEY, Config.CONSUMER_SECRET)
-//                            .setBusinessShortCode(Config.BUSINESS_SHORTCODE)
-//                            .setPassKey(AppUtils.getPassKey())
-//                            .setTransactionType(Config.ACCOUNT_TYPE)
-//                            .setCallbackUrl(Config.CALLBACK_URL)
-//                            .setEnvironment(Environment.SANDBOX)
-//                            .build();
-//                }
                 priceConfirmationDialog();
 
             }
@@ -153,18 +121,17 @@ public class Product_Details extends AppCompatActivity {
     }
 
     private void requestedPermission() {
-        ActivityCompat.requestPermissions(Product_Details.this, new String[] { Manifest.permission.CALL_PHONE}, PHONE_PERMISSION);
+        ActivityCompat.requestPermissions(Product_Details.this, new String[]{Manifest.permission.CALL_PHONE}, PHONE_PERMISSION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case PHONE_PERMISSION :
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PHONE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission Accepted...", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission Denied...", Toast.LENGTH_SHORT).show();
                 }
 
@@ -203,19 +170,6 @@ public class Product_Details extends AppCompatActivity {
 
                         int capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
 
-//                Toast.makeText(Product_Details.this, "KES : " + totalPrice + "Compared By : " + price, Toast.LENGTH_SHORT).show();
-
-//                uploadingData(totalPrice, value);
-//
-//                Intent cartIntent = new Intent(Product_Details.this, Order.class);
-//                cartIntent.putExtra("prdName", d_name);
-//                cartIntent.putExtra("prdMail", d_email);
-//                cartIntent.putExtra("prdLocation", d_location);
-//                cartIntent.putExtra("prdPhone", d_phone);
-//                cartIntent.putExtra("prdCapacity", value);
-//                cartIntent.putExtra("prdPrice", price);
-//                cartIntent.putExtra("remPrdCapacity", capacityRem);
-
                         if (capacityRem >= 0) {
 
                             uploadingData(totalPrice, value, String.valueOf(capacityRem));
@@ -240,8 +194,7 @@ public class Product_Details extends AppCompatActivity {
                         Toast.makeText(Product_Details.this, "Capacity cannot be less than 1", Toast.LENGTH_SHORT).show();
                     }
 //                startActivity(cartIntent);
-                }
-                catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     Toast.makeText(Product_Details.this, value + " Is not a Valid Number input", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -256,10 +209,6 @@ public class Product_Details extends AppCompatActivity {
         alert.show();
     }
 
-    private void updatePersonalProducts() {
-
-    }
-
     private void uploadingData(int totalPrice, String value, String capRem) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String loadedPhone = pref.getString("phone", null);
@@ -269,14 +218,6 @@ public class Product_Details extends AppCompatActivity {
 
         DatabaseReference perPref = database.getReference("personalProducts").child(d_phone).child(d_key);
         perPref.child("capacity").setValue(capRem);
-//        String orderKey = ref.push().getKey();
-
-//        DatabaseReference orderDatabaseRef = FirebaseDatabase.getInstance().getReference("Products");
-//        String orderKey = orderDatabaseRef.push().getKey();
-
-//        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image);
-//        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone);
-//        fullOrder = new orderModel(d_name, value , Integer.toString(totalPrice), d_image, d_phone, d_location);
         int remCapacity = Integer.valueOf(d_capacity) - Integer.valueOf(value);
 
         fullOrder = new orderModel(d_name, value, Integer.toString(totalPrice), d_image, d_phone, d_location, d_email, Integer.toString(remCapacity));
@@ -290,7 +231,7 @@ public class Product_Details extends AppCompatActivity {
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
                 && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")) {
-//            String  d_email;
+
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
             d_price = getIntent().getStringExtra("price");
@@ -304,7 +245,6 @@ public class Product_Details extends AppCompatActivity {
 
             assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity);
 
-//            uploadOrders();
         }
     }
 

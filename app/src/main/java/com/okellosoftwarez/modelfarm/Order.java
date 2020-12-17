@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +52,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
     TextView defaultOrderView;
     private int priceSum, remainder;
 
-    private static final int NOT_PERMISSION = 60 ;
+    private static final int NOT_PERMISSION = 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,77 +73,73 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 //        if (isNetworkConnected()){
 //            if (isInternetAvailable()){
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-                String loadPhone = pref.getString("phone", null);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
+        String loadPhone = pref.getString("phone", null);
 //        obtaining the order database Reference from the order
-                orderDatabase = FirebaseDatabase.getInstance().getReference("Orders").child(loadPhone);
-                ordersList = new ArrayList<>();
-                notificationList = new ArrayList<>();
+        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders").child(loadPhone);
+        ordersList = new ArrayList<>();
+        notificationList = new ArrayList<>();
 
-                payBtn = findViewById(R.id.paymentBtn);
-                loadingOrders = findViewById(R.id.loadingOrders);
-                defaultOrderView = findViewById(R.id.defaultOrderView);
+        payBtn = findViewById(R.id.paymentBtn);
+        loadingOrders = findViewById(R.id.loadingOrders);
+        defaultOrderView = findViewById(R.id.defaultOrderView);
 
-                ordersRecyclerView = findViewById(R.id.cartList);
-                ordersRecyclerView.setHasFixedSize(true);
+        ordersRecyclerView = findViewById(R.id.cartList);
+        ordersRecyclerView.setHasFixedSize(true);
 
-                ordersLayoutManager = new LinearLayoutManager(this);
-                ordersRecyclerView.setLayoutManager(ordersLayoutManager);
+        ordersLayoutManager = new LinearLayoutManager(this);
+        ordersRecyclerView.setLayoutManager(ordersLayoutManager);
 
-                cartAdapter = new cartAdapter(this, ordersList);
-                ordersRecyclerView.setAdapter(cartAdapter);
-                cartAdapter.setOnCartClickListener(this);
+        cartAdapter = new cartAdapter(this, ordersList);
+        ordersRecyclerView.setAdapter(cartAdapter);
+        cartAdapter.setOnCartClickListener(this);
 
-        if (isNetworkConnected()){
-                orderDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ordersList.clear();
-                        notificationList.clear();
+        if (isNetworkConnected()) {
+            orderDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ordersList.clear();
+                    notificationList.clear();
 
-                        priceSum = 0;
-                        for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
-                            orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
-                            orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
-                            ordersList.add(orderedProduct);
-                            priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
-//                    writePlacedOrders(orderedProduct);
+                    priceSum = 0;
+                    for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
+                        orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
+                        orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
+                        ordersList.add(orderedProduct);
+                        priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
 
-                            NotificationModel  notificationModel = new NotificationModel(orderedProduct.getPrdOrderPhone(), orderedProduct.getPrdOrderedTotal(), orderedProduct.getPrdOrderedName());
-                            notificationList.add(notificationModel);
-                        }
-                        if (ordersList.isEmpty()) {
-                            defaultOrderView.setVisibility(View.VISIBLE);
-//                    payBtn.setEnabled(false);
-                            payBtn.setVisibility(View.INVISIBLE);
-                        }
-                        cartAdapter.notifyDataSetChanged();
-                        loadingOrders.setVisibility(View.INVISIBLE);
+                        NotificationModel notificationModel = new NotificationModel(orderedProduct.getPrdOrderPhone(), orderedProduct.getPrdOrderedTotal(), orderedProduct.getPrdOrderedName());
+                        notificationList.add(notificationModel);
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        Toast.makeText(Order.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                        loadingOrders.setVisibility(View.INVISIBLE);
-
-                    }
-                });
-
-                payBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(Order.this, "Feature Coming Soon... : Clear " + priceSum, Toast.LENGTH_SHORT).show();
-                        paymentMethod(priceSum);
-//                ordersList.clear();
-                        passingPlacedOrders();
-                        orderDatabase.removeValue();
-
-//                checkingMessagePermission();
-                        sendOrderNotification();
+                    if (ordersList.isEmpty()) {
                         defaultOrderView.setVisibility(View.VISIBLE);
+                        payBtn.setVisibility(View.INVISIBLE);
                     }
-                });
+                    cartAdapter.notifyDataSetChanged();
+                    loadingOrders.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    Toast.makeText(Order.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    loadingOrders.setVisibility(View.INVISIBLE);
+
+                }
+            });
+
+            payBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(Order.this, "Feature Coming Soon... : Clear " + priceSum, Toast.LENGTH_SHORT).show();
+                    paymentMethod(priceSum);
+                    passingPlacedOrders();
+                    orderDatabase.removeValue();
+
+                    sendOrderNotification();
+                    defaultOrderView.setVisibility(View.VISIBLE);
+                }
+            });
 
 //            }
 //            else {
@@ -150,110 +149,23 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 //                Toast.makeText(Order.this, R.string.No_internet, Toast.LENGTH_LONG).show();
 //            }
 
-        }
-        else {
+        } else {
 
             loadingOrders.setVisibility(View.INVISIBLE);
             defaultOrderView.setVisibility(View.VISIBLE);
             defaultOrderView.setText(R.string.No_network);
             Toast.makeText(Order.this, R.string.No_network, Toast.LENGTH_LONG).show();
         }
-
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
-//        String loadPhone = pref.getString("phone", null);
-////        obtaining the order database Reference from the order
-//        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders").child(loadPhone);
-//        ordersList = new ArrayList<>();
-//        notificationList = new ArrayList<>();
-//
-//        payBtn = findViewById(R.id.paymentBtn);
-//        loadingOrders = findViewById(R.id.loadingOrders);
-//        defaultOrderView = findViewById(R.id.defaultOrderView);
-
-//        ordersRecyclerView = findViewById(R.id.cartList);
-//        ordersRecyclerView.setHasFixedSize(true);
-//
-//        ordersLayoutManager = new LinearLayoutManager(this);
-//        ordersRecyclerView.setLayoutManager(ordersLayoutManager);
-//
-//        cartAdapter = new cartAdapter(this, ordersList);
-//        ordersRecyclerView.setAdapter(cartAdapter);
-//        cartAdapter.setOnCartClickListener(this);
-//
-//        orderDatabase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                ordersList.clear();
-//                notificationList.clear();
-//
-//                priceSum = 0;
-//                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
-//                    orderModel orderedProduct = orderSnapshot.getValue(orderModel.class);
-//                    orderedProduct.setPrdOrderKey(orderSnapshot.getKey());
-//                    ordersList.add(orderedProduct);
-//                    priceSum = priceSum + Integer.parseInt(orderedProduct.prdOrderedTotal);
-////                    writePlacedOrders(orderedProduct);
-//
-//                    NotificationModel  notificationModel = new NotificationModel(orderedProduct.getPrdOrderPhone(), orderedProduct.getPrdOrderedTotal(), orderedProduct.getPrdOrderedName());
-//                    notificationList.add(notificationModel);
-//                }
-//                if (ordersList.isEmpty()) {
-//                    defaultOrderView.setVisibility(View.VISIBLE);
-////                    payBtn.setEnabled(false);
-//                    payBtn.setVisibility(View.INVISIBLE);
-//                }
-//                cartAdapter.notifyDataSetChanged();
-//                loadingOrders.setVisibility(View.INVISIBLE);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                Toast.makeText(Order.this, "Permission Denied... " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                loadingOrders.setVisibility(View.INVISIBLE);
-//
-//            }
-//        });
-//
-//        payBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(Order.this, "Feature Coming Soon... : Clear " + priceSum, Toast.LENGTH_SHORT).show();
-//                paymentMethod(priceSum);
-////                ordersList.clear();
-//                passingPlacedOrders();
-//                orderDatabase.removeValue();
-//
-////                checkingMessagePermission();
-//                sendOrderNotification();
-//                defaultOrderView.setVisibility(View.VISIBLE);
-//            }
-//        });
     }
-
-//    private boolean checkingMessagePermission() {
-//        if (Build.VERSION.SDK_INT >= 23){
-//            if (check_permission()){
-//                Log.e("Permission", "Permission Granted");
-//            }
-//            else {
-//                request_permission();
-//
-//            }
-//
-//        }
-//    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case NOT_PERMISSION :
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case NOT_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission Accepted...", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission Denied...", Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -262,34 +174,31 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 
     private void request_permission() {
 
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS}, NOT_PERMISSION);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, NOT_PERMISSION);
 
     }
 
     private boolean check_permission() {
         int results = ContextCompat.checkSelfPermission(Order.this, Manifest.permission.SEND_SMS);
 
-        if (results == PackageManager.PERMISSION_GRANTED){
+        if (results == PackageManager.PERMISSION_GRANTED) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     private void sendOrderNotification() {
 
-        if (Build.VERSION.SDK_INT >= 23){
-            if (check_permission()){
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (check_permission()) {
                 Log.e("Permission", "Permission Granted");
-            }
-            else {
+            } else {
                 request_permission();
 
             }
 
-        }
-        else {
+        } else {
             Toast.makeText(this, "Version is Lower than 23", Toast.LENGTH_LONG).show();
         }
 
@@ -298,14 +207,13 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
             String notTotal = nModel.getnTotal();
             String notName = nModel.getnName();
 
-            if (!TextUtils.isEmpty(notPhone) && !TextUtils.isEmpty(notTotal) && !TextUtils.isEmpty(notName)){
+            if (!TextUtils.isEmpty(notPhone) && !TextUtils.isEmpty(notTotal) && !TextUtils.isEmpty(notName)) {
 
-                if (check_permission()){
+                if (check_permission()) {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(notPhone, null, "Product Request : " + notName + " Received and Totalling : " + notTotal, null, null);
 
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -313,17 +221,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         }
     }
 
-    private void writePlacedOrders(orderModel orderedProduct) {
-        DatabaseReference placedRef = FirebaseDatabase.getInstance().getReference("placedOrders");
-        String placedKey = placedRef.push().getKey();
-        placedRef.child(placedKey).setValue(orderedProduct);
-//        List<orderModel> list = new ArrayList<>();
-//        list.add(orderedProduct);
-    }
-
     private void passingPlacedOrders() {
-//        Intent placedIntent = new Intent(this, placedOrders.class);
-//        placedIntent.putExtra("orders", );
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         String phoneNo = pref.getString("phone", null);
         String buyerLocation = pref.getString("location", null);
@@ -335,12 +233,10 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
         for (orderModel placedOrder : ordersList) {
             String phone = placedOrder.getPrdOrderPhone();
             String placedKey = placedRef.push().getKey();
-//            String placedKey = placedOrder.getPrdOrderKey();
             placedRef.child(placedKey).setValue(placedOrder);
 
 
             receivedRef.child(phone).child(placedKey).setValue(placedOrder);
-//            receivedRef.child(phone).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderLocation").setValue(buyerLocation);
             receivedRef.child(phone).child(placedKey).child("prdOrderedMail").setValue(buyerMail);
             receivedRef.child(phone).child(placedKey).child("prdOrderPhone").setValue(phoneNo);
@@ -349,10 +245,6 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
             prodRef.child("capacity").setValue(placedOrder.getPrdRemCapacity());
 
         }
-//        placedRef.setValue(ordersList);
-
-//        Intent placedIntent = new Intent(this, placedOrders.class);
-//        startActivity(placedIntent);
 
     }
 
@@ -389,12 +281,8 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
     @Override
     public void editCartItem(int position) {
 
-//        Toast.makeText(this, "Editing Interface...", Toast.LENGTH_SHORT).show();
-
         final orderModel selectedOrder = ordersList.get(position);
         final String selectedOrderKey = selectedOrder.getPrdOrderKey();
-
-//        Toast.makeText(this, "Editing Interface..." + selectedOrderKey, Toast.LENGTH_LONG).show();
 
         AlertDialog.Builder alertCapacity = new AlertDialog.Builder(this);
         alertCapacity.setTitle("Capacity");
@@ -423,12 +311,6 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
                 orderDatabase.child(selectedOrderKey).child("prdOrderedTotal").setValue(Integer.toString(newTotal));
                 orderDatabase.child(selectedOrderKey).child("prdRemCapacity").setValue(Integer.toString(newRem));
 
-//                Toast.makeText(Order.this, "New Price : " + price, Toast.LENGTH_LONG).show();
-
-//                Intent updateIntent = new Intent(getApplicationContext(), Order.class);
-//                startActivity(updateIntent);
-
-
             }
         });
         alertCapacity.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -441,6 +323,7 @@ public class Order extends AppCompatActivity implements cartAdapter.onCartClickL
 
         alertCapacity.show();
     }
+
     //    This method checks whether mobile is connected to internet and returns true if connected:
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

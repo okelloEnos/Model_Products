@@ -26,15 +26,12 @@ import java.util.List;
 public class productAdapter extends RecyclerView.Adapter<productAdapter.productViewHolder> {
     private static final String TAG = "productAdapter";
     List<Products> productsList;
-//    List<Products> productFilteredList;
-//    List<Products> productsListAll;
     private Context mcontext;
 
     public productAdapter(Context context, List<Products> list) {
 
         mcontext = context;
         productsList = list;
-//        this.productsListAll = new ArrayList<>(list);
     }
 
     @NonNull
@@ -97,74 +94,6 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
         Log.d(TAG, "getItemCount: Done counting for non-list...");
         return 0;
     }
-
-//    @Override
-//    public Filter getFilter() {
-//        return new Filter() {
-//            @Override
-//            protected FilterResults performFiltering(CharSequence constraint) {
-//                String charString = constraint.toString();
-//                if (charString.isEmpty()){
-//                    productFilteredList = productsList;
-//                }
-//                else {
-//                    List<Products> filteredList = new ArrayList<>();
-//                    for (Products row : productsList) {
-//                        // name match condition
-//                        if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
-//                            filteredList.add(row);
-//                        }
-//
-//                    }
-//                    productFilteredList = filteredList;
-//                }
-//                FilterResults filterResults = new FilterResults();
-//                filterResults.values = productFilteredList;
-//
-//                return filterResults;
-//            }
-//
-//            @Override
-//            protected void publishResults(CharSequence constraint, FilterResults results) {
-//
-//                productFilteredList = (ArrayList<Products>) results.values;
-////                refresh the list with filtered data
-//                notifyDataSetChanged();
-//            }
-//        };
-//    }
-
-//    Filter filter = new Filter() {
-////        Runs on a background thread
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            List<Products> filteredList = new ArrayList<>();
-//            if (constraint.toString().isEmpty()){
-//                filteredList.addAll(productsListAll);
-//            }
-//            else {
-//                for (Products filProd : productsList){
-//                    if (filProd.getName().toLowerCase().contains(constraint.toString().toLowerCase())){
-//                        filteredList.add(filProd);
-//                    }
-//                }
-//
-//            }
-//
-//            FilterResults filterResults = new FilterResults();
-//            filterResults.values = filteredList;
-//
-//            return filterResults;
-//        }
-//// Runs on ui
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//
-//            productsList.clear();
-//            productsList.addAll((Collection<? extends Products>) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
 
     public class productViewHolder extends RecyclerView.ViewHolder {
 
