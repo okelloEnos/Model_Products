@@ -273,11 +273,11 @@ public class personalProducts extends AppCompatActivity implements personalAdapt
 //        Toast.makeText(this, "Whatever Click... " + position, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        personalReference.removeEventListener(personalValueEventListener);
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        personalReference.removeEventListener(personalValueEventListener);
+//    }
 
     public static AlertDialog displayMobileDataSettingDialog(final Activity activity, final Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

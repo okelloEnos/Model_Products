@@ -317,7 +317,7 @@ public class Product_Details extends AppCompatActivity {
         tv_capacity.setText(d_capacity);
 
         Picasso.with(this).load(d_image)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.back_image)
                 .fit()
                 .centerCrop()
                 .into(detail_image);

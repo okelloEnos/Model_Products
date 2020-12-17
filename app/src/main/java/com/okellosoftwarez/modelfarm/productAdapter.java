@@ -57,7 +57,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
         holder.recPrice.setText("Price Per KG : " + currentProducts.getPrice());
         Picasso.with(mcontext)
                 .load(currentProducts.getImage())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.back_image)
                 .fit()
                 .centerCrop()
                 .into(holder.recImage);

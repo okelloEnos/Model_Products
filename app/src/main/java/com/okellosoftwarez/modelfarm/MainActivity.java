@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (getIntent().hasExtra("editImage")) {
                 receivedImage = getIntent().getStringExtra("editImage");
-                Picasso.with(this).load(receivedImage).placeholder(R.mipmap.ic_launcher)
+                Picasso.with(this).load(receivedImage).placeholder(R.drawable.back_image)
                         .fit().centerCrop().into(addImage);
                 image_uri = Uri.parse(receivedImage);
 

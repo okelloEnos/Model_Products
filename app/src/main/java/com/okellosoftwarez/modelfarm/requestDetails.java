@@ -169,7 +169,7 @@ public class requestDetails extends AppCompatActivity {
         tv_capacityReq.setText(d_capacity);
 
         Picasso.with(this).load(d_image)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.back_image)
                 .fit()
                 .centerCrop()
                 .into(detail_ReqImage);

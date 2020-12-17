@@ -44,14 +44,14 @@ public class personalAdapter extends RecyclerView.Adapter<personalAdapter.person
 
     @Override
     public void onBindViewHolder(@NonNull personalViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: allign to recycler...");
+        Log.d(TAG, "onBindViewHolder: align to recycler...");
         final Products currentProducts = personalProductsList.get(position);
         holder.recName.setText(currentProducts.getName());
         holder.recLocation.setText("Location : " + currentProducts.getLocation());
         holder.recPrice.setText("Price Per KG : " + currentProducts.getPrice());
         Picasso.with(personalContext)
                 .load(currentProducts.getImage())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.back_image)
                 .fit()
                 .centerCrop()
                 .into(holder.recImage);
