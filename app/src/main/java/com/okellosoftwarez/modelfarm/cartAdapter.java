@@ -43,9 +43,9 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.cartAdapterVie
         holder.orderName.setText(currentOrder.getPrdOrderedName());
         holder.orderCapacity.setText(currentOrder.getPrdOrderedCapacity() + " KG");
         holder.orderedPrice.setText(currentOrder.getPrdOrderedTotal());
-        Picasso.with(ordersContext)
+        Picasso.get()
                 .load(currentOrder.getPrdOrderImage())
-                .placeholder(R.drawable.common_google_signin_btn_icon_dark)
+                .placeholder(R.drawable.back_image)
                 .fit()
                 .centerCrop()
                 .into(holder.orderImage);
