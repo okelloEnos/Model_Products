@@ -134,7 +134,7 @@ public class SignIn extends AppCompatActivity {
 
                     }
                 } else {
-                    Toast.makeText(SignIn.this, "Invalid Phone Number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignIn.this, "Invalid Fields Try Creating an Account", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -265,5 +265,16 @@ public class SignIn extends AppCompatActivity {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//            super.onBackPressed();
+        Intent backLintent = new Intent(this, welcome_screen.class);
+        backLintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(backLintent);
+        finish();
     }
 }

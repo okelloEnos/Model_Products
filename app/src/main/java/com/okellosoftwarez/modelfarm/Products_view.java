@@ -1,6 +1,7 @@
 package com.okellosoftwarez.modelfarm;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -24,6 +25,7 @@ import com.okellosoftwarez.modelfarm.models.userModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -557,9 +559,30 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     }
 
     private void signOut() {
-        signOutmAuth.signOut();
-        Intent outIntent = new Intent(this, SignIn.class);
-        startActivity(outIntent);
+
+        AlertDialog.Builder signOutDialog = new AlertDialog.Builder(this);
+        signOutDialog.setTitle("Log Out...");
+        signOutDialog.setMessage("Are you Sure you want to exit ?");
+        signOutDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                signOutmAuth.signOut();
+                Intent outIntent = new Intent(Products_view.this, SignIn.class);
+//        outIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+//                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+//                Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(outIntent);
+//        finish();
+            }
+        });
+        signOutDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(Products_view.this, "Request Cancelled...", Toast.LENGTH_SHORT).show();
+            }
+        });
+        signOutDialog.show();
+
     }
 
     private void switchUser() {

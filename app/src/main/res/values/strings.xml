@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ModelFarmer</string>
+    <string name="app_name">Agri Marketing</string>
     <string name="tvWelcome">Welcome to Agriculture Marketing Platform</string>
     <string name="title_activity_products_view">Products View</string>
     <string name="action_settings">Settings</string>
