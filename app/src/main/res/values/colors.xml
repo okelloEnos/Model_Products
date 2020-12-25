@@ -7,6 +7,8 @@
     <color name="colorPrimary">#0CE415</color>
     <color name="colorPrimaryDark">#0A810F</color>
     <color name="colorAccent">#0CE415</color>
+    <color name="backgroundColor">#FF5722</color>
+    <color name="backgroundColors">#dfdfdf</color>
     <color name="black">#000000</color>
     <color name="white">#fff</color>
     <!--<color name="colorPrimary">#1fb49c</color>-->

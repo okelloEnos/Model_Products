@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -37,11 +38,14 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Product_Details extends AppCompatActivity {
+public class Product_Details extends AppCompatActivity implements RatingDialogListener {
 
     private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key;
     ImageView detail_image;
@@ -52,6 +56,9 @@ public class Product_Details extends AppCompatActivity {
     private orderModel fullOrder;
 
     private static final int PHONE_PERMISSION = 30;
+    private int capacityRem;
+    private String price;
+    private String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +120,38 @@ public class Product_Details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(Product_Details.this, "Making Order ...", Toast.LENGTH_SHORT).show();
+//                ratingDialog();
                 priceConfirmationDialog();
 
             }
         });
         receiveDetailIntents();
+    }
+
+    private void ratingDialog() {
+
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Send review")
+                .setNeutralButtonText("Later")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setDefaultRating(0)
+                .setTitle("Rate this Product")
+                .setDescription("Please select some stars and give your feedback")
+                .setCommentInputEnabled(true)
+                .setDefaultComment("This product is pretty cool !")
+                .setStarColor(R.color.colorAccent)
+                .setNoteDescriptionTextColor(R.color.colorPrimaryDark)
+                .setTitleTextColor(R.color.colorPrimaryDark)
+                .setDescriptionTextColor(R.color.colorPrimaryDark)
+                .setHint("Please write your comment here ...")
+                .setHintTextColor(R.color.colorAccent)
+                .setCommentTextColor(R.color.white)
+                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .create(Product_Details.this)
+                .show();
     }
 
     private void requestedPermission() {
@@ -149,8 +183,8 @@ public class Product_Details extends AppCompatActivity {
     private void priceConfirmationDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle("Capacity");
-        alert.setMessage("Enter the Capacity in KG :");
+        alert.setTitle(Html.fromHtml("<font color='#0A810F'> Capacity </font>"));
+        alert.setMessage(Html.fromHtml("<font color='#0A810F'> Enter the Capacity in KG : </font>"));
 
 // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -158,7 +192,7 @@ public class Product_Details extends AppCompatActivity {
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
+                value = input.getText().toString();
 
                 try {
 
@@ -166,9 +200,9 @@ public class Product_Details extends AppCompatActivity {
 
                         int totalPrice = Integer.valueOf(value) * Integer.valueOf(d_price);
 
-                        String price = Integer.toString(totalPrice);
+                        price = Integer.toString(totalPrice);
 
-                        int capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
+                        capacityRem = (Integer.valueOf(d_capacity) - Integer.valueOf(value));
 
                         if (capacityRem >= 0) {
 
@@ -176,16 +210,8 @@ public class Product_Details extends AppCompatActivity {
 
                             tv_capacity.setText(String.valueOf(capacityRem));
 
-                            Intent cartIntent = new Intent(Product_Details.this, Order.class);
-                            cartIntent.putExtra("prdName", d_name);
-                            cartIntent.putExtra("prdMail", d_email);
-                            cartIntent.putExtra("prdLocation", d_location);
-                            cartIntent.putExtra("prdPhone", d_phone);
-                            cartIntent.putExtra("prdCapacity", value);
-                            cartIntent.putExtra("prdPrice", price);
-                            cartIntent.putExtra("remPrdCapacity", capacityRem);
+                            ratingDialog();
 
-                            startActivity(cartIntent);
 //                    updatePersonalProducts();
                         } else {
                             Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity, Toast.LENGTH_SHORT).show();
@@ -203,6 +229,7 @@ public class Product_Details extends AppCompatActivity {
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
+                ratingDialog();
             }
         });
 
@@ -262,4 +289,38 @@ public class Product_Details extends AppCompatActivity {
                 .centerCrop()
                 .into(detail_image);
     }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+        proceedToOrders();
+//        priceConfirmationDialog();
+    }
+
+    private void proceedToOrders() {
+        Intent cartIntent = new Intent(Product_Details.this, Order.class);
+        cartIntent.putExtra("prdName", d_name);
+        cartIntent.putExtra("prdMail", d_email);
+        cartIntent.putExtra("prdLocation", d_location);
+        cartIntent.putExtra("prdPhone", d_phone);
+        cartIntent.putExtra("prdCapacity", value);
+        cartIntent.putExtra("prdPrice", price);
+        cartIntent.putExtra("remPrdCapacity", capacityRem);
+
+        startActivity(cartIntent);
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+//        priceConfirmationDialog();
+        proceedToOrders();
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int i, String s) {
+        Toast.makeText(this, "Rating : "+ i + "  : Comment : " + s, Toast.LENGTH_SHORT).show();
+//        priceConfirmationDialog();
+        proceedToOrders();
+    }
+
 }
