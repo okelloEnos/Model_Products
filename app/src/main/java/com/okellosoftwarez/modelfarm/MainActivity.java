@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView addImage;
     Uri image_uri;
     Products product;
-    String sName, sPhone, sEmail, sLocation, sPrice, sCapacity, editKey, receivedImage;
-    String newName, newPhone, newEmail, newLocation, newPrice, newCapacity;
+    String sName, sPhone, sEmail, sLocation, sPrice, sCapacity, editKey, receivedImage, sRatings, sVoters;
+    String newName, newPhone, newEmail, newLocation, newPrice, newCapacity, newRatings, newVoters;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private ProgressBar mProgress;
@@ -171,6 +171,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updatingDetails() {
+        if (getIntent().hasExtra("editRatings") && getIntent().hasExtra("editVoters")) {
+            sRatings = getIntent().getStringExtra("editRatings");
+            sVoters = getIntent().getStringExtra("editVoters");
+//            etName.setText(sName);
+        }else {
+            sRatings = Integer.toString(0);
+            sVoters = Integer.toString(0);
+
+        }
 
         newName = etName.getText().toString().trim();
         newLocation = etLocation.getText().toString().trim();
@@ -199,7 +208,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }, 500);
 
-                    Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+//                    Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail);
+
+                    Products updatedProduct = new Products(newName, newPhone, newLocation, receivedImage, newPrice, newCapacity, newEmail, sRatings, sVoters);
                     updateRef.child(editKey).setValue(updatedProduct);
                     databaseReference.child(editKey).setValue(updatedProduct);
                     mProgress.setProgress(100);
@@ -245,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 }, 500);
                                                 Toast.makeText(MainActivity.this, "Upload Successful..." + newImage, Toast.LENGTH_SHORT).show();
 
-                                                Products updatedProduct = new Products(newName, newPhone, newLocation, newImage, newPrice, newCapacity, newEmail);
+                                                Products updatedProduct = new Products(newName, newPhone, newLocation, newImage, newPrice, newCapacity, newEmail, sRatings, sVoters);
 
                                                 updateRef.child(editKey).setValue(updatedProduct);
                                                 databaseReference.child(editKey).setValue(updatedProduct);
@@ -386,7 +397,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }, 500);
                                 Toast.makeText(MainActivity.this, "Upload Successful..." + sImage, Toast.LENGTH_SHORT).show();
 
-                                product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
+                                product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail, Integer.toString(0), Integer.toString(0));
+//                                product = new Products(sName, sPhone, sLocation, sImage, sPrice, sCapacity, sEmail);
                                 String key = databaseReference.push().getKey();
                                 product.setID(key);
                                 databaseReference.child(key).setValue(product);

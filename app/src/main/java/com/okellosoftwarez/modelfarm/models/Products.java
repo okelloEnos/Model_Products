@@ -14,6 +14,40 @@ public class Products implements Serializable {
     private String price;
     private String capacity;
     private String email;
+    private String ratings;
+    private String voters;
+
+    public Products(String name, String phone, String location, String image, String price, String capacity, String email, String ratings, String voters) {
+        this.name = name;
+        this.phone = phone;
+        this.location = location;
+        this.image = image;
+        this.price = price;
+        this.capacity = capacity;
+        this.email = email;
+        this.ratings = ratings;
+        this.voters = voters;
+    }
+
+//    public Products(String sName, String sPhone, String sLocation, String sImage, String sPrice, String sCapacity, String sEmail, String toString, String toString1) {
+//
+//    }
+
+    public String getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(String ratings) {
+        this.ratings = ratings;
+    }
+
+    public String getVoters() {
+        return voters;
+    }
+
+    public void setVoters(String voters) {
+        this.voters = voters;
+    }
 
     public String getImage() {
         return image;

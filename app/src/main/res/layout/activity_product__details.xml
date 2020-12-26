@@ -220,6 +220,79 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_detailPhone" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/tv_ratings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Ratings and Reviews "
+                android:textColor="@color/black"
+                android:textSize="@dimen/eighteen_sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contactLayout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ratingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/eight_dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_ratings">
+
+                <RatingBar
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="2dp"
+                    android:isIndicator="true"
+                    android:paddingRight="2dp"
+                    android:rating="0" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_staticPhone"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="@dimen/eight_dp"-->
+<!--                    android:text="Phone No : "-->
+<!--                    android:textColor="@color/black"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_detailPhone"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="@dimen/eight_dp"-->
+<!--                    android:text="TextView"-->
+<!--                    android:textColor="?attr/colorPrimary"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/tv_staticPhone"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_staticMail"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="@dimen/eight_dp"-->
+<!--                    android:text="Email : "-->
+<!--                    android:textColor="@color/black"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_staticPhone" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_detailEmail"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="@dimen/eight_dp"-->
+<!--                    android:text="TextView"-->
+<!--                    android:textColor="?attr/colorPrimary"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/tv_staticMail"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_detailPhone" />-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <Button
                 android:id="@+id/order_button"
                 android:layout_width="match_parent"
@@ -239,7 +312,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contactLayout" />
+                app:layout_constraintTop_toBottomOf="@id/ratingLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

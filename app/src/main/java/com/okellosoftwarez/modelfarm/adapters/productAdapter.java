@@ -46,7 +46,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
 
     @Override
     public void onBindViewHolder(@NonNull productViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: allign to recycler...");
+        Log.d(TAG, "onBindViewHolder: align to recycler...");
         final Products currentProducts = productsList.get(position);
         holder.recName.setText(currentProducts.getName());
         holder.recLocation.setText("Location : " + currentProducts.getLocation());
@@ -73,6 +73,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                     passIntent.putExtra("phone", currentProducts.getPhone());
                     passIntent.putExtra("image", currentProducts.getImage());
                     passIntent.putExtra("key", currentProducts.getID());
+                    passIntent.putExtra("ratings", currentProducts.getRatings());
+                    passIntent.putExtra("voters", currentProducts.getVoters());
 
                     Toast.makeText(mcontext, "Key:" + currentProducts.getID(), Toast.LENGTH_LONG).show();
                     mcontext.startActivity(passIntent);

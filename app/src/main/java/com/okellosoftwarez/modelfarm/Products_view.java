@@ -417,6 +417,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         if (buttonString.equals("seller")) {
             cartSellerItem.setVisible(false);
+
         }
 
 

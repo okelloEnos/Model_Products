@@ -8,7 +8,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,40 +15,34 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.okellosoftwarez.modelfarm.models.Products;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Product_Details extends AppCompatActivity implements RatingDialogListener {
 
-    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key;
+    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key, d_ratings, d_voters;
     ImageView detail_image;
     TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email;
+    RatingBar ratingBar;
+    private DatabaseReference databaseReference;
 
     private StorageReference orderStorageReference;
     private DatabaseReference orderDatabaseReference;
@@ -73,6 +66,7 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
 
         orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
         orderDatabaseReference = FirebaseDatabase.getInstance().getReference("Orders");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Products");
 
         fullOrder = new orderModel();
 
@@ -84,6 +78,7 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         tv_phone = findViewById(R.id.tv_detailPhone);
         tv_email = findViewById(R.id.tv_detailEmail);
         Button orderBtn = findViewById(R.id.order_button);
+        ratingBar = findViewById(R.id.RatingBar);
 
         tv_phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,7 +252,8 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         if (getIntent().hasExtra("name") && getIntent().hasExtra("phone")
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
-                && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")) {
+                && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")
+                && getIntent().hasExtra("ratings") && getIntent().hasExtra("voters")) {
 
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
@@ -267,15 +263,18 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
             d_image = getIntent().getStringExtra("image");
             d_email = getIntent().getStringExtra("email");
             d_key = getIntent().getStringExtra("key");
+            d_ratings = getIntent().getStringExtra("ratings");
+            d_voters = getIntent().getStringExtra("voters");
 
             Toast.makeText(this, "The Email : " + d_email, Toast.LENGTH_LONG).show();
 
-            assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity);
+            assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity, d_ratings, d_voters);
 
         }
     }
 
-    private void assignDetails(String d_name, String d_phone, String d_image, String d_email, String d_location, String d_price, String d_capacity) {
+    private void assignDetails(String d_name, String d_phone, String d_image, String d_email, String d_location,
+                               String d_price, String d_capacity, String d_ratings, String d_voters) {
         tv_name.setText(d_name);
         tv_phone.setText(d_phone);
         tv_email.setText(d_email);
@@ -288,16 +287,43 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
                 .fit()
                 .centerCrop()
                 .into(detail_image);
+
+        if (d_ratings != null) {
+            float rate, ratingsFloat, ratingsVoters;
+            ratingsFloat = Float.parseFloat(d_ratings);
+            ratingsVoters = Float.parseFloat(d_voters);
+//        Float.parseFloat()
+//        float rate =  (float) Integer.parseInt(d_ratings) / Integer.parseInt(d_voters);
+            rate = ratingsFloat / ratingsVoters;
+            ratingBar.setRating(rate);
+        }
+        else {
+            ratingBar.setRating(0);
+        }
+
     }
 
     @Override
     public void onNegativeButtonClicked() {
+        int count, newRate;
+        if (d_voters != null && d_ratings != null) {
+            count = Integer.parseInt(d_voters);
+            newRate = Integer.parseInt(d_ratings);
+//            count = count + 1;
+//            newRate = newRate + i;
+        }
+        else {
+            count = 0;
+            newRate = 0;
 
-        proceedToOrders();
+        }
+        proceedToOrders(newRate, "", count);
+
+//        proceedToOrders(0, "", 0);
 //        priceConfirmationDialog();
     }
 
-    private void proceedToOrders() {
+    private void proceedToOrders(int i, String s, int count) {
         Intent cartIntent = new Intent(Product_Details.this, Order.class);
         cartIntent.putExtra("prdName", d_name);
         cartIntent.putExtra("prdMail", d_email);
@@ -307,20 +333,54 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         cartIntent.putExtra("prdPrice", price);
         cartIntent.putExtra("remPrdCapacity", capacityRem);
 
+
+        Products ratedProduct = new Products(d_name, d_phone, d_location, d_image, d_price, d_capacity, d_email, Integer.toString(i), Integer.toString(count));
+//        updateRef.child(editKey).setValue(updatedProduct);
+        databaseReference.child(d_key).setValue(ratedProduct);
+
         startActivity(cartIntent);
     }
 
     @Override
     public void onNeutralButtonClicked() {
 //        priceConfirmationDialog();
-        proceedToOrders();
+        int count, newRate;
+        if (d_voters != null && d_ratings != null) {
+            count = Integer.parseInt(d_voters);
+            newRate = Integer.parseInt(d_ratings);
+//            count = count + 1;
+//            newRate = newRate + i;
+        }
+        else {
+            count = 0;
+            newRate = 0;
+
+        }
+        proceedToOrders(newRate, "", count);
     }
 
     @Override
     public void onPositiveButtonClicked(int i, String s) {
         Toast.makeText(this, "Rating : "+ i + "  : Comment : " + s, Toast.LENGTH_SHORT).show();
 //        priceConfirmationDialog();
-        proceedToOrders();
+        int count, newRate;
+        if (d_voters != null && d_ratings != null) {
+            count = Integer.parseInt(d_voters);
+            newRate = Integer.parseInt(d_ratings);
+            count = count + 1;
+            newRate = newRate + i;
+        }
+        else {
+            count = 1;
+            newRate = i;
+
+        }
+        proceedToOrders(newRate, s, count);
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        Toast.makeText(this, "Back Pressed...", Toast.LENGTH_SHORT).show();
+//    }
 }

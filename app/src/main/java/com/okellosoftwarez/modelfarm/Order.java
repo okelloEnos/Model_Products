@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -344,5 +345,13 @@ public class Order extends AppCompatActivity implements com.okellosoftwarez.mode
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        Toast.makeText(this, "On Back Pressed...", Toast.LENGTH_SHORT).show();
+        Intent backWardIntent = new Intent(Order.this, Products_view.class);
+        startActivity(backWardIntent);
     }
 }
