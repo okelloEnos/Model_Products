@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,7 @@ import android.widget.Toast;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class Products_view extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,6 +74,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
     TextView cartText;
 
     long cartCount = 0;
+    private List<String> commentsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,7 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         storage = FirebaseStorage.getInstance();
 
+        commentsList = new ArrayList<>();
         productsList = new ArrayList<>();
         filteredProductsList = new ArrayList<>();
         nameList = new ArrayList<>();
@@ -142,7 +146,20 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
                     productsList.clear();
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        final Products receivedProduct = postSnapshot.getValue(Products.class);
+                        String name = postSnapshot.child("name").getValue(String.class);
+                        String email = postSnapshot.child("email").getValue(String.class);
+                        String capacity = postSnapshot.child("capacity").getValue(String.class);
+                        String phone = postSnapshot.child("phone").getValue(String.class);
+                        String location = postSnapshot.child("location").getValue(String.class);
+                        String image = postSnapshot.child("image").getValue(String.class);
+//                        String comments = postSnapshot.child("comments").getValue(String.class);
+                        String price = postSnapshot.child("price").getValue(String.class);
+                        String ratings = postSnapshot.child("ratings").getValue(String.class);
+                        String voters = postSnapshot.child("voters").getValue(String.class);
+//                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+//                        Log.d(TAG, "Value is: " + name);
+
+                        final Products receivedProduct = new Products(name, phone, location, image, price, capacity, email, ratings, voters);
                         receivedProduct.setID(postSnapshot.getKey());
 
                         if (Integer.valueOf(receivedProduct.getCapacity()) > 0) {
@@ -417,7 +434,6 @@ public class Products_view extends AppCompatActivity implements NavigationView.O
 
         if (buttonString.equals("seller")) {
             cartSellerItem.setVisible(false);
-
         }
 
 

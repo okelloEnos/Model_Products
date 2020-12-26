@@ -75,6 +75,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                     passIntent.putExtra("key", currentProducts.getID());
                     passIntent.putExtra("ratings", currentProducts.getRatings());
                     passIntent.putExtra("voters", currentProducts.getVoters());
+                    passIntent.putExtra("comments", currentProducts.getComments());
 
                     Toast.makeText(mcontext, "Key:" + currentProducts.getID(), Toast.LENGTH_LONG).show();
                     mcontext.startActivity(passIntent);

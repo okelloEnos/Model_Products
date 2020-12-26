@@ -25,8 +25,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.okellosoftwarez.modelfarm.models.Products;
@@ -38,20 +41,18 @@ import java.util.Arrays;
 
 public class Product_Details extends AppCompatActivity implements RatingDialogListener {
 
-    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key, d_ratings, d_voters;
+    private String d_price, d_name, d_capacity, d_image, d_phone, d_location, d_email, d_key, d_ratings, d_voters, d_comments;
     ImageView detail_image;
-    TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email;
+    TextView tv_name, tv_location, tv_price, tv_capacity, tv_phone, tv_email, tv_comments;
     RatingBar ratingBar;
     private DatabaseReference databaseReference;
-
-    private StorageReference orderStorageReference;
-    private DatabaseReference orderDatabaseReference;
     private orderModel fullOrder;
 
     private static final int PHONE_PERMISSION = 30;
     private int capacityRem;
     private String price;
     private String value;
+    private String comts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,6 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        orderStorageReference = FirebaseStorage.getInstance().getReference("Orders");
-        orderDatabaseReference = FirebaseDatabase.getInstance().getReference("Orders");
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");
 
         fullOrder = new orderModel();
@@ -77,6 +76,7 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         tv_capacity = findViewById(R.id.tv_detailCapacity);
         tv_phone = findViewById(R.id.tv_detailPhone);
         tv_email = findViewById(R.id.tv_detailEmail);
+        tv_comments = findViewById(R.id.tv_Comments);
         Button orderBtn = findViewById(R.id.order_button);
         ratingBar = findViewById(R.id.RatingBar);
 
@@ -253,7 +253,8 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
                 && getIntent().hasExtra("image") && getIntent().hasExtra("email")
                 && getIntent().hasExtra("location") && getIntent().hasExtra("price")
                 && getIntent().hasExtra("capacity") && getIntent().hasExtra("key")
-                && getIntent().hasExtra("ratings") && getIntent().hasExtra("voters")) {
+                && getIntent().hasExtra("ratings") && getIntent().hasExtra("voters")
+                && getIntent().hasExtra("comments")) {
 
             d_name = getIntent().getStringExtra("name");
             d_location = getIntent().getStringExtra("location");
@@ -265,16 +266,17 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
             d_key = getIntent().getStringExtra("key");
             d_ratings = getIntent().getStringExtra("ratings");
             d_voters = getIntent().getStringExtra("voters");
+            d_comments = getIntent().getStringExtra("comments");
 
             Toast.makeText(this, "The Email : " + d_email, Toast.LENGTH_LONG).show();
 
-            assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity, d_ratings, d_voters);
+            assignDetails(d_name, d_phone, d_image, d_email, d_location, d_price, d_capacity, d_ratings, d_voters, d_key);
 
         }
     }
 
     private void assignDetails(String d_name, String d_phone, String d_image, String d_email, String d_location,
-                               String d_price, String d_capacity, String d_ratings, String d_voters) {
+                               String d_price, String d_capacity, String d_ratings, String d_voters, String d_key) {
         tv_name.setText(d_name);
         tv_phone.setText(d_phone);
         tv_email.setText(d_email);
@@ -290,15 +292,39 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
 
         if (d_ratings != null) {
             float rate, ratingsFloat, ratingsVoters;
+            if (d_voters == null){
+                d_voters = Integer.toString(0);
+            }
             ratingsFloat = Float.parseFloat(d_ratings);
             ratingsVoters = Float.parseFloat(d_voters);
-//        Float.parseFloat()
-//        float rate =  (float) Integer.parseInt(d_ratings) / Integer.parseInt(d_voters);
             rate = ratingsFloat / ratingsVoters;
             ratingBar.setRating(rate);
         }
         else {
             ratingBar.setRating(0);
+        }
+
+
+        databaseReference.child(d_key).child("comments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot commentSnap :
+                        dataSnapshot.getChildren()) {
+                    comts = commentSnap.getValue(String.class);
+                }
+                tv_comments.setText(comts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        if (d_comments != null){
+            tv_comments.setText("problem");
+        }
+        else {
+            tv_comments.setText("nothing");
         }
 
     }
@@ -309,8 +335,6 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         if (d_voters != null && d_ratings != null) {
             count = Integer.parseInt(d_voters);
             newRate = Integer.parseInt(d_ratings);
-//            count = count + 1;
-//            newRate = newRate + i;
         }
         else {
             count = 0;
@@ -318,9 +342,6 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
 
         }
         proceedToOrders(newRate, "", count);
-
-//        proceedToOrders(0, "", 0);
-//        priceConfirmationDialog();
     }
 
     private void proceedToOrders(int i, String s, int count) {
@@ -334,9 +355,16 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
         cartIntent.putExtra("remPrdCapacity", capacityRem);
 
 
-        Products ratedProduct = new Products(d_name, d_phone, d_location, d_image, d_price, d_capacity, d_email, Integer.toString(i), Integer.toString(count));
+        Products ratedProduct = new Products(d_name, d_phone, d_location, d_image, d_price, d_capacity, d_email, Integer.toString(i), Integer.toString(count), s);
 //        updateRef.child(editKey).setValue(updatedProduct);
         databaseReference.child(d_key).setValue(ratedProduct);
+
+        String commentsKey = databaseReference.child(d_key).child("comments").push().getKey();
+
+        String cKey = databaseReference.push().getKey();
+//        comment commentInfo = new comment(s);
+//        databaseReference.child(d_key).setValue(ratedProduct);
+        databaseReference.child(d_key).child("comments").child(commentsKey).setValue(s);
 
         startActivity(cartIntent);
     }

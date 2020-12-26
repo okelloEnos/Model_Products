@@ -3,6 +3,7 @@ package com.okellosoftwarez.modelfarm.models;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class Products implements Serializable {
@@ -16,6 +17,20 @@ public class Products implements Serializable {
     private String email;
     private String ratings;
     private String voters;
+    private String comments;
+
+    public Products(String name, String phone, String location, String image, String price, String capacity, String email, String ratings, String voters, String comments) {
+        this.name = name;
+        this.phone = phone;
+        this.location = location;
+        this.image = image;
+        this.price = price;
+        this.capacity = capacity;
+        this.email = email;
+        this.ratings = ratings;
+        this.voters = voters;
+        this.comments = comments;
+    }
 
     public Products(String name, String phone, String location, String image, String price, String capacity, String email, String ratings, String voters) {
         this.name = name;
@@ -29,9 +44,13 @@ public class Products implements Serializable {
         this.voters = voters;
     }
 
-//    public Products(String sName, String sPhone, String sLocation, String sImage, String sPrice, String sCapacity, String sEmail, String toString, String toString1) {
-//
-//    }
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
     public String getRatings() {
         return ratings;
