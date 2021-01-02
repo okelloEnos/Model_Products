@@ -204,10 +204,23 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
                             uploadingData(totalPrice, value, String.valueOf(capacityRem));
 
                             tv_capacity.setText(String.valueOf(capacityRem));
+//uncomment
+//                            ratingDialog();
+//                            proceedToOrders(0, "empty", 0);
+                            Intent cartIntent = new Intent(Product_Details.this, Order.class);
+                            cartIntent.putExtra("prdName", d_name);
+                            cartIntent.putExtra("prdMail", d_email);
+                            cartIntent.putExtra("prdLocation", d_location);
+                            cartIntent.putExtra("prdPhone", d_phone);
+                            cartIntent.putExtra("prdCapacity", value);
+                            cartIntent.putExtra("prdPrice", price);
+                            cartIntent.putExtra("remPrdCapacity", capacityRem);
 
-                            ratingDialog();
+                            Products ratedProduct = new Products(d_name, d_phone, d_location, d_image, d_price, d_capacity, d_email, "nulled", "nulled", "nulled");
+//        updateRef.child(editKey).setValue(updatedProduct);
+                            databaseReference.child(d_key).setValue(ratedProduct);
+                            startActivity(cartIntent);
 
-//                    updatePersonalProducts();
                         } else {
                             Toast.makeText(Product_Details.this, "Not Possible For Excess Order : Capacity Available is : " + d_capacity, Toast.LENGTH_SHORT).show();
                         }
@@ -223,8 +236,8 @@ public class Product_Details extends AppCompatActivity implements RatingDialogLi
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-                ratingDialog();
+                // Canceled. uncomment
+//                ratingDialog();
             }
         });
 
